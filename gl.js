@@ -1,5 +1,13 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 
+function trace(message) {
+    "use strict";
+
+ // alert(message);
+    console.log(message);
+    return;
+}
+
 /*
  * Here is where the OpenGL application is all done, from a C perspective.
  *
@@ -21,16 +29,46 @@ function main_GL() {
     glGetIntegerv(GL.VIEWPORT, viewport_state);
     glViewport(0, 0, viewport_state[2], viewport_state[3]);
 
-    alert(glGetString(GL_VENDOR));
-    alert(glGetString(GL_RENDERER));
-    alert(glGetString(GL_VERSION));
-    alert(glGetString(GL_EXTENSIONS));
+    trace(glGetString(GL_VENDOR));
+    trace(glGetString(GL_RENDERER));
+    trace(glGetString(GL_VERSION));
+    trace(glGetString(GL_EXTENSIONS));
 
     error_code = glGetError();
     if (error_code !== GL_NO_ERROR) {
-        alert(error_code);
+        trace_error(error_code);
     }
     return;
+}
+
+function trace_error(error_code) {
+    "use strict";
+
+    switch (error_code) {
+    case GL_NO_ERROR:
+        trace("GL_NO_ERROR");
+        return;
+    case GL_INVALID_ENUM:
+        trace("GL_INVALID_ENUM");
+        return;
+    case GL_INVALID_VALUE:
+        trace("GL_INVALID_VALUE");
+        return;
+    case GL_INVALID_OPERATION:
+        trace("GL_INVALID_OPERATION");
+        return;
+    case GL_STACK_OVERFLOW:
+        trace("GL_STACK_OVERFLOW");
+        return;
+    case GL_STACK_UNDERFLOW:
+        trace("GL_STACK_UNDERFLOW");
+        return;
+    case GL_OUT_OF_MEMORY:
+        trace("GL_OUT_OF_MEMORY");
+        return;
+    default:
+        trace("GL_UNKNOWN_ERROR");
+    }
 }
 
 function GL_initialize(ML_interface, trace_error) {
