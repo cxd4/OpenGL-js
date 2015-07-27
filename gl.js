@@ -9,7 +9,7 @@ var GL; /* global context name for setting up C emulation in JavaScript */
 function main_GL() {
     "use strict";
 
-    glClearColor(0, 1, 1, .5);
+    glClearColor(0, 1, 1, 0.5);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -37,12 +37,12 @@ function GL_initialize(ML_interface, trace_error) {
         }
         trace_error("Warning:  Experimental WebGL implementation.");
     }
-    GL_emulate_macros(GL);
+    emulate_GL_macros(GL);
     main_GL();
     return;
 }
 
-function GL_emulate_macros(context) {
+function emulate_GL_macros(context) {
     "use strict";
 
     GL_COLOR_BUFFER_BIT = context.COLOR_BUFFER_BIT;
