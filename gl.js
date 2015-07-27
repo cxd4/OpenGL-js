@@ -12,7 +12,7 @@ function main_GL() {
     var error_code;
 
     glClearColor(0, 1, 1, 0.5);
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glFlush();
