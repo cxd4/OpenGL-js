@@ -141,8 +141,8 @@ function emulate_GL_macros(context) {
     GL_ACCUM_BUFFER_BIT = context.ACCUM_BUFFER_BIT;
     GL_STENCIL_BUFFER_BIT = context.STENCIL_BUFFER_BIT;
 
-    GL_FALSE = 0;
-    GL_TRUE = 1;
+    GL_FALSE = false;
+    GL_TRUE = true;
     return;
 }
 
