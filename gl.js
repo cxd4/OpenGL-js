@@ -16,7 +16,7 @@ function trace(message) {
  */
 function main_GL() {
     "use strict";
-    var viewport_state = { v:  [-1, -1, -1, -1] };
+    var viewport_state = {v: []};
     var error_code;
 
     glClearColor(0, 1, 1, 0.5);
@@ -110,6 +110,22 @@ function emulate_GL_macros(context) {
     GL_OUT_OF_MEMORY = context.OUT_OF_MEMORY;
 
 /*
+ * capability enumerations for glIsEnabled, glEnable and glDisable
+ *
+ * These were all taken from the OpenGL ES 2.0 reference, but a couple of
+ * them I am sure are not universal to all OpenGL versions.
+ */
+    GL_BLEND = context.BLEND;
+    GL_CULL_FACE = context.CULL_FACE;
+    GL_DEPTH_TEST = context.DEPTH_TEST;
+    GL_DITHER = context.DITHER;
+    GL_POLYGON_OFFSET_FILL = context.POLYGON_OFFSET_FILL;
+    GL_SAMPLE_ALPHA_TO_COVERAGE = context.SAMPLE_ALPHA_TO_COVERAGE;
+    GL_SAMPLE_COVERAGE = context.SAMPLE_COVERAGE;
+    GL_SCISSOR_TEST = context.SCISSOR_TEST;
+    GL_STENCIL_TEST = context.STENCIL_TEST;
+
+/*
  * universally accepted queries for glGetString(macro)
  */
     GL_VENDOR = context.VENDOR;
@@ -141,6 +157,16 @@ var GL_FALSE,
     GL_STACK_UNDERFLOW,
     GL_OUT_OF_MEMORY,
 
+    GL_BLEND,
+    GL_CULL_FACE,
+    GL_DEPTH_TEST,
+    GL_DITHER,
+    GL_POLYGON_OFFSET_FILL,
+    GL_SAMPLE_ALPHA_TO_COVERAGE,
+    GL_SAMPLE_COVERAGE,
+    GL_SCISSOR_TEST,
+    GL_STENCIL_TEST,
+
     GL_VENDOR,
     GL_RENDERER,
     GL_VERSION,
@@ -150,6 +176,23 @@ var GL_FALSE,
     GL_DEPTH_BUFFER_BIT,
     GL_ACCUM_BUFFER_BIT,
     GL_STENCIL_BUFFER_BIT;
+
+function glDisable(capability) {
+    "use strict";
+
+    GL.disable(capability);
+    return;
+}
+function glEnable(capability) {
+    "use strict";
+
+    GL.enable(capability);
+    return;
+}
+function glIsEnabled(capability) {
+    "use strict";
+    return GL.isEnabled(capability);
+}
 
 function glClear(buffers_mask) {
     "use strict";
