@@ -226,6 +226,16 @@ function glGetFloatv(name, params) {
 function glGetString(name) {
     "use strict";
 
+/*
+ * Deprecation never happened in OpenGL, and neither did Khronos.
+ *
+ * Moving glGetString(GL_EXTENSIONS) to glGetStringi was pretty much the
+ * exact opposite direction of their claimed intention to stream OpenGL into
+ * a low-level, performance-only API.  Their excuse was some potential
+ * security risk with extraneously duplicating the string to a new buffer.
+ *
+ * The deprecation model encourages:  instead of better code practice, worse.
+ */
     if (name === GL_EXTENSIONS) {
         var ext = [];
         var ext_list = "";
