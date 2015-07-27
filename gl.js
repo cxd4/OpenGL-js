@@ -8,6 +8,8 @@ var GL; /* global context name for setting up C emulation in JavaScript */
  */
 function main_GL() {
     "use strict";
+    var viewport_state = [0, 0, 0, 0];
+    var error_code;
 
     glClearColor(0, 1, 1, 0.5);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -15,6 +17,19 @@ function main_GL() {
 
     glFlush();
     glFinish();
+
+    glGetIntegerv(GL.VIEWPORT, viewport_state);
+    glViewport(0, 0, viewport_state[2], viewport_state[3]);
+
+    alert(glGetString(GL_VENDOR));
+    alert(glGetString(GL_RENDERER));
+    alert(glGetString(GL_VERSION));
+    alert(glGetString(GL_EXTENSIONS));
+
+    error_code = glGetError();
+    if (error_code !== GL_NO_ERROR) {
+        alert(error_code);
+    }
     return;
 }
 
@@ -45,6 +60,28 @@ function GL_initialize(ML_interface, trace_error) {
 function emulate_GL_macros(context) {
     "use strict";
 
+/*
+ * known enumerations for OpenGL error codes
+ */
+    GL_NO_ERROR = context.NO_ERROR;
+    GL_INVALID_ENUM = context.INVALID_ENUM;
+    GL_INVALID_VALUE = context.INVALID_VALUE;
+    GL_INVALID_OPERATION = context.INVALID_OPERATION;
+    GL_STACK_OVERFLOW = context.STACK_OVERFLOW;
+    GL_STACK_UNDERFLOW = context.STACK_UNDERFLOW;
+    GL_OUT_OF_MEMORY = context.OUT_OF_MEMORY;
+
+/*
+ * universally accepted queries for glGetString(macro)
+ */
+    GL_VENDOR = context.VENDOR;
+    GL_RENDERER = context.RENDERER;
+    GL_VERSION = context.VERSION;
+    GL_EXTENSIONS = context.EXTENSIONS;
+
+/*
+ * bit masks for wiping with glClear
+ */
     GL_COLOR_BUFFER_BIT = context.COLOR_BUFFER_BIT;
     GL_DEPTH_BUFFER_BIT = context.DEPTH_BUFFER_BIT;
     GL_ACCUM_BUFFER_BIT = context.ACCUM_BUFFER_BIT;
@@ -57,6 +94,19 @@ function emulate_GL_macros(context) {
 
 var GL_FALSE,
     GL_TRUE,
+
+    GL_NO_ERROR,
+    GL_INVALID_ENUM,
+    GL_INVALID_VALUE,
+    GL_INVALID_OPERATION,
+    GL_STACK_OVERFLOW,
+    GL_STACK_UNDERFLOW,
+    GL_OUT_OF_MEMORY,
+
+    GL_VENDOR,
+    GL_RENDERER,
+    GL_VERSION,
+    GL_EXTENSIONS,
 
     GL_COLOR_BUFFER_BIT,
     GL_DEPTH_BUFFER_BIT,
@@ -97,3 +147,61 @@ function glFinish() {
     GL.finish();
     return;
 } /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+
+function glGetError() {
+    "use strict";
+    return GL.getError();
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+
+function glViewport(x, y, width, height) {
+    "use strict";
+
+    GL.viewport(x, y, width, height);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+
+/*
+ * These functions are all universal to all versions of OpenGL.
+ *
+ * However, type agnosticism in JavaScript, as a language, makes the
+ * differing function names obsolete.  In WebGL, they are all renamed to:
+ *     getParameter(...)
+ */
+function glGetBooleanv(name, params) {
+    "use strict";
+
+    GL.getParameter(name, params);
+    return;
+}
+function glGetIntegerv(name, params) {
+    "use strict";
+
+    GL.getParameter(name, params);
+    return;
+}
+function glGetFloatv(name, params) {
+    "use strict";
+
+    GL.getParameter(name, params);
+    return;
+}
+function glGetString(name) {
+    "use strict";
+
+    if (name === GL_EXTENSIONS) {
+        var ext = [];
+        var ext_list = "";
+        var i = 0;
+
+        ext = GL.getSupportedExtensions(); // C:  glGetStringi(GL_EXTENSIONS)
+        while (i < ext.length) {
+            if (ext_list.length) {
+                ext_list += "\n";
+            }
+            ext_list += ext[i];
+            i += 1;
+        }
+        return (ext_list);
+    }
+    return GL.getParameter(name);
+}
