@@ -16,7 +16,7 @@ function trace(message) {
  */
 function main_GL() {
     "use strict";
-    var viewport_state = [0, 0, 0, 0];
+    var viewport_state = { v:  [-1, -1, -1, -1] };
     var error_code;
 
     glClearColor(0, 1, 1, 0.5);
@@ -203,24 +203,24 @@ function glViewport(x, y, width, height) {
  *
  * However, type agnosticism in JavaScript, as a language, makes the
  * differing function names obsolete.  In WebGL, they are all renamed to:
- *     getParameter(...)
+ *     params = getParameter(name);
  */
 function glGetBooleanv(name, params) {
     "use strict";
 
-    GL.getParameter(name, params);
+    params.v = GL.getParameter(name);
     return;
 }
 function glGetIntegerv(name, params) {
     "use strict";
 
-    GL.getParameter(name, params);
+    params.v = GL.getParameter(name);
     return;
 }
 function glGetFloatv(name, params) {
     "use strict";
 
-    GL.getParameter(name, params);
+    params.v = GL.getParameter(name);
     return;
 }
 function glGetString(name) {
