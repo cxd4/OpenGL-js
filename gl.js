@@ -18,13 +18,17 @@ function main_GL() {
     "use strict";
     var error_code;
 
-    glClearColor(0, 1, 1, 0.5);
-    glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+    glClearColor(0.00, 0.00, 0.00, 1.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
     glColor4f(1, 0, 0, 1);
+    glRect(-1, -1, 0, 0);
+    glColor4f(0, 1, 0, 1);
+    glRect(0, -1, 1, 0);
+    glColor4f(0, 0, 1, 0);
     glRect(0, 0, 1, 1);
+    glColor4f(1, 1, 0, 0);
+    glRect(-1, 0, 0, 1);
 
     glFlush();
     glFinish();
@@ -381,7 +385,7 @@ function glRect(x1, y1, x2, y2) {
     delta_y = raster_y2 - raster_y1;
     glScissor(raster_x1, raster_y1, delta_x, delta_y);
 
-    glClearColor(color_red, color_green, color_blue, color_coverage);
+    glClearColor(color_red, color_green, color_blue, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if (scissoring_enabled === GL_FALSE) {
