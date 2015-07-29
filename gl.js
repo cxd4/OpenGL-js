@@ -101,6 +101,7 @@ function GL_initialize(ML_interface, trace_error) {
 
 function emulate_GL_macros(context) {
     "use strict";
+    var triangle = [-1, -1, +1, -1, 0, +1];
 
 /*
  * known enumerations for OpenGL error codes
@@ -125,6 +126,20 @@ function emulate_GL_macros(context) {
     GL_UNSIGNED_SHORT_5_6_5 = context.UNSIGNED_SHORT_5_6_5;
     GL_UNSIGNED_SHORT_4_4_4_4 = context.UNSIGNED_SHORT_4_4_4_4;
     GL_UNSIGNED_SHORT_5_5_5_1 = context.UNSIGNED_SHORT_5_5_5_1;
+
+    GL_UNSIGNED_SHORT = context.UNSIGNED_SHORT;
+    GL_UNSIGNED_INT = context.UNSIGNED_INT;
+
+/*
+ * geometric primitives for drawing in vector space
+ */
+    GL_POINTS = context.POINTS;
+    GL_LINE_STRIP = context.LINE_STRIP;
+    GL_LINE_LOOP = context.LINE_LOOP;
+    GL_LINES = context.LINES;
+    GL_TRIANGLE_STRIP = context.TRIANGLE_STRIP;
+    GL_TRIANGLE_FAN = context.TRIANGLE_FAN;
+    GL_TRIANGLES = context.TRIANGLES;
 
 /*
  * capability enumerations for glIsEnabled, glEnable and glDisable
@@ -182,6 +197,16 @@ var GL_FALSE,
     GL_UNSIGNED_SHORT_5_6_5,
     GL_UNSIGNED_SHORT_4_4_4_4,
     GL_UNSIGNED_SHORT_5_5_5_1,
+    GL_UNSIGNED_SHORT,
+    GL_UNSIGNED_INT,
+
+    GL_POINTS,
+    GL_LINE_STRIP,
+    GL_LINE_LOOP,
+    GL_LINES,
+    GL_TRIANGLE_STRIP,
+    GL_TRIANGLE_FAN,
+    GL_TRIANGLES,
 
     GL_BLEND,
     GL_CULL_FACE,
@@ -271,6 +296,19 @@ function glViewport(x, y, width, height) {
     "use strict";
 
     GL.viewport(x, y, width, height);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+
+function glDrawArrays(mode, first, count) {
+    "use strict";
+
+    GL.drawArrays(mode, first, count);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+function glDrawElements(mode, count, type, indices) {
+    "use strict";
+
+    GL.drawElements(mode, count, type, indices);
     return;
 } /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
 
