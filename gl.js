@@ -350,7 +350,7 @@ function glColor4f(red, green, blue, alpha) {
 
 function glRect(x1, y1, x2, y2) {
     "use strict";
-    var viewport_state = [];
+    var viewport_state = [], old_color = [], old_scissor = [];
     var scissoring_enabled;
     var raster_x1, raster_y1, raster_x2, raster_y2, delta_x, delta_y;
     var temporary;
@@ -376,6 +376,9 @@ function glRect(x1, y1, x2, y2) {
     }
 
     viewport_state = GL.getParameter(GL.VIEWPORT);
+    old_scissor = GL.getParameter(GL.SCISSOR_BOX);
+    old_color = GL.getParameter(GL.COLOR_CLEAR_VALUE);
+
     raster_x1 = (x1 - ortho_x1)/2 * (viewport_state[2] - 0);
     raster_y1 = (y1 - ortho_y1)/2 * (viewport_state[3] - 0);
     raster_x2 = (x2 + ortho_x2)/2 * (viewport_state[2] - 0);
@@ -388,6 +391,8 @@ function glRect(x1, y1, x2, y2) {
     glClearColor(color_red, color_green, color_blue, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glScissor(old_scissor[0], old_scissor[1], old_scissor[2], old_scissor[3]);
+    glClearColor(old_color[0], old_color[1], old_color[2], old_color[3]);
     if (scissoring_enabled === GL_FALSE) {
         glDisable(GL_SCISSOR_TEST);
     }
