@@ -24,7 +24,7 @@ function main_GL() {
 
     glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
     glColor4f(1, 0, 0, 1);
-    glRect(-0.5, -0.5, +0.5, +0.5);
+    glRect(0, 0, 1, 1);
 
     glFlush();
     glFinish();
@@ -373,9 +373,9 @@ function glRect(x1, y1, x2, y2) {
 
     viewport_state = GL.getParameter(GL.VIEWPORT);
     raster_x1 = (x1 - ortho_x1)/2 * (viewport_state[2] - 1);
-    raster_y1 = (y1 - ortho_y1)/2 * (viewport_state[2] - 1);
-    raster_x2 = (2*ortho_x2 - x2)/2 * (viewport_state[3] - 1);
-    raster_y2 = (2*ortho_y2 - y2)/2 * (viewport_state[3] - 1);
+    raster_y1 = (y1 - ortho_y1)/2 * (viewport_state[3] - 1);
+    raster_x2 = (x2 + ortho_x2)/2 * (viewport_state[2] - 1);
+    raster_y2 = (y2 + ortho_y2)/2 * (viewport_state[3] - 1);
 
     delta_x = raster_x2 - raster_x1;
     delta_y = raster_y2 - raster_y1;
