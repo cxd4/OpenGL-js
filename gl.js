@@ -31,6 +31,9 @@ function main_GL() {
     glColor4f(1, 1, 0, 0);
     glRect(-1, 0, 0, 1);
 
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+
     glFlush();
     glFinish();
 
@@ -142,6 +145,15 @@ function emulate_GL_macros(context) {
     GL_TRIANGLES = context.TRIANGLES;
 
 /*
+ * vertex attribute caches...position, color, normalization, raster and CI
+ */
+    GL_VERTEX_ARRAY = context.VERTEX_ARRAY;
+    GL_COLOR_ARRAY = context.COLOR_ARRAY;
+    GL_NORMAL_ARRAY = context.NORMAL_ARRAY;
+    GL_TEXTURE_COORD_ARRAY = context.TEXTURE_COORD_ARRAY;
+    GL_INDEX_ARRAY = context.INDEX_ARRAY;
+
+/*
  * capability enumerations for glIsEnabled, glEnable and glDisable
  *
  * These were all taken from the OpenGL ES 2.0 reference, but a couple of
@@ -207,6 +219,12 @@ var GL_FALSE,
     GL_TRIANGLE_STRIP,
     GL_TRIANGLE_FAN,
     GL_TRIANGLES,
+
+    GL_VERTEX_ARRAY,
+    GL_COLOR_ARRAY,
+    GL_NORMAL_ARRAY,
+    GL_TEXTURE_COORD_ARRAY,
+    GL_INDEX_ARRAY,
 
     GL_BLEND,
     GL_CULL_FACE,
@@ -463,6 +481,61 @@ function glRect(x1, y1, x2, y2) {
     if (scissoring_enabled === GL_FALSE) {
         glDisable(GL_SCISSOR_TEST);
     }
+    return;
+}
+
+function glEnableClientState(capability) {
+    "use strict";
+    var index;
+
+    switch (capability) {
+    case GL_VERTEX_ARRAY:
+        index = 0;
+        break;
+    case GL_COLOR_ARRAY:
+        index = 1;
+        break;
+    case GL_NORMAL_ARRAY:
+        index = 2;
+        break;
+    case GL_TEXTURE_COORD_ARRAY:
+        index = 3;
+        break;
+    case GL_INDEX_ARRAY:
+        index = 4;
+        break;
+    default:
+        trace_error(GL_INVALID_VALUE);
+        return;
+    }
+    GL.enableVertexAttribArray(index);
+    return;
+}
+function glDisableClientState(capability) {
+    "use strict";
+    var index;
+
+    switch (capability) {
+    case GL_VERTEX_ARRAY:
+        index = 0;
+        break;
+    case GL_COLOR_ARRAY:
+        index = 1;
+        break;
+    case GL_NORMAL_ARRAY:
+        index = 2;
+        break;
+    case GL_TEXTURE_COORD_ARRAY:
+        index = 3;
+        break;
+    case GL_INDEX_ARRAY:
+        index = 4;
+        break;
+    default:
+        trace_error(GL_INVALID_VALUE);
+        return;
+    }
+    GL.disableVertexAttribArray(index);
     return;
 }
 
