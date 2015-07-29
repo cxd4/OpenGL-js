@@ -228,6 +228,19 @@ var GL_FALSE,
     GL_ACCUM_BUFFER_BIT,
     GL_STENCIL_BUFFER_BIT;
 
+function glDrawArrays(mode, first, count) {
+    "use strict";
+
+    GL.drawArrays(mode, first, count);
+    return;
+} /* All versions of OpenGL since 1.1 have this function. */
+function glDrawElements(mode, count, type, indices) {
+    "use strict";
+
+    GL.drawElements(mode, count, type, indices);
+    return;
+} /* All versions of OpenGL since 1.1 have this function. */
+
 function glDisable(capability) {
     "use strict";
 
@@ -296,19 +309,6 @@ function glViewport(x, y, width, height) {
     "use strict";
 
     GL.viewport(x, y, width, height);
-    return;
-} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
-
-function glDrawArrays(mode, first, count) {
-    "use strict";
-
-    GL.drawArrays(mode, first, count);
-    return;
-} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
-function glDrawElements(mode, count, type, indices) {
-    "use strict";
-
-    GL.drawElements(mode, count, type, indices);
     return;
 } /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
 
