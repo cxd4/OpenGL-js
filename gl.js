@@ -114,6 +114,19 @@ function emulate_GL_macros(context) {
     GL_OUT_OF_MEMORY = context.OUT_OF_MEMORY;
 
 /*
+ * pixel transfer mode enumerations
+ * The only 100% universally portable pair is GL_RGBA with GL_UNSIGNED_BYTE.
+ */
+    GL_RGB = context.RGB;
+    GL_ALPHA = context.ALPHA;
+    GL_RGBA = context.RGBA;
+
+    GL_UNSIGNED_BYTE = context.UNSIGNED_BYTE;
+    GL_UNSIGNED_SHORT_5_6_5 = context.UNSIGNED_SHORT_5_6_5;
+    GL_UNSIGNED_SHORT_4_4_4_4 = context.UNSIGNED_SHORT_4_4_4_4;
+    GL_UNSIGNED_SHORT_5_5_5_1 = context.UNSIGNED_SHORT_5_5_5_1;
+
+/*
  * capability enumerations for glIsEnabled, glEnable and glDisable
  *
  * These were all taken from the OpenGL ES 2.0 reference, but a couple of
@@ -160,6 +173,15 @@ var GL_FALSE,
     GL_STACK_OVERFLOW,
     GL_STACK_UNDERFLOW,
     GL_OUT_OF_MEMORY,
+
+    GL_RGB,
+    GL_ALPHA,
+    GL_RGBA,
+
+    GL_UNSIGNED_BYTE,
+    GL_UNSIGNED_SHORT_5_6_5,
+    GL_UNSIGNED_SHORT_4_4_4_4,
+    GL_UNSIGNED_SHORT_5_5_5_1,
 
     GL_BLEND,
     GL_CULL_FACE,
@@ -249,6 +271,13 @@ function glViewport(x, y, width, height) {
     "use strict";
 
     GL.viewport(x, y, width, height);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+
+function glReadPixels(x, y, width, height, format, type, data) {
+    "use strict";
+
+    GL.readPixels(x, y, width, height, format, type, data.v);
     return;
 } /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
 
@@ -396,5 +425,50 @@ function glRect(x1, y1, x2, y2) {
     if (scissoring_enabled === GL_FALSE) {
         glDisable(GL_SCISSOR_TEST);
     }
+    return;
+}
+
+function glDrawPixels(width, height, format, type, data) {
+/*
+ * Against all favorable odds for performance and quality, glDrawPixels is
+ * somewhat desirable to have.  However, there are way, way too many factors
+ * involved for me to make a function to emulate it as a deprecated function.
+ *
+ * For starters, it depends on what was set with glPixelStore, glPixelMap,
+ * glPixelTransfer, glPixelZoom and glRasterPos*, which are all deprecated
+ * functions as well and have a ton of possible inputs to care for.
+ *
+ * Ideally, glDrawPixels **COULD** be emulated by using glClear w/ glScissor
+ * on a pixel-by-pixel basis.  Such a design would be painfully slow, but
+ * then again so is the original deprecated function anyway.
+ */
+    switch (format) {
+ // case GL_RGBA:
+    default:
+        trace(GL_INVALID_OPERATION); /* not implemented (yet?), sorry */
+    }
+    return;
+}
+
+function glCopyPixels(x, y, width, height, type) {
+    var frame_buffer = [];
+    var format;
+
+/*
+ * In theory, a call to glCopyPixels is a more direct version of doing a call
+ * first to glReadPixels and then glDrawPixels, but I have not tested this.
+ */
+    switch (type) {
+    case GL.DEPTH:
+        format = GL.DEPTH_COMPONENT;
+        break;
+    case GL.STENCIL:
+        format = GL.STENCIL_INDEX;
+        break;
+    default:
+        format = GL.RGBA;
+    }
+    glReadPixels(x, y, width, height, format, type, frame_buffer);
+    glDrawPixels(width, height, format, type, frame_buffer);
     return;
 }
