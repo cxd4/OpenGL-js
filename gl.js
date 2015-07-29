@@ -16,6 +16,7 @@ function trace(message) {
  */
 function main_GL() {
     "use strict";
+    var triangle = [-1, -1, 0, 1, +1, -1, 0, 1, 0, +1, 0, 1];
     var error_code;
 
     glClearColor(0.00, 0.00, 0.00, 1.00);
@@ -101,7 +102,6 @@ function GL_initialize(ML_interface, trace_error) {
 
 function emulate_GL_macros(context) {
     "use strict";
-    var triangle = [-1, -1, +1, -1, 0, +1];
 
 /*
  * known enumerations for OpenGL error codes
