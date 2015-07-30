@@ -19,9 +19,10 @@ function main_GL() {
     var triangle = [-1, -1, 0, 1, +1, -1, 0, 1, 0, +1, 0, 1];
     var error_code;
 
-    glClearColor(0.00, 0.00, 0.00, 1.00);
+    glClearColor(0.00, 0.00, 0.00, 0.50);
     glClear(GL_COLOR_BUFFER_BIT);
 
+/*
     glColor4f(1, 0, 0, 1);
     glRect(-1, -1, 0, 0);
     glColor4f(0, 1, 0, 1);
@@ -30,8 +31,11 @@ function main_GL() {
     glRect(0, 0, 1, 1);
     glColor4f(1, 1, 0, 0);
     glRect(-1, 0, 0, 1);
+*/
 
     glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(4, GL_FLOAT, 0, triangle);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableClientState(GL_VERTEX_ARRAY);
 
     glFlush();
@@ -130,8 +134,11 @@ function emulate_GL_macros(context) {
     GL_UNSIGNED_SHORT_4_4_4_4 = context.UNSIGNED_SHORT_4_4_4_4;
     GL_UNSIGNED_SHORT_5_5_5_1 = context.UNSIGNED_SHORT_5_5_5_1;
 
+    GL_BYTE = context.BYTE;
     GL_UNSIGNED_SHORT = context.UNSIGNED_SHORT;
+    GL_SHORT = context.SHORT;
     GL_UNSIGNED_INT = context.UNSIGNED_INT;
+    GL_FLOAT = context.FLOAT;
 
 /*
  * geometric primitives for drawing in vector space
@@ -205,12 +212,15 @@ var GL_FALSE,
     GL_ALPHA,
     GL_RGBA,
 
+    GL_BYTE,
     GL_UNSIGNED_BYTE,
     GL_UNSIGNED_SHORT_5_6_5,
     GL_UNSIGNED_SHORT_4_4_4_4,
     GL_UNSIGNED_SHORT_5_5_5_1,
+    GL_SHORT,
     GL_UNSIGNED_SHORT,
     GL_UNSIGNED_INT,
+    GL_FLOAT,
 
     GL_POINTS,
     GL_LINE_STRIP,
@@ -484,6 +494,17 @@ function glRect(x1, y1, x2, y2) {
     return;
 }
 
+/*
+ * universal functions since OpenGL 1.1 and available on OpenGL ES 1.x,
+ * but revised in the GL3 deprecation to different function names:
+ *     * glVertexPointer
+ *     * glColorPointer
+ *     * glTexCoordPointer
+ *     * glNormalPointer
+ *     * glIndexPointer
+ *     * glEnableClientState
+ *     * glDisableClientState
+ */
 var buffer_objects = [];
 function glEnableClientState(capability) {
     "use strict";
@@ -541,6 +562,18 @@ function glDisableClientState(capability) {
     GL.disableVertexAttribArray(index);
     GL.bindBuffer(GL.ARRAY_BUFFER, null);
     GL.deleteBuffer(buffer_objects[index]);
+    return;
+}
+function glVertexPointer(size, type, stride, pointer) {
+    "use strict";
+    var test_tri = [
+        -1, -1, 0, 1,
+         0, +1, 0, 1,
+        +1, -1, 0, 1
+    ];
+
+    GL.bufferData(GL.ARRAY_BUFFER, /*pointer*/test_tri, GL.STREAM_DRAW);
+    GL.vertexAttribPointer(0, size, type, GL_FALSE, stride, 0);
     return;
 }
 
