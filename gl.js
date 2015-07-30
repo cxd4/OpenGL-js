@@ -100,7 +100,7 @@ function GL_initialize(ML_interface, trace_error) {
             trace_error("Unable to initialize WebGL.");
             return;
         }
-        trace_error("Warning:  Experimental WebGL implementation.");
+     // trace_error("Warning:  Experimental WebGL implementation.");
     }
     emulate_GL_macros(GL);
     main_GL();
