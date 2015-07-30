@@ -3,7 +3,7 @@ function main_GL() {
     var triangle = [-1, -1, 0, 1, +1, -1, 0, 1, 0, +1, 0, 1];
     var error_code;
 
-    glClearColor(0.00, 0.00, 0.00, 0.50);
+    glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
 /*
