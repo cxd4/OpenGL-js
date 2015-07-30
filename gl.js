@@ -41,10 +41,10 @@ function main_GL() {
     glFlush();
     glFinish();
 
-    trace(glGetString(GL_VENDOR));
+ // trace(glGetString(GL_VENDOR));
     trace(glGetString(GL_RENDERER));
     trace(glGetString(GL_VERSION));
-    trace(glGetString(GL_EXTENSIONS));
+ // trace(glGetString(GL_EXTENSIONS));
 
     error_code = glGetError();
     if (error_code !== GL_NO_ERROR) {
