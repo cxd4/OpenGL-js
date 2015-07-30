@@ -484,6 +484,7 @@ function glRect(x1, y1, x2, y2) {
     return;
 }
 
+var buffer_objects = [];
 function glEnableClientState(capability) {
     "use strict";
     var index;
@@ -508,6 +509,8 @@ function glEnableClientState(capability) {
         trace_error(GL_INVALID_VALUE);
         return;
     }
+    buffer_objects[index] = GL.createBuffer();
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[index]);
     GL.enableVertexAttribArray(index);
     return;
 }
@@ -536,6 +539,8 @@ function glDisableClientState(capability) {
         return;
     }
     GL.disableVertexAttribArray(index);
+    GL.bindBuffer(GL.ARRAY_BUFFER, null);
+    GL.deleteBuffer(buffer_objects[index]);
     return;
 }
 
