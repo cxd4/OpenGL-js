@@ -461,6 +461,18 @@ function glRect(x1, y1, x2, y2) {
  *     * glDisableClientState
  */
 var buffer_objects = [];
+var dummy_vtx, dummy_frag;
+
+var dummy_scripts = [
+   "attribute vec4 pos;"+
+   "void main() {"+
+   "    gl_Position = vec4(pos);"+
+   "}",
+
+   "void main() {"+
+   "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"+
+   "}"
+];
 function glEnableClientState(capability) {
     "use strict";
     var index;
@@ -488,6 +500,15 @@ function glEnableClientState(capability) {
     buffer_objects[index] = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[index]);
     GL.enableVertexAttribArray(index);
+
+    if (dummy_vtx == 0) {
+        dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
+    }
+    if (dummy_frag == 0) {
+        dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
+    }
+    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+    GL.shaderSource(dummy_frag, dummy_scripts[1]);
     return;
 }
 function glDisableClientState(capability) {
@@ -517,6 +538,15 @@ function glDisableClientState(capability) {
     GL.disableVertexAttribArray(index);
     GL.bindBuffer(GL.ARRAY_BUFFER, null);
     GL.deleteBuffer(buffer_objects[index]);
+
+    if (dummy_vtx != 0) {
+        GL.deleteShader(dummy_vtx);
+        dummy_vtx = 0;
+    }
+    if (dummy_frag != 0) {
+        GL.deleteShader(dummy_frag);
+        dummy_frag = 0;
+    }
     return;
 }
 function glVertexPointer(size, type, stride, pointer) {
