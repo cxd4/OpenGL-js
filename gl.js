@@ -464,7 +464,7 @@ function glRect(x1, y1, x2, y2) {
  *     * glDisableClientState
  */
 var buffer_objects = [];
-var dummy_vtx, dummy_frag;
+var dummy_vtx = 0, dummy_frag = 0;
 
 var dummy_scripts = [
    "attribute vec4 pos;"+
@@ -501,10 +501,10 @@ function glEnableClientState(capability) {
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[index]);
     GL.enableVertexAttribArray(index);
 
-    if (dummy_vtx == 0) {
+    if (dummy_vtx === 0) {
         dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
     }
-    if (dummy_frag == 0) {
+    if (dummy_frag === 0) {
         dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
     }
     GL.shaderSource(dummy_vtx, dummy_scripts[0]);
