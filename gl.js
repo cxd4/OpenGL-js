@@ -216,8 +216,29 @@ var GL_FALSE,
 
 function glDrawArrays(mode, first, count) {
     "use strict";
+    var compiled_vertices, compiled_fragments;
+    var program;
 
+    compiled_vertices = GL.getShaderParameter(dummy_vtx, GL.COMPILE_STATUS);
+    compiled_fragments = GL.getShaderParameter(dummy_frag, GL.COMPILE_STATUS);
+    if (!compiled_vertices) {
+        GL.compileShader(dummy_vtx);
+    }
+    if (!compiled_fragments) {
+        GL.compileShader(dummy_frag);
+    }
+
+    program = GL.createProgram();
+    GL.attachShader(program, dummy_vtx);
+    GL.attachShader(program, dummy_frag);
+    GL.linkProgram(program);
+
+    GL.useProgram(program);
     GL.drawArrays(mode, first, count);
+
+    GL.detachShader(program, dummy_vtx);
+    GL.detachShader(program, dummy_frag);
+    GL.deleteProgram(program);
     return;
 } /* All versions of OpenGL since 1.1 have this function. */
 function glDrawElements(mode, count, type, indices) {
