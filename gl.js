@@ -398,6 +398,16 @@ function glColor4f(red, green, blue, alpha) {
     color_blue = blue;
 
     color_coverage = alpha;
+
+    dummy_scripts[1] =
+        "void main(void) {"+
+        "    gl_FragColor = vec4(" +
+                 color_red + ", " +
+                 color_green + ", " +
+                 color_blue + ", " +
+                 color_coverage +
+            ");"+
+        "}";
     return;
 }
 
