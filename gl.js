@@ -468,11 +468,11 @@ var dummy_vtx = 0, dummy_frag = 0;
 
 var dummy_scripts = [
    "attribute vec4 pos;"+
-   "void main() {"+
+   "void main(void) {"+
    "    gl_Position = vec4(pos);"+
    "}",
 
-   "void main() {"+
+   "void main(void) {"+
    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"+
    "}"
 ];
