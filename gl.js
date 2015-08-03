@@ -107,13 +107,14 @@ function emulate_GL_macros(context) {
     GL_TRIANGLES = context.TRIANGLES;
 
 /*
- * vertex attribute caches...position, color, normalization, raster and CI
+ * vertex attribute caches...position, color, normalization, and raster
+ * Palette-based (color table) rendering is not available on GL ES 1.
  */
     GL_VERTEX_ARRAY = context.VERTEX_ARRAY;
     GL_COLOR_ARRAY = context.COLOR_ARRAY;
     GL_NORMAL_ARRAY = context.NORMAL_ARRAY;
     GL_TEXTURE_COORD_ARRAY = context.TEXTURE_COORD_ARRAY;
-    GL_INDEX_ARRAY = context.INDEX_ARRAY;
+ // GL_INDEX_ARRAY = context.INDEX_ARRAY;
 
 /*
  * capability enumerations for glIsEnabled, glEnable and glDisable
@@ -189,7 +190,6 @@ var GL_FALSE,
     GL_COLOR_ARRAY,
     GL_NORMAL_ARRAY,
     GL_TEXTURE_COORD_ARRAY,
-    GL_INDEX_ARRAY,
 
     GL_BLEND,
     GL_CULL_FACE,
@@ -490,9 +490,6 @@ function glEnableClientState(capability) {
     case GL_TEXTURE_COORD_ARRAY:
         index = 3;
         break;
-    case GL_INDEX_ARRAY:
-        index = 4;
-        break;
     default:
         trace_error(GL_INVALID_VALUE);
         return;
@@ -527,9 +524,6 @@ function glDisableClientState(capability) {
         break;
     case GL_TEXTURE_COORD_ARRAY:
         index = 3;
-        break;
-    case GL_INDEX_ARRAY:
-        index = 4;
         break;
     default:
         trace_error(GL_INVALID_VALUE);
