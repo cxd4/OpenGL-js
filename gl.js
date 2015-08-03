@@ -548,9 +548,31 @@ function glDisableClientState(capability) {
 }
 function glVertexPointer(size, type, stride, pointer) {
     "use strict";
+    var vector_size;
+    var coordinates;
 
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
     GL.vertexAttribPointer(0, size, type, GL_FALSE, stride, 0);
+
+    switch (size) {
+    case 2: // P(x, y, 0, 1)
+        vector_size = "vec2";
+        coordinates = "pos, 0, 1";
+        break;
+    case 3: // P(x, y, z, 1)
+        vector_size = "vec3";
+        coordinates = "pos, 1";
+        break;
+    case 4: // P(x, y, z, w)
+        vector_size = "vec4";
+        coordinates = "pos";
+        break;
+    }
+    dummy_scripts[0] =
+        "attribute " + vector_size + " pos;"+
+        "void main(void) {"+
+        "    gl_Position = vec4(" + coordinates + ");"+
+        "}";
     return;
 }
 
