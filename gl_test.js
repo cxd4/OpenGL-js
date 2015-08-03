@@ -32,7 +32,7 @@ function main_GL() {
 
     error_code = glGetError();
     if (error_code !== GL_NO_ERROR) {
-        trace_error(error_code);
+        trace_GL_error("OpenGL error", error_code);
     }
     return;
 }

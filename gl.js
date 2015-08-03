@@ -8,34 +8,37 @@ function trace(message) {
     return;
 }
 
-function trace_error(error_code) {
+function trace_GL_error(message, error_code) {
     "use strict";
+    var error_message;
 
     switch (error_code) {
     case GL_NO_ERROR:
-        trace("GL_NO_ERROR");
+        error_message = "GL_NO_ERROR";
         return;
     case GL_INVALID_ENUM:
-        trace("GL_INVALID_ENUM");
+        error_message = "GL_INVALID_ENUM";
         return;
     case GL_INVALID_VALUE:
-        trace("GL_INVALID_VALUE");
+        error_message = "GL_INVALID_VALUE";
         return;
     case GL_INVALID_OPERATION:
-        trace("GL_INVALID_OPERATION");
+        error_message = "GL_INVALID_OPERATION";
         return;
     case GL_STACK_OVERFLOW:
-        trace("GL_STACK_OVERFLOW");
+        error_message = "GL_STACK_OVERFLOW";
         return;
     case GL_STACK_UNDERFLOW:
-        trace("GL_STACK_UNDERFLOW");
+        error_message = "GL_STACK_UNDERFLOW";
         return;
     case GL_OUT_OF_MEMORY:
-        trace("GL_OUT_OF_MEMORY");
+        error_message = "GL_OUT_OF_MEMORY";
         return;
     default:
-        trace("GL_UNKNOWN_ERROR");
+        error_message = "GL_UNKNOWN_ERROR";
     }
+    trace(message + ":  " + error_message);
+    return;
 }
 
 function GL_initialize(ML_interface, trace_error) {
