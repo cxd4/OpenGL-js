@@ -521,13 +521,8 @@ function glDisableClientState(capability) {
 }
 function glVertexPointer(size, type, stride, pointer) {
     "use strict";
-    var test_tri = [
-        -1, -1, 0, 1,
-         0, +1, 0, 1,
-        +1, -1, 0, 1
-    ];
 
-    GL.bufferData(GL.ARRAY_BUFFER, /*pointer*/test_tri, GL.STREAM_DRAW);
+    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
     GL.vertexAttribPointer(0, size, type, GL_FALSE, stride, 0);
     return;
 }
