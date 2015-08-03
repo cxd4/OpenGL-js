@@ -5,6 +5,11 @@ function main_GL() {
         +1, -1, 0, 1,
          0, +1, 0, 1
     ];
+    var colors = [
+        1, 0, 0, 1,
+        0, 1, 0, 1,
+        0, 0, 1, 1
+    ];
     var error_code;
 
     glClearColor(0.00, 0.00, 0.00, 0.00);
@@ -23,9 +28,15 @@ function main_GL() {
     glColor4f(0.25, 0.00, 0.50, 1.00);
 
     glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
     glVertexPointer(4, GL_FLOAT, 0, triangle);
+ // glColorPointer(4, GL_FLOAT, 0, colors);
+
     glDrawArrays(GL_TRIANGLES, 0, 3);
+
     glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 
     glFlush();
     glFinish();
