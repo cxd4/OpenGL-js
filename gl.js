@@ -503,7 +503,7 @@ var dummy_scripts = [
    "varying vec4 out_color;"+
    "void main(void) {"+
    "    gl_Position = vec4(pos);"+
-   "    out_color = vec4(col);"+
+// "    out_color = vec4(col);"+
    "}",
 
    "attribute vec4 out_color;"+
