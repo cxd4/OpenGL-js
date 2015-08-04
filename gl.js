@@ -500,13 +500,13 @@ var dummy_vtx = 0, dummy_frag = 0;
 var dummy_scripts = [
    "attribute vec4 pos;"+
    "attribute vec4 col;"+
-   "varying vec4 out_color;"+
+   "varying lowp vec4 out_color;"+
    "void main(void) {"+
    "    gl_Position = vec4(pos);"+
 // "    out_color = vec4(col);"+
    "}",
 
-   "attribute vec4 out_color;"+
+   "varying lowp vec4 out_color;"+
    "void main(void) {"+
    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"+
      // gl_FragColor = vec4(out_color);
@@ -607,7 +607,7 @@ function glVertexPointer(size, type, stride, pointer) {
     dummy_scripts[0] =
         "attribute " + vector_size + " pos;"+
         "attribute " + "vec4" + " col;"+
-        "varying " + "vec4" + " out_color;"+
+        "varying lowp " + "vec4" + " out_color;"+
         "void main(void) {"+
         "    gl_Position = vec4(" + coordinates + ");"+
         "    out_color = vec4(col);"+
@@ -633,7 +633,7 @@ function glColorPointer(size, type, stride, pointer) {
         break;
     }
     dummy_scripts[1] =
-        "attribute " + vector_size + " out_color;"+
+        "varying lowp " + vector_size + " out_color;"+
         "void main(void) {"+
         "    gl_FragColor = vec4(" + color_RGB_A + ");"+
         "}";
