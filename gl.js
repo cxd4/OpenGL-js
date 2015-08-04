@@ -1,4 +1,5 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
+var dummy_shader_program = 0;
 
 function trace(message) {
     "use strict";
@@ -217,7 +218,6 @@ var GL_FALSE,
 function glDrawArrays(mode, first, count) {
     "use strict";
     var compiled_vertices, compiled_fragments;
-    var program;
 
     compiled_vertices = GL.getShaderParameter(dummy_vtx, GL.COMPILE_STATUS);
     compiled_fragments = GL.getShaderParameter(dummy_frag, GL.COMPILE_STATUS);
@@ -228,17 +228,15 @@ function glDrawArrays(mode, first, count) {
         GL.compileShader(dummy_frag);
     }
 
-    program = GL.createProgram();
-    GL.attachShader(program, dummy_vtx);
-    GL.attachShader(program, dummy_frag);
-    GL.linkProgram(program);
+    GL.attachShader(dummy_shader_program, dummy_vtx);
+    GL.attachShader(dummy_shader_program, dummy_frag);
 
-    GL.useProgram(program);
+    GL.linkProgram(dummy_shader_program);
+    GL.useProgram(dummy_shader_program);
     GL.drawArrays(mode, first, count);
 
-    GL.detachShader(program, dummy_vtx);
-    GL.detachShader(program, dummy_frag);
-    GL.deleteProgram(program);
+    GL.detachShader(dummy_shader_program, dummy_vtx);
+    GL.detachShader(dummy_shader_program, dummy_frag);
     return;
 } /* All versions of OpenGL since 1.1 have this function. */
 function glDrawElements(mode, count, type, indices) {
@@ -515,6 +513,12 @@ var dummy_scripts = [
 function glEnableClientState(capability) {
     "use strict";
     var index;
+
+ // if (GL.isProgram(dummy_shader_program)) { // JavaScript bug in FireFox??
+    if (dummy_shader_program > 0) {
+        GL.deleteProgram(dummy_shader_program);
+    }
+    dummy_shader_program = GL.createProgram();
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
