@@ -25,7 +25,7 @@ function main_GL() {
     glColor4f(1, 1, 0, 0);
     glRect(-1, 0, 0, 1);
 */
-    glColor4f(0.25, 0.00, 0.50, 1.00);
+ // glColor4f(0.25, 0.00, 0.50, 1.00);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
