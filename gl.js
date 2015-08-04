@@ -506,7 +506,7 @@ var dummy_scripts = [
    "    out_color = vec4(col);"+
    "}",
 
-   "attribute vec4 out_color;"
+   "attribute vec4 out_color;"+
    "void main(void) {"+
    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"+
      // gl_FragColor = vec4(out_color);
