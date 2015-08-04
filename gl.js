@@ -499,12 +499,17 @@ var dummy_vtx = 0, dummy_frag = 0;
 
 var dummy_scripts = [
    "attribute vec4 pos;"+
+   "attribute vec4 col;"+
+   "varying vec4 out_color;"+
    "void main(void) {"+
    "    gl_Position = vec4(pos);"+
+   "    out_color = vec4(col);"+
    "}",
 
+   "attribute vec4 out_color;"
    "void main(void) {"+
    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"+
+     // gl_FragColor = vec4(out_color);
    "}"
 ];
 function glEnableClientState(capability) {
@@ -601,8 +606,36 @@ function glVertexPointer(size, type, stride, pointer) {
     }
     dummy_scripts[0] =
         "attribute " + vector_size + " pos;"+
+        "attribute " + "vec4" + " col;"+
+        "varying " + "vec4" + " out_color;"+
         "void main(void) {"+
         "    gl_Position = vec4(" + coordinates + ");"+
+        "    out_color = vec4(col);"+
+        "}";
+    return;
+}
+function glColorPointer(size, type, stride, pointer) {
+    "use strict";
+    var vector_size;
+    var color_RGB_A;
+
+    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
+    GL.vertexAttribPointer(1, size, type, GL_FALSE, stride, 0);
+
+    switch (size) {
+    case 3: // r, g, b, 1
+        vector_size = "vec3";
+        color_RGB_A = "out_color, 1";
+        break;
+    case 4: // r, g, b, a
+        vector_size = "vec4";
+        color_RGB_A = "out_color";
+        break;
+    }
+    dummy_scripts[1] =
+        "attribute " + vector_size + " out_color;"+
+        "void main(void) {"+
+        "    gl_FragColor = vec4(" + color_RGB_A + ");"+
         "}";
     return;
 }

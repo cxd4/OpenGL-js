@@ -31,7 +31,7 @@ function main_GL() {
     glEnableClientState(GL_COLOR_ARRAY);
 
     glVertexPointer(4, GL_FLOAT, 0, triangle);
- // glColorPointer(4, GL_FLOAT, 0, colors);
+    glColorPointer(4, GL_FLOAT, 0, colors);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
