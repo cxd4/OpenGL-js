@@ -1,16 +1,25 @@
 function main_GL() {
     "use strict";
-    var triangle = [
-        -1, -1, 0, 1,
-        +1, -1, 0, 1,
-         0, +1, 0, 1
-    ];
+    var x = 0, y = 1, z = 2, w = 3;
+    var r = 0, g = 1, b = 2, a = 3;
+    var coordinates_per_vertex = 2;
+
+    var triangle = [];
     var colors = [
         1, 0, 0, 1,
         0, 1, 0, 1,
         0, 0, 1, 1
     ];
     var error_code;
+
+    triangle[0*coordinates_per_vertex + x] = 0.0;
+    triangle[0*coordinates_per_vertex + y] = 1.0;
+
+    triangle[1*coordinates_per_vertex + x] = -Math.sqrt(3) / 2;
+    triangle[1*coordinates_per_vertex + y] = -0.5;
+
+    triangle[2*coordinates_per_vertex + x] = +Math.sqrt(3) / 2;
+    triangle[2*coordinates_per_vertex + y] = -0.5;
 
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -30,7 +39,7 @@ function main_GL() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
-    glVertexPointer(4, GL_FLOAT, 0, triangle);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
     glColorPointer(4, GL_FLOAT, 0, colors);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
