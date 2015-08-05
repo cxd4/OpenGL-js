@@ -494,6 +494,8 @@ function glRect(x1, y1, x2, y2) {
  */
 var buffer_objects = [];
 var dummy_vtx = 0, dummy_frag = 0;
+var dummy_ID_pos = 0,
+    dummy_ID_col = 1;
 
 var dummy_scripts = [
    "attribute vec4 pos;"+
@@ -522,10 +524,12 @@ function glEnableClientState(capability) {
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
-        index = 0;
+        dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
+        index = dummy_ID_pos;
         break;
     case GL_COLOR_ARRAY:
-        index = 1;
+        dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
+        index = dummy_ID_col;
         break;
     case GL_NORMAL_ARRAY:
         index = 2;
@@ -557,10 +561,10 @@ function glDisableClientState(capability) {
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
-        index = 0;
+        index = dummy_ID_pos;
         break;
     case GL_COLOR_ARRAY:
-        index = 1;
+        index = dummy_ID_col;
         break;
     case GL_NORMAL_ARRAY:
         index = 2;
@@ -592,7 +596,7 @@ function glVertexPointer(size, type, stride, pointer) {
     var coordinates;
 
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
-    GL.vertexAttribPointer(0, size, type, GL_FALSE, stride, 0);
+    GL.vertexAttribPointer(dummy_ID_pos, size, type, GL_FALSE, stride, 0);
 
     switch (size) {
     case 2: // P(x, y, 0, 1)
@@ -624,7 +628,7 @@ function glColorPointer(size, type, stride, pointer) {
     var color_RGB_A;
 
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
-    GL.vertexAttribPointer(1, size, type, GL_FALSE, stride, 0);
+    GL.vertexAttribPointer(dummy_ID_col, size, type, GL_FALSE, stride, 0);
 
     switch (size) {
     case 3: // r, g, b, 1
