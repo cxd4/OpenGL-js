@@ -228,15 +228,9 @@ function glDrawArrays(mode, first, count) {
         GL.compileShader(dummy_frag);
     }
 
-    GL.attachShader(dummy_shader_program, dummy_vtx);
-    GL.attachShader(dummy_shader_program, dummy_frag);
-
     GL.linkProgram(dummy_shader_program);
     GL.useProgram(dummy_shader_program);
     GL.drawArrays(mode, first, count);
-
-    GL.detachShader(dummy_shader_program, dummy_vtx);
-    GL.detachShader(dummy_shader_program, dummy_frag);
     return;
 } /* All versions of OpenGL since 1.1 have this function. */
 function glDrawElements(mode, count, type, indices) {
@@ -503,7 +497,7 @@ var dummy_scripts = [
    "varying lowp vec4 out_color;"+
    "void main(void) {"+
    "    gl_Position = vec4(pos);"+
-// "    out_color = vec4(col);"+
+   "    out_color = vec4(col);"+
    "}",
 
    "varying lowp vec4 out_color;"+
@@ -521,6 +515,24 @@ function glEnableClientState(capability) {
         GL.deleteProgram(dummy_shader_program);
     }
     dummy_shader_program = GL.createProgram();
+
+    if (dummy_vtx === 0) {
+        dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
+    }
+    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+    GL.attachShader(dummy_shader_program, dummy_vtx);
+
+    if (dummy_frag === 0) {
+        dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
+    }
+    GL.shaderSource(dummy_frag, dummy_scripts[1]);
+    GL.attachShader(dummy_shader_program, dummy_frag);
+
+    GL.compileShader(dummy_vtx);
+    GL.compileShader(dummy_frag);
+
+    GL.linkProgram(dummy_shader_program);
+    GL.useProgram(dummy_shader_program);
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
@@ -544,15 +556,6 @@ function glEnableClientState(capability) {
     buffer_objects[index] = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[index]);
     GL.enableVertexAttribArray(index);
-
-    if (dummy_vtx === 0) {
-        dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
-    }
-    if (dummy_frag === 0) {
-        dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
-    }
-    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-    GL.shaderSource(dummy_frag, dummy_scripts[1]);
     return;
 }
 function glDisableClientState(capability) {
@@ -581,10 +584,12 @@ function glDisableClientState(capability) {
     GL.deleteBuffer(buffer_objects[index]);
 
     if (dummy_vtx != 0) {
+        GL.detachShader(dummy_shader_program, dummy_vtx);
         GL.deleteShader(dummy_vtx);
         dummy_vtx = 0;
     }
     if (dummy_frag != 0) {
+        GL.detachShader(dummy_shader_program, dummy_frag);
         GL.deleteShader(dummy_frag);
         dummy_frag = 0;
     }
