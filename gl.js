@@ -26,6 +26,9 @@ function trace_GL_error(message, error_code) {
     case GL_INVALID_OPERATION:
         error_message = "GL_INVALID_OPERATION";
         return;
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+        error_message = "GL_INVALID_FRAMEBUFFER_OPERATION";
+        return;
     case GL_OUT_OF_MEMORY:
         error_message = "GL_OUT_OF_MEMORY";
         return;
@@ -72,6 +75,7 @@ function emulate_GL_macros(context) {
     GL_INVALID_OPERATION = context.INVALID_OPERATION;
  // GL_STACK_OVERFLOW = context.STACK_OVERFLOW; // not possible with OpenGL ES
  // GL_STACK_UNDERFLOW = context.STACK_UNDERFLOW; // not possible with OpenGL ES
+    GL_INVALID_FRAMEBUFFER_OPERATION = context.INVALID_FRAMEBUFFER_OPERATION;
     GL_OUT_OF_MEMORY = context.OUT_OF_MEMORY;
 
 /*
@@ -158,6 +162,7 @@ var GL_FALSE,
     GL_INVALID_ENUM,
     GL_INVALID_VALUE,
     GL_INVALID_OPERATION,
+    GL_INVALID_FRAMEBUFFER_OPERATION,
     GL_OUT_OF_MEMORY,
 
     GL_RGB,
