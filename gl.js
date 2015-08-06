@@ -490,15 +490,15 @@ var dummy_ID_pos = 0,
     dummy_ID_col = 1;
 
 var dummy_scripts = [
-    "varying lowp vec4 out_color;" +
-            "attribute vec4 pos;" +
-            "attribute vec4 col;" +
+    "varying highp vec4 out_color;" +
+            "attribute highp vec4 pos;" +
+            "attribute highp vec4 col;" +
             "void main(void) {" +
             "    gl_Position = vec4(pos);" +
             "    out_color = vec4(col);" +
             "}",
 
-    "varying lowp vec4 out_color;" +
+    "varying highp vec4 out_color;" +
             "void main(void) {" +
             "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
             "}"
@@ -603,11 +603,11 @@ function glVertexPointer(size, type, stride, pointer) {
     switch (size) {
     case 2: // P(x, y, 0, 1)
         vector_size = "vec2";
-        coordinates = "pos, 0, 1";
+        coordinates = "pos, 0.0, 1.0";
         break;
     case 3: // P(x, y, z, 1)
         vector_size = "vec3";
-        coordinates = "pos, 1";
+        coordinates = "pos, 1.0";
         break;
     case 4: // P(x, y, z, w)
         vector_size = "vec4";
@@ -615,9 +615,9 @@ function glVertexPointer(size, type, stride, pointer) {
         break;
     }
     dummy_scripts[0] =
-            "attribute " + vector_size + " pos;" +
-            "attribute " + "vec4" + " col;" +
-            "varying lowp " + "vec4" + " out_color;" +
+            "attribute highp " + vector_size + " pos;" +
+            "attribute highp " + "vec4" + " col;" +
+            "varying highp " + "vec4" + " out_color;" +
             "void main(void) {" +
             "    gl_Position = vec4(" + coordinates + ");" +
             "    out_color = vec4(col);" +
@@ -633,14 +633,14 @@ function glColorPointer(size, type, stride, pointer) {
 
     switch (size) {
     case 3: // r, g, b, 1
-        color_RGB_A = "1";
+        color_RGB_A = "1.0";
         break;
     case 4: // r, g, b, a
         color_RGB_A = "out_color.a";
         break;
     }
     dummy_scripts[1] =
-            "varying lowp vec4 out_color;" +
+            "varying highp vec4 out_color;" +
             "void main(void) {" +
             "    gl_FragColor = vec4(out_color.rgb, " + color_RGB_A + ");" +
             "}";
