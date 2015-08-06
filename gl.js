@@ -140,7 +140,7 @@ function emulate_GL_macros(context) {
     GL_VENDOR = context.VENDOR;
     GL_RENDERER = context.RENDERER;
     GL_VERSION = context.VERSION;
-    GL_EXTENSIONS = context.EXTENSIONS;
+    GL_EXTENSIONS = 0x1F03; // universal to OpenGL and GL ES but not to WebGL
 
 /*
  * bit masks for wiping with glClear
