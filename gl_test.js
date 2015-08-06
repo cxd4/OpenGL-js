@@ -57,9 +57,9 @@ function main_GL() {
     trace(glGetString(GL_VERSION));
  // trace(glGetString(GL_EXTENSIONS));
 
-    error_code = glGetError();
-    if (error_code !== GL_NO_ERROR) {
-        trace_GL_error("OpenGL error", error_code);
-    }
+    do {
+        error_code = glGetError();
+        trace_GL_error("OpenGL error status", error_code);
+    } while (error_code != GL_NO_ERROR);
     return;
 }
