@@ -111,12 +111,14 @@ function emulate_GL_macros(context) {
 /*
  * vertex attribute caches...position, color, normalization, and raster
  * Palette-based (color table) rendering is not available on GL ES 1.
+ *
+ * These are the OpenGL ES 1.x definitions for the macros, as they were
+ * removed afterwards in order to force everyone to equip GLSL shaders.
  */
-    GL_VERTEX_ARRAY = context.VERTEX_ARRAY;
-    GL_COLOR_ARRAY = context.COLOR_ARRAY;
-    GL_NORMAL_ARRAY = context.NORMAL_ARRAY;
-    GL_TEXTURE_COORD_ARRAY = context.TEXTURE_COORD_ARRAY;
- // GL_INDEX_ARRAY = context.INDEX_ARRAY;
+    GL_VERTEX_ARRAY = 0x8074;
+    GL_COLOR_ARRAY = 0x8076;
+    GL_NORMAL_ARRAY = 0x8075;
+    GL_TEXTURE_COORD_ARRAY = 0x8078;
 
 /*
  * capability enumerations for glIsEnabled, glEnable and glDisable
