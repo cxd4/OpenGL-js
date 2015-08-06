@@ -16,22 +16,22 @@ function trace_GL_error(message, error_code) {
     switch (error_code) {
     case GL_NO_ERROR:
         error_message = "GL_NO_ERROR";
-        return;
+        break;
     case GL_INVALID_ENUM:
         error_message = "GL_INVALID_ENUM";
-        return;
+        break;
     case GL_INVALID_VALUE:
         error_message = "GL_INVALID_VALUE";
-        return;
+        break;
     case GL_INVALID_OPERATION:
         error_message = "GL_INVALID_OPERATION";
-        return;
+        break;
     case GL_INVALID_FRAMEBUFFER_OPERATION:
         error_message = "GL_INVALID_FRAMEBUFFER_OPERATION";
-        return;
+        break;
     case GL_OUT_OF_MEMORY:
         error_message = "GL_OUT_OF_MEMORY";
-        return;
+        break;
     default:
         error_message = "GL_UNKNOWN_ERROR";
     }
