@@ -52,10 +52,10 @@ function main_GL() {
     glFlush();
     glFinish();
 
- // trace(glGetString(GL_VENDOR));
-    trace(glGetString(GL_RENDERER));
-    trace(glGetString(GL_VERSION));
- // trace(glGetString(GL_EXTENSIONS));
+ // trace("GL_VENDOR    :  " + glGetString(GL_VENDOR));
+    trace("GL_RENDERER  :  " + glGetString(GL_RENDERER));
+    trace("GL_VERSION   :  " + glGetString(GL_VERSION));
+ // trace("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
     do {
         error_code = glGetError();
