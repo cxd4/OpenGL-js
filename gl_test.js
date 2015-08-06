@@ -1,27 +1,37 @@
 function main_GL() {
     "use strict";
-    var x = 0, y = 1, z = 2, w = 3;
+    var x = 0, y = 1/*, z = 2, w = 3*/;
     var r = 0, g = 1, b = 2, a = 3;
     var coordinates_per_vertex = 2;
+    var channels_per_color = 4;
 
     var triangle = [];
-    var colors = [
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-
-        1.0, 1.0, 1.0, 1.0
-    ];
+    var colors = [];
     var error_code;
 
-    triangle[0*coordinates_per_vertex + x] = 0.0;
-    triangle[0*coordinates_per_vertex + y] = 1.0;
+    triangle[0 * coordinates_per_vertex + x] = 0.0;
+    triangle[0 * coordinates_per_vertex + y] = 1.0;
 
-    triangle[1*coordinates_per_vertex + x] = -Math.sqrt(3) / 2;
-    triangle[1*coordinates_per_vertex + y] = -0.5;
+    triangle[1 * coordinates_per_vertex + x] = -Math.sqrt(3) / 2;
+    triangle[1 * coordinates_per_vertex + y] = -0.5;
 
-    triangle[2*coordinates_per_vertex + x] = +Math.sqrt(3) / 2;
-    triangle[2*coordinates_per_vertex + y] = -0.5;
+    triangle[2 * coordinates_per_vertex + x] = +Math.sqrt(3) / 2;
+    triangle[2 * coordinates_per_vertex + y] = -0.5;
+
+    colors[0 * channels_per_color + r] = 1;
+    colors[0 * channels_per_color + g] = 0;
+    colors[0 * channels_per_color + b] = 0;
+    colors[0 * channels_per_color + a] = 1;
+
+    colors[1 * channels_per_color + r] = 0;
+    colors[1 * channels_per_color + g] = 0;
+    colors[1 * channels_per_color + b] = 1;
+    colors[1 * channels_per_color + a] = 1;
+
+    colors[2 * channels_per_color + r] = 0;
+    colors[2 * channels_per_color + g] = 1;
+    colors[2 * channels_per_color + b] = 0;
+    colors[2 * channels_per_color + a] = 1;
 
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -60,6 +70,6 @@ function main_GL() {
     do {
         error_code = glGetError();
         trace_GL_error("OpenGL error status", error_code);
-    } while (error_code != GL_NO_ERROR);
+    } while (error_code !== GL_NO_ERROR);
     return;
 }
