@@ -38,11 +38,11 @@ function main_GL() {
 */
  // glColor4f(0.25, 0.00, 0.50, 1.00);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
-
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
     glColorPointer(4, GL_FLOAT, 0, colors);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
