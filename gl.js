@@ -490,9 +490,9 @@ var dummy_ID_pos = 0,
     dummy_ID_col = 1;
 
 var dummy_scripts = [
-    "attribute vec4 pos;" +
+    "varying lowp vec4 out_color;" +
+            "attribute vec4 pos;" +
             "attribute vec4 col;" +
-            "varying lowp vec4 out_color;" +
             "void main(void) {" +
             "    gl_Position = vec4(pos);" +
             "    out_color = vec4(col);" +
