@@ -491,17 +491,12 @@ var dummy_ID_pos = 0,
 
 var dummy_scripts = [
     "attribute vec4 pos;" +
-            "attribute vec4 col;" +
-            "varying lowp vec4 out_color;" +
             "void main(void) {" +
             "    gl_Position = vec4(pos);" +
-            "    out_color = vec4(col);" +
             "}",
 
-    "varying lowp vec4 out_color;" +
-            "void main(void) {" +
+    "void main(void) {" +
             "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
-              // gl_FragColor = vec4(out_color);
             "}"
 ];
 function glEnableClientState(capability) {
