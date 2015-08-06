@@ -411,14 +411,14 @@ function glColor4f(red, green, blue, alpha) {
     color_coverage = alpha;
 
     dummy_scripts[1] =
-        "void main(void) {"+
-        "    gl_FragColor = vec4(" +
-                 color_red + ", " +
-                 color_green + ", " +
-                 color_blue + ", " +
-                 color_coverage +
-            ");"+
-        "}";
+            "void main(void) {" +
+            "    gl_FragColor = vec4(" +
+            color_red + ", " +
+            color_green + ", " +
+            color_blue + ", " +
+            color_coverage +
+            ");" +
+            "}";
     return;
 }
 
@@ -490,19 +490,19 @@ var dummy_ID_pos = 0,
     dummy_ID_col = 1;
 
 var dummy_scripts = [
-   "attribute vec4 pos;"+
-   "attribute vec4 col;"+
-   "varying lowp vec4 out_color;"+
-   "void main(void) {"+
-   "    gl_Position = vec4(pos);"+
-   "    out_color = vec4(col);"+
-   "}",
+    "attribute vec4 pos;" +
+            "attribute vec4 col;" +
+            "varying lowp vec4 out_color;" +
+            "void main(void) {" +
+            "    gl_Position = vec4(pos);" +
+            "    out_color = vec4(col);" +
+            "}",
 
-   "varying lowp vec4 out_color;"+
-   "void main(void) {"+
-   "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"+
-     // gl_FragColor = vec4(out_color);
-   "}"
+    "varying lowp vec4 out_color;" +
+            "void main(void) {" +
+            "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
+              // gl_FragColor = vec4(out_color);
+            "}"
 ];
 function glEnableClientState(capability) {
     "use strict";
@@ -581,12 +581,12 @@ function glDisableClientState(capability) {
     GL.bindBuffer(GL.ARRAY_BUFFER, null);
     GL.deleteBuffer(buffer_objects[index]);
 
-    if (dummy_vtx != 0) {
+    if (dummy_vtx !== 0) {
         GL.detachShader(dummy_shader_program, dummy_vtx);
         GL.deleteShader(dummy_vtx);
         dummy_vtx = 0;
     }
-    if (dummy_frag != 0) {
+    if (dummy_frag !== 0) {
         GL.detachShader(dummy_shader_program, dummy_frag);
         GL.deleteShader(dummy_frag);
         dummy_frag = 0;
@@ -616,13 +616,13 @@ function glVertexPointer(size, type, stride, pointer) {
         break;
     }
     dummy_scripts[0] =
-        "attribute " + vector_size + " pos;"+
-        "attribute " + "vec4" + " col;"+
-        "varying lowp " + "vec4" + " out_color;"+
-        "void main(void) {"+
-        "    gl_Position = vec4(" + coordinates + ");"+
-        "    out_color = vec4(col);"+
-        "}";
+            "attribute " + vector_size + " pos;" +
+            "attribute " + "vec4" + " col;" +
+            "varying lowp " + "vec4" + " out_color;" +
+            "void main(void) {" +
+            "    gl_Position = vec4(" + coordinates + ");" +
+            "    out_color = vec4(col);" +
+            "}";
     return;
 }
 function glColorPointer(size, type, stride, pointer) {
@@ -644,14 +644,16 @@ function glColorPointer(size, type, stride, pointer) {
         break;
     }
     dummy_scripts[1] =
-        "varying lowp " + vector_size + " out_color;"+
-        "void main(void) {"+
-        "    gl_FragColor = vec4(" + color_RGB_A + ");"+
-        "}";
+            "varying lowp " + vector_size + " out_color;" +
+            "void main(void) {" +
+            "    gl_FragColor = vec4(" + color_RGB_A + ");" +
+            "}";
     return;
 }
 
 function glDrawPixels(width, height, format, type, data) {
+    "use strict";
+
 /*
  * Against all favorable odds for performance and quality, glDrawPixels is
  * somewhat desirable to have.  However, there are way, way too many factors
@@ -666,7 +668,9 @@ function glDrawPixels(width, height, format, type, data) {
  * then again so is the original deprecated function anyway.
  */
     switch (format) {
- // case GL_RGBA:
+    case GL_RGBA:
+        trace("to do " + width + height + type + data);
+        break;
     default:
         trace(GL_INVALID_OPERATION); /* not implemented (yet?), sorry */
     }
@@ -674,6 +678,7 @@ function glDrawPixels(width, height, format, type, data) {
 }
 
 function glCopyPixels(x, y, width, height, type) {
+    "use strict";
     var frame_buffer = [];
     var format;
 
