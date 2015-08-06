@@ -548,7 +548,7 @@ function glEnableClientState(capability) {
         index = 3;
         break;
     default:
-        trace_error(GL_INVALID_VALUE);
+        trace_GL_error(GL_INVALID_VALUE);
         return;
     }
     buffer_objects[index] = GL.createBuffer();
@@ -574,7 +574,7 @@ function glDisableClientState(capability) {
         index = 3;
         break;
     default:
-        trace_error(GL_INVALID_VALUE);
+        trace_GL_error(GL_INVALID_VALUE);
         return;
     }
     GL.disableVertexAttribArray(index);
