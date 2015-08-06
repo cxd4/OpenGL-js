@@ -149,7 +149,7 @@ function emulate_GL_macros(context) {
  */
     GL_COLOR_BUFFER_BIT = context.COLOR_BUFFER_BIT;
     GL_DEPTH_BUFFER_BIT = context.DEPTH_BUFFER_BIT;
-    GL_ACCUM_BUFFER_BIT = context.ACCUM_BUFFER_BIT;
+ // GL_ACCUM_BUFFER_BIT = context.ACCUM_BUFFER_BIT; // not supported in ES
     GL_STENCIL_BUFFER_BIT = context.STENCIL_BUFFER_BIT;
 
     GL_FALSE = false;
@@ -212,7 +212,6 @@ var GL_FALSE,
 
     GL_COLOR_BUFFER_BIT,
     GL_DEPTH_BUFFER_BIT,
-    GL_ACCUM_BUFFER_BIT,
     GL_STENCIL_BUFFER_BIT;
 
 function glDrawArrays(mode, first, count) {
