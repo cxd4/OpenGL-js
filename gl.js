@@ -626,7 +626,6 @@ function glVertexPointer(size, type, stride, pointer) {
 }
 function glColorPointer(size, type, stride, pointer) {
     "use strict";
-    var vector_size;
     var color_RGB_A;
 
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
@@ -634,18 +633,16 @@ function glColorPointer(size, type, stride, pointer) {
 
     switch (size) {
     case 3: // r, g, b, 1
-        vector_size = "vec3";
-        color_RGB_A = "out_color, 1";
+        color_RGB_A = "1";
         break;
     case 4: // r, g, b, a
-        vector_size = "vec4";
-        color_RGB_A = "out_color";
+        color_RGB_A = "out_color.a";
         break;
     }
     dummy_scripts[1] =
-            "varying lowp " + vector_size + " out_color;" +
+            "varying lowp vec4 out_color;" +
             "void main(void) {" +
-            "    gl_FragColor = vec4(" + color_RGB_A + ");" +
+            "    gl_FragColor = vec4(out_color.rgb, " + color_RGB_A + ");" +
             "}";
     return;
 }
