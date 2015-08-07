@@ -513,19 +513,13 @@ function glEnableClientState(capability) {
         dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
         index = dummy_ID_col;
         break;
-    case GL_NORMAL_ARRAY:
-        index = 2;
-        break;
-    case GL_TEXTURE_COORD_ARRAY:
-        index = 3;
-        break;
     default:
-        trace_GL_error(GL_INVALID_VALUE);
+        index = capability - GL_VERTEX_ARRAY;
         return;
     }
+    GL.enableVertexAttribArray(index);
     buffer_objects[index] = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[index]);
-    GL.enableVertexAttribArray(index);
     return;
 }
 function glDisableClientState(capability) {
@@ -539,14 +533,8 @@ function glDisableClientState(capability) {
     case GL_COLOR_ARRAY:
         index = dummy_ID_col;
         break;
-    case GL_NORMAL_ARRAY:
-        index = 2;
-        break;
-    case GL_TEXTURE_COORD_ARRAY:
-        index = 3;
-        break;
     default:
-        trace_GL_error(GL_INVALID_VALUE);
+        index = capability - GL_VERTEX_ARRAY;
         return;
     }
     GL.disableVertexAttribArray(index);
