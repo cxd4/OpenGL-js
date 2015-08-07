@@ -12,6 +12,11 @@ function main_GL() {
     ];
     var error_code;
 
+    if (GL_initialize(document, "GL_canvas") === null) {
+        alert("Failed to initialize WebGL.");
+        return;
+    }
+
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 

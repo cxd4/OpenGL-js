@@ -39,7 +39,7 @@ function trace_GL_error(message, error_code) {
     return;
 }
 
-function GL_initialize(ML_interface, trace_error) {
+function GL_initialize(ML_interface, canvas_name) {
     "use strict";
     var canvas;
 
@@ -47,20 +47,18 @@ function GL_initialize(ML_interface, trace_error) {
  * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
  * currently available as an extension in most browsers (planned for HTML5).
  */
-    canvas = ML_interface.getElementById("GL_canvas");
+    canvas = ML_interface.getElementById(canvas_name);
     GL = canvas.getContext("webgl");
 
     if (!GL) {
         GL = canvas.getContext("experimental-webgl");
         if (!GL) {
-            trace_error("Unable to initialize WebGL.");
-            return;
+            return null;
         }
      // trace_error("Warning:  Experimental WebGL implementation.");
     }
     emulate_GL_macros(GL);
-    main_GL();
-    return;
+    return (GL);
 }
 
 function emulate_GL_macros(context) {
