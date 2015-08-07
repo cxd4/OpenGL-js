@@ -98,7 +98,7 @@ glVertexPointer(COORDINATES_PER_VERTEX, GL_DOUBLE, 0, square);
 glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); /* Triangle "fans" work, too. */
 ```
 
-A second, more forceful workaround is to draw the square's rectangles using `GL_TRIANGLES`, but this will require sending 6 vertices to the vertex array instead of only 4.  Changing the allocation of the `square[]` array to re-define two vertices over could be avoided by using `glDrawElements` instead of `glDrawArrays`:
+A second, more forceful workaround is to draw the square using `GL_TRIANGLES`, but this will require sending 6 vertices to the vertex array instead of only 4.  Changing the allocation of the `square[]` array to re-define two vertices over could be avoided by using `glDrawElements` instead of `glDrawArrays`:
 ```c
 GLdouble square[COORDINATES_PER_VERTEX * 4] = {
     /* old values from initial example with glBegin(GL_QUADS) */
@@ -116,7 +116,7 @@ GLubyte indices[] = {
 glEnableClientState(GL_VERTEX_ARRAY);
 glVertexPointer(COORDINATES_PER_VERTEX, GL_DOUBLE, 0, square);
 
-glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_BYTE, indices);
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
 ```
 
 A third and final workaround which is of the most fundamental importance:  Do not be distracted by deprecation.  To this day, it impacts nothing realistically except for WebGL or OpenGL ES.  You and you alone are able to determine rightfully whether low-level rendering performance is less or more of a priority with the type(s) of OpenGL application(s) you do, over other priorities which such optimizations (some of which a lot less certain than others, if even optimizations at all in some cases) may vary against.
