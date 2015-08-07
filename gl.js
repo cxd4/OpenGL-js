@@ -572,7 +572,7 @@ function glVertexPointer(size, type, stride, pointer) {
     var vector_size;
     var coordinates;
 
-    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
+    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_pos, size, type, GL_FALSE, stride, 0);
 
     switch (size) {
@@ -603,7 +603,7 @@ function glColorPointer(size, type, stride, pointer) {
     "use strict";
     var color_RGB_A;
 
-    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STREAM_DRAW);
+    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_col, size, type, GL_FALSE, stride, 0);
 
     switch (size) {
