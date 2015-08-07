@@ -21,13 +21,13 @@ function main_GL() {
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glColor4f(1, 0, 0, 1);
+    glColor4f(1, 0, 0, 0.50);
     glRectf(-1, -1, 0, 0);
-    glColor4f(0, 1, 0, 1);
+    glColor4f(0, 1, 0, 0.50);
     glRectf(0, -1, 1, 0);
-    glColor4f(0, 0, 1, 0);
+    glColor4f(0, 0, 1, 0.50);
     glRectf(0, 0, 1, 1);
-    glColor4f(1, 1, 0, 0);
+    glColor4f(1, 1, 0, 0.50);
     glRectf(-1, 0, 0, 1);
 
 /*
