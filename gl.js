@@ -390,18 +390,6 @@ function glGetString(name) {
  * Thank Khronos.
  */
 
-var ortho_x1 = -1,
-    ortho_x2 = +1,
-    ortho_y1 = -1,
-    ortho_y2 = +1,
-    ortho_z1 = -1,
-    ortho_z2 = +1;
-
-var color_red = 1,
-    color_green = 1,
-    color_blue = 1,
-    color_coverage = 1;
-
 function glColor4f(red, green, blue, alpha) {
     "use strict";
 
@@ -409,20 +397,10 @@ function glColor4f(red, green, blue, alpha) {
  * glColor* is all removed from OpenGL ES 2+.
  * However, glColor4f, in particular, was available on OpenGL ES 1.0.
  */
-    color_red = red;
-    color_green = green;
-    color_blue = blue;
-
-    color_coverage = alpha;
-
     dummy_scripts[1] =
             "void main(void) {" +
             "    gl_FragColor = vec4(" +
-            color_red + ", " +
-            color_green + ", " +
-            color_blue + ", " +
-            color_coverage +
-            ");" +
+            red + ", " + green + ", " + blue + ", " + alpha + ");" +
             "}";
     return;
 }
