@@ -427,22 +427,20 @@ function glColor4f(red, green, blue, alpha) {
     return;
 }
 
-function glRect(x1, y1, x2, y2) {
+function glRectf(x1, y1, x2, y2) {
     "use strict";
-    var viewport_state = [], old_color = [], old_scissor = [];
-    var scissoring_enabled;
-    var raster_x1, raster_y1, raster_x2, raster_y2, delta_x, delta_y;
+    var rectangle = [];
     var temporary;
+    var x = 0, y = 1, coordinates_per_vertex = 2;
 
 /*
- * glRectf, *fv, *d, *dv are deprecated but pretty easy to emulate by using
- * glClear with scissoring to create the rectangle using raster operations.
+ * Optional (but my preference):
+ * Force a rearrangement of the specified coordinates to ensure that (x1, y1)
+ * is the lower-left point of the rectangle and (x2, y2) the upper-right.
+ *
+ * This is achievable by swapping x2 with x1, if (x2 < x1) and also y2 with
+ * y1, if (y2 < y1).
  */
-    scissoring_enabled = glIsEnabled(GL_SCISSOR_TEST);
-    if (scissoring_enabled === GL_FALSE) {
-        glEnable(GL_SCISSOR_TEST);
-    }
-
     if (x2 < x1) {
         temporary = x2;
         x2 = x1;
@@ -454,27 +452,21 @@ function glRect(x1, y1, x2, y2) {
         y1 = temporary;
     }
 
-    viewport_state = GL.getParameter(GL.VIEWPORT);
-    old_scissor = GL.getParameter(GL.SCISSOR_BOX);
-    old_color = GL.getParameter(GL.COLOR_CLEAR_VALUE);
+    rectangle[0 * coordinates_per_vertex + x] = x1;
+    rectangle[0 * coordinates_per_vertex + y] = y1; // lower-left
 
-    raster_x1 = (x1 - ortho_x1)/2 * (viewport_state[2] - 0);
-    raster_y1 = (y1 - ortho_y1)/2 * (viewport_state[3] - 0);
-    raster_x2 = (x2 + ortho_x2)/2 * (viewport_state[2] - 0);
-    raster_y2 = (y2 + ortho_y2)/2 * (viewport_state[3] - 0);
+    rectangle[1 * coordinates_per_vertex + x] = x2;
+    rectangle[1 * coordinates_per_vertex + y] = y1; // lower-right
 
-    delta_x = raster_x2 - raster_x1;
-    delta_y = raster_y2 - raster_y1;
-    glScissor(raster_x1, raster_y1, delta_x, delta_y);
+    rectangle[2 * coordinates_per_vertex + x] = x1;
+    rectangle[2 * coordinates_per_vertex + y] = y2; // upper-left
 
-    glClearColor(color_red, color_green, color_blue, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    rectangle[3 * coordinates_per_vertex + x] = x2;
+    rectangle[3 * coordinates_per_vertex + y] = y2; // upper-right
 
-    glScissor(old_scissor[0], old_scissor[1], old_scissor[2], old_scissor[3]);
-    glClearColor(old_color[0], old_color[1], old_color[2], old_color[3]);
-    if (scissoring_enabled === GL_FALSE) {
-        glDisable(GL_SCISSOR_TEST);
-    }
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, rectangle);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
     return;
 }
 

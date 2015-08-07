@@ -15,17 +15,14 @@ function main_GL() {
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
-/*
     glColor4f(1, 0, 0, 1);
-    glRect(-1, -1, 0, 0);
+    glRectf(-1, -1, 0, 0);
     glColor4f(0, 1, 0, 1);
-    glRect(0, -1, 1, 0);
+    glRectf(0, -1, 1, 0);
     glColor4f(0, 0, 1, 0);
-    glRect(0, 0, 1, 1);
+    glRectf(0, 0, 1, 1);
     glColor4f(1, 1, 0, 0);
-    glRect(-1, 0, 0, 1);
-*/
- // glColor4f(0.25, 0.00, 0.50, 1.00);
+    glRectf(-1, 0, 0, 1);
 
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(3, GL_FLOAT, 0, colors);
