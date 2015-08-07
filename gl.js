@@ -215,19 +215,7 @@ var GL_FALSE,
 
 function glDrawArrays(mode, first, count) {
     "use strict";
-    var compiled_vertices, compiled_fragments;
 
-    compiled_vertices = GL.getShaderParameter(dummy_vtx, GL.COMPILE_STATUS);
-    compiled_fragments = GL.getShaderParameter(dummy_frag, GL.COMPILE_STATUS);
-    if (!compiled_vertices) {
-        GL.compileShader(dummy_vtx);
-    }
-    if (!compiled_fragments) {
-        GL.compileShader(dummy_frag);
-    }
-
-    GL.linkProgram(dummy_shader_program);
-    GL.useProgram(dummy_shader_program);
     GL.drawArrays(mode, first, count);
     return;
 } /* All versions of OpenGL since 1.1 have this function. */
