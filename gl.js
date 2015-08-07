@@ -209,7 +209,7 @@ function glDrawElements(mode, count, type, indices) {
     }
 
     GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, vertex_indices, GL.STATIC_DRAW);
-    GL.drawElements(mode, count, type, vertex_indices);
+    GL.drawElements(mode, count, type, 0);
 
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, null);
     GL.deleteBuffer(vertex_index_buffer_object);
