@@ -10,6 +10,7 @@ function main_GL() {
         0, 0, 1,
         0, 1, 0
     ];
+    var i, circle = [];
     var error_code;
 
     if (GL_initialize(document, "GL_canvas") === null) {
@@ -28,6 +29,22 @@ function main_GL() {
     glRectf(0, 0, 1, 1);
     glColor4f(1, 1, 0, 0);
     glRectf(-1, 0, 0, 1);
+
+/*
+ * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
+ * the perfect triangle, which will be drawn in front of it.
+ */
+    for (i = 0; i < 360; i += 1) {
+        circle[4 * i + 0] = Math.cos(i * Math.PI / 180);
+        circle[4 * i + 1] = Math.sin(i * Math.PI / 180);
+        circle[4 * i + 2] = Math.tan(i * Math.PI / 180); // experimental
+        circle[4 * i + 3] = 2.0;
+    }
+    glColor4f(1, 1, 1, 1);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    glVertexPointer(2, GL_FLOAT, 4 * 4, circle);
+    glDrawArrays(GL_LINE_LOOP, 0, 360);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(2, GL_FLOAT, 0, triangle);
