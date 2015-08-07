@@ -1,35 +1,6 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 var dummy_shader_program = 0;
 
-function trace_GL_error(message, error_code) {
-    "use strict";
-    var error_message;
-
-    switch (error_code) {
-    case GL_NO_ERROR:
-        error_message = "GL_NO_ERROR";
-        break;
-    case GL_INVALID_ENUM:
-        error_message = "GL_INVALID_ENUM";
-        break;
-    case GL_INVALID_VALUE:
-        error_message = "GL_INVALID_VALUE";
-        break;
-    case GL_INVALID_OPERATION:
-        error_message = "GL_INVALID_OPERATION";
-        break;
-    case GL_INVALID_FRAMEBUFFER_OPERATION:
-        error_message = "GL_INVALID_FRAMEBUFFER_OPERATION";
-        break;
-    case GL_OUT_OF_MEMORY:
-        error_message = "GL_OUT_OF_MEMORY";
-        break;
-    default:
-        error_message = "GL_UNKNOWN_ERROR";
-    }
-    return (message + ":  " + error_message);
-}
-
 function GL_initialize(ML_interface, canvas_name) {
     "use strict";
     var canvas;
