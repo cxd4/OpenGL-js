@@ -1,5 +1,5 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
-var dummy_shader_program = 0;
+var dummy_shader_program;
 
 function GL_initialize(ML_interface, canvas_name) {
     "use strict";
@@ -20,6 +20,19 @@ function GL_initialize(ML_interface, canvas_name) {
      // trace_error("Warning:  Experimental WebGL implementation.");
     }
     emulate_GL_macros(GL);
+
+/*
+ * JavaScript WebGL types for shaders and shader programs are something more
+ * complex than the unsigned integer types the C functions use, so I think we
+ * have to create a temporary program and shaders, then delete them.
+ */
+    dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
+    GL.deleteShader(dummy_vtx);
+    dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
+    GL.deleteShader(dummy_frag);
+
+    dummy_shader_program = GL.createProgram();
+    GL.deleteProgram(dummy_shader_program);
     return (GL);
 }
 
@@ -401,7 +414,7 @@ function glRectf(x1, y1, x2, y2) {
  *     * glDisableClientState
  */
 var buffer_objects = [];
-var dummy_vtx = 0, dummy_frag = 0;
+var dummy_vtx, dummy_frag;
 var dummy_ID_pos = 0,
     dummy_ID_col = 1;
 
@@ -423,19 +436,18 @@ function glEnableClientState(capability) {
     "use strict";
     var index;
 
- // if (GL.isProgram(dummy_shader_program)) { // JavaScript bug in FireFox??
-    if (dummy_shader_program > 0) {
+    if (GL.isProgram(dummy_shader_program)) {
         GL.deleteProgram(dummy_shader_program);
     }
     dummy_shader_program = GL.createProgram();
 
-    if (dummy_vtx === 0) {
+    if (GL.isShader(dummy_vtx) === GL_FALSE) {
         dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
     }
     GL.shaderSource(dummy_vtx, dummy_scripts[0]);
     GL.attachShader(dummy_shader_program, dummy_vtx);
 
-    if (dummy_frag === 0) {
+    if (GL.isShader(dummy_frag) === GL_FALSE) {
         dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
     }
     GL.shaderSource(dummy_frag, dummy_scripts[1]);
@@ -484,15 +496,13 @@ function glDisableClientState(capability) {
     GL.bindBuffer(GL.ARRAY_BUFFER, null);
     GL.deleteBuffer(buffer_objects[index]);
 
-    if (dummy_vtx !== 0) {
+    if (GL.isShader(dummy_vtx) === GL_TRUE) {
         GL.detachShader(dummy_shader_program, dummy_vtx);
         GL.deleteShader(dummy_vtx);
-        dummy_vtx = 0;
     }
-    if (dummy_frag !== 0) {
+    if (GL.isShader(dummy_frag) === GL_TRUE) {
         GL.detachShader(dummy_shader_program, dummy_frag);
         GL.deleteShader(dummy_frag);
-        dummy_frag = 0;
     }
     return;
 }
