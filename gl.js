@@ -1,14 +1,6 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 var dummy_shader_program = 0;
 
-function trace(message) {
-    "use strict";
-
- // alert(message);
-    console.log(message);
-    return;
-}
-
 function trace_GL_error(message, error_code) {
     "use strict";
     var error_message;
@@ -35,8 +27,7 @@ function trace_GL_error(message, error_code) {
     default:
         error_message = "GL_UNKNOWN_ERROR";
     }
-    trace(message + ":  " + error_message);
-    return;
+    return (message + ":  " + error_message);
 }
 
 function GL_initialize(ML_interface, canvas_name) {

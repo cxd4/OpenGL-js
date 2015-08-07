@@ -44,14 +44,14 @@ function main_GL() {
     glFlush();
     glFinish();
 
- // trace("GL_VENDOR    :  " + glGetString(GL_VENDOR));
-    trace("GL_RENDERER  :  " + glGetString(GL_RENDERER));
-    trace("GL_VERSION   :  " + glGetString(GL_VERSION));
- // trace("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
+ // console.log("GL_VENDOR    :  " + glGetString(GL_VENDOR));
+    console.log("GL_RENDERER  :  " + glGetString(GL_RENDERER));
+    console.log("GL_VERSION   :  " + glGetString(GL_VERSION));
+ // console.log("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
     do {
         error_code = glGetError();
-        trace_GL_error("OpenGL error status", error_code);
+        console.log(trace_GL_error("OpenGL error status", error_code));
     } while (error_code !== GL_NO_ERROR);
     return;
 }
