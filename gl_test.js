@@ -51,7 +51,8 @@ function main_GL() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+ // glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, [0, 1, 2]);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);

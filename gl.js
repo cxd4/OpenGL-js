@@ -221,8 +221,25 @@ function glDrawArrays(mode, first, count) {
 } /* All versions of OpenGL since 1.1 have this function. */
 function glDrawElements(mode, count, type, indices) {
     "use strict";
+    var vertex_indices;
+    var vertex_index_buffer_object;
 
-    GL.drawElements(mode, count, type, indices);
+    vertex_index_buffer_object = GL.createBuffer();
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, vertex_index_buffer_object);
+    switch (type) {
+    case GL_UNSIGNED_BYTE:
+        vertex_indices = new Uint8Array(indices);
+        break;
+    case GL_UNSIGNED_SHORT:
+        vertex_indices = new Uint16Array(indices);
+        break;
+    }
+
+    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, vertex_indices, GL.STATIC_DRAW);
+    GL.drawElements(mode, count, type, vertex_indices);
+
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, null);
+    GL.deleteBuffer(vertex_index_buffer_object);
     return;
 } /* All versions of OpenGL since 1.1 have this function. */
 
