@@ -22,13 +22,13 @@ function main_GL() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glColor4f(1, 0, 0, 0.50);
-    glRectf(-1, -1, 0, 0);
+    glRectf(0, 0, -1, -1);
     glColor4f(0, 1, 0, 0.50);
-    glRectf(0, -1, 1, 0);
+    glRectf(0, 0, +1, -1);
     glColor4f(0, 0, 1, 0.50);
-    glRectf(0, 0, 1, 1);
+    glRectf(0, 0, +1, +1);
     glColor4f(1, 1, 0, 0.50);
-    glRectf(-1, 0, 0, 1);
+    glRectf(0, 0, -1, +1);
 
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe

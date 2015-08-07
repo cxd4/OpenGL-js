@@ -371,36 +371,17 @@ function glRectf(x1, y1, x2, y2) {
     var temporary;
     var x = 0, y = 1, coordinates_per_vertex = 2;
 
-/*
- * Optional (but my preference):
- * Force a rearrangement of the specified coordinates to ensure that (x1, y1)
- * is the lower-left point of the rectangle and (x2, y2) the upper-right.
- *
- * This is achievable by swapping x2 with x1, if (x2 < x1) and also y2 with
- * y1, if (y2 < y1).
- */
-    if (x2 < x1) {
-        temporary = x2;
-        x2 = x1;
-        x1 = temporary;
-    }
-    if (y2 < y1) {
-        temporary = y2;
-        y2 = y1;
-        y1 = temporary;
-    }
-
     rectangle[0 * coordinates_per_vertex + x] = x1;
-    rectangle[0 * coordinates_per_vertex + y] = y1; // lower-left
+    rectangle[0 * coordinates_per_vertex + y] = y1;
 
     rectangle[1 * coordinates_per_vertex + x] = x2;
-    rectangle[1 * coordinates_per_vertex + y] = y1; // lower-right
+    rectangle[1 * coordinates_per_vertex + y] = y1;
 
     rectangle[2 * coordinates_per_vertex + x] = x1;
-    rectangle[2 * coordinates_per_vertex + y] = y2; // upper-left
+    rectangle[2 * coordinates_per_vertex + y] = y2;
 
     rectangle[3 * coordinates_per_vertex + x] = x2;
-    rectangle[3 * coordinates_per_vertex + y] = y2; // upper-right
+    rectangle[3 * coordinates_per_vertex + y] = y2;
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, rectangle);
