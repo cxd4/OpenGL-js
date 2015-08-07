@@ -545,6 +545,12 @@ function glVertexPointer(size, type, stride, pointer) {
             "    gl_Position = vec4(" + coordinates + ");" +
             "    out_color = vec4(col);" +
             "}";
+
+    if (GL.isShader(dummy_vtx) === GL_TRUE) {
+        GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+        GL.compileShader(dummy_vtx);
+        GL.linkProgram(dummy_shader_program);
+    }
     return;
 }
 function glColorPointer(size, type, stride, pointer) {
@@ -567,5 +573,11 @@ function glColorPointer(size, type, stride, pointer) {
             "void main(void) {" +
             "    gl_FragColor = vec4(out_color.rgb, " + color_RGB_A + ");" +
             "}";
+
+    if (GL.isShader(dummy_frag) === GL_TRUE) {
+        GL.shaderSource(dummy_frag, dummy_scripts[1]);
+        GL.compileShader(dummy_frag);
+        GL.linkProgram(dummy_shader_program);
+    }
     return;
 }
