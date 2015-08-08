@@ -17,7 +17,6 @@ While most of the universal functions and features are supported, there are a fe
 * glCullFace and glFrontFace
 * glHint
 * glGetBooleanv, glGetIntegerv and glGetFloatv
-* glLineWidth
 * glClearStencil, glStencilMask and glDepthMask
 * glBlendFunc, glStencilFunc, glStencilOp, and glDepthFunc
 * glTexImage2D, gl(Get)TexParameter(f/i)(v), glPixelStorei and any pixel upload operation

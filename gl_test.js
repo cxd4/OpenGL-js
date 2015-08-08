@@ -30,6 +30,8 @@ function main_GL() {
     glColor4f(1, 1, 0, 0.50);
     glRectf(0, 0, -1, +1);
 
+    glLineWidth(1);
+
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.

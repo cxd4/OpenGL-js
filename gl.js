@@ -325,6 +325,17 @@ function glGetString(name) {
     return GL.getParameter(name);
 }
 
+function glLineWidth(width) {
+    "use strict";
+
+/*
+ * There were attempts to both deprecate and remove glLineWidth, but it lives
+ * on as of yet and is therefore another universal function.
+ */
+    GL.lineWidth(width);
+	return;
+}
+
 /*
  * OpenGL 1.x functions removed by Khronos in OpenGL ES 2+
  *
