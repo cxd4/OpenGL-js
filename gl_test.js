@@ -1,4 +1,4 @@
-function main_GL() {
+function display() {
     "use strict";
     var triangle = [
         0, 1,
@@ -11,12 +11,6 @@ function main_GL() {
         0, 1, 0
     ];
     var i, circle = [];
-    var error_code;
-
-    if (GL_initialize(document, "GL_canvas") === null) {
-        alert("Failed to initialize WebGL.");
-        return;
-    }
 
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
@@ -78,15 +72,29 @@ function main_GL() {
 
     glFlush();
     glFinish();
+    return;
+}
+
+function main_GL() {
+    "use strict";
+    var error_code;
+
+    if (GL_initialize(document, "GL_canvas") === null) {
+        alert("Failed to initialize WebGL.");
+        return;
+    }
 
  // console.log("GL_VENDOR    :  " + glGetString(GL_VENDOR));
     console.log("GL_RENDERER  :  " + glGetString(GL_RENDERER));
     console.log("GL_VERSION   :  " + glGetString(GL_VERSION));
  // console.log("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
+    display();
     do {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
     } while (error_code !== GL_NO_ERROR);
+
+    setInterval(display, 10000);
     return;
 }
