@@ -1,3 +1,5 @@
+var circle = [];
+
 function display() {
     "use strict";
     var triangle = [
@@ -10,16 +12,6 @@ function display() {
         0, 0, 1,
         0, 1, 0
     ];
-    var i, circle = [];
-
-    glEnable(GL_BLEND);
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-
-    glClearColor(0.00, 0.00, 0.00, 0.00);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
 
     glDisable(GL_CULL_FACE);
     glColor4f(1, 0, 0, 0.50);
@@ -32,29 +24,13 @@ function display() {
     glRectf(0, 0, -1, +1);
     glEnable(GL_CULL_FACE);
 
-    glPointSize(8.0);
-    glLineWidth(1);
+    glColor4f(1, 1, 1, 1);
+    glEnableClientState(GL_VERTEX_ARRAY);
 
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
  */
-    circle[4 * 0 + 0] = circle[4 * 0 + 1] = circle[4 * 0 + 2] = 0.0;
-    circle[4 * 0 + 3] = 1.0;
-    for (i = 1; i < 360 + 1; i += 1) {
-        circle[4 * i + 0] = Math.cos(i * Math.PI / 180);
-        circle[4 * i + 1] = Math.sin(i * Math.PI / 180);
-        circle[4 * i + 2] = Math.tan(i * Math.PI / 180); // experimental
-        circle[4 * i + 3] = 2.0;
-    }
-    circle[4 * i + 0] = circle[4 * 1 + 0];
-    circle[4 * i + 1] = circle[4 * 1 + 1];
-    circle[4 * i + 2] = circle[4 * 1 + 2];
-    circle[4 * i + 3] = circle[4 * 1 + 3];
-
-    glColor4f(1, 1, 1, 1);
-    glEnableClientState(GL_VERTEX_ARRAY);
-
     glVertexPointer(2, GL_FLOAT, 4 * 4, circle);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 360 + 1 + 1);
 
@@ -75,6 +51,34 @@ function display() {
     return;
 }
 
+function init() {
+    "use strict";
+    var i;
+
+    circle[4 * 0 + 0] = circle[4 * 0 + 1] = 0.0;
+    for (i = 0 + 1; i < 360 + 1; i += 1) {
+        circle[4 * i + 0] = Math.cos(i * Math.PI / 180);
+        circle[4 * i + 1] = Math.sin(i * Math.PI / 180);
+    }
+    circle[4 * i + 0] = circle[4 * 1 + 0];
+    circle[4 * i + 1] = circle[4 * 1 + 1];
+
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+
+    glClearColor(0.00, 0.00, 0.00, 0.00);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    glPointSize(8.0);
+    glLineWidth(1);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    return;
+}
+
 function main_GL() {
     "use strict";
     var error_code;
@@ -89,6 +93,7 @@ function main_GL() {
     console.log("GL_VERSION   :  " + glGetString(GL_VERSION));
  // console.log("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
+    init();
     setInterval(display, 3000);
     do {
         error_code = glGetError();
