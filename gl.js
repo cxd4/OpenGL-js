@@ -375,6 +375,12 @@ function glColor4f(red, green, blue, alpha) {
             "    gl_FragColor = vec4(" +
             red + ", " + green + ", " + blue + ", " + alpha + ");" +
             "}";
+
+    if (GL.isShader(dummy_frag) === GL_TRUE) {
+        GL.shaderSource(dummy_frag, dummy_scripts[1]);
+        GL.compileShader(dummy_frag);
+        GL.linkProgram(dummy_shader_program);
+    }
     return;
 }
 
