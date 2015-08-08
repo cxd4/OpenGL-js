@@ -294,31 +294,6 @@ function glReadPixels(x, y, width, height, format, type, data) {
     return;
 } /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
 
-/*
- * These functions are all universal to all versions of OpenGL.
- *
- * However, type agnosticism in JavaScript, as a language, makes the
- * differing function names obsolete.  In WebGL, they are all renamed to:
- *     params = getParameter(name);
- */
-function glGetBooleanv(name, params) {
-    "use strict";
-
-    params.v = GL.getParameter(name);
-    return;
-}
-function glGetIntegerv(name, params) {
-    "use strict";
-
-    params.v = GL.getParameter(name);
-    return;
-}
-function glGetFloatv(name, params) {
-    "use strict";
-
-    params.v = GL.getParameter(name);
-    return;
-}
 function glGetString(name) {
     "use strict";
 
