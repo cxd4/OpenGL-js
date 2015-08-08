@@ -375,6 +375,24 @@ function glLineWidth(width) {
  * Thank Khronos.
  */
 
+var experimental_point_size = 1.000000000001;
+function glPointSize(size) {
+    "use strict";
+
+/*
+ * Unlike glLineWidth, glPointSize wasn't so lucky in the API's "evolution".
+ *
+ * There is a GLSL output symbol linked directly to rasterization point size,
+ * but I am not a JavaScript expert (e.g. GLSL string manipulation) and am
+ * going to try using this global variable instead.  It will be read into the
+ * vertex shader the next time that glVertexPointer is called.
+ *
+ * fixme:  Um, how do I force JavaScript var's to float types?
+ */
+    experimental_point_size = size + 0.000000000001;
+	return;
+}
+
 function glColor4f(red, green, blue, alpha) {
     "use strict";
 
@@ -553,6 +571,7 @@ function glVertexPointer(size, type, stride, pointer) {
             "void main(void) {" +
             "    gl_Position = vec4(" + coordinates + ");" +
             "    out_color = vec4(col);" +
+            "    gl_PointSize = " + experimental_point_size + ";" +
             "}";
 
     if (GL.isShader(dummy_vtx) === GL_TRUE) {

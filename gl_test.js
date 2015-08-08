@@ -30,6 +30,7 @@ function main_GL() {
     glColor4f(1, 1, 0, 0.50);
     glRectf(0, 0, -1, +1);
 
+    glPointSize(8.0);
     glLineWidth(1);
 
     glEnable(GL_BLEND);
