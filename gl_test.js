@@ -32,6 +32,12 @@ function main_GL() {
 
     glLineWidth(1);
 
+    glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.

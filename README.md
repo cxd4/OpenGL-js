@@ -14,7 +14,6 @@ In general, all of the _"universal"_ OpenGL commands are exposed as C-style func
 
 ### Currently Unimplemented Commands
 While most of the universal functions and features are supported, there are a few I have not gotten to:
-* glCullFace and glFrontFace
 * glHint
 * glGetBooleanv, glGetIntegerv and glGetFloatv
 * glClearStencil, glStencilMask and glDepthMask

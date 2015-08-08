@@ -109,6 +109,13 @@ function emulate_GL_macros(context) {
     GL_SCISSOR_TEST = context.SCISSOR_TEST;
     GL_STENCIL_TEST = context.STENCIL_TEST;
 
+    GL_CW = context.CW;
+    GL_CCW = context.CCW;
+
+    GL_FRONT = context.FRONT;
+    GL_BACK = context.BACK;
+    GL_FRONT_AND_BACK = context.FRONT_AND_BACK;
+
 /*
  * universally accepted queries for glGetString(macro)
  */
@@ -176,6 +183,13 @@ var GL_FALSE,
     GL_SAMPLE_COVERAGE,
     GL_SCISSOR_TEST,
     GL_STENCIL_TEST,
+
+    GL_CW,
+    GL_CCW,
+
+    GL_FRONT,
+    GL_BACK,
+    GL_FRONT_AND_BACK,
 
     GL_VENDOR,
     GL_RENDERER,
@@ -325,6 +339,18 @@ function glGetString(name) {
     return GL.getParameter(name);
 }
 
+function glCullFace(mode) {
+    "use strict";
+
+    GL.cullFace(mode);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
+function glFrontFace(mode) {
+    "use strict";
+
+    GL.frontFace(mode);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
 function glLineWidth(width) {
     "use strict";
 
