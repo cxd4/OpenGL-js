@@ -89,12 +89,10 @@ function main_GL() {
     console.log("GL_VERSION   :  " + glGetString(GL_VERSION));
  // console.log("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
-    display();
+    setInterval(display, 3000);
     do {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
     } while (error_code !== GL_NO_ERROR);
-
-    setInterval(display, 10000);
     return;
 }
