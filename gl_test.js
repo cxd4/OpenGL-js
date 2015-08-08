@@ -12,11 +12,16 @@ function display() {
     ];
     var i, circle = [];
 
+    glEnable(GL_BLEND);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    glDisable(GL_CULL_FACE);
     glColor4f(1, 0, 0, 0.50);
     glRectf(0, 0, -1, -1);
     glColor4f(0, 1, 0, 0.50);
@@ -25,15 +30,10 @@ function display() {
     glRectf(0, 0, +1, +1);
     glColor4f(1, 1, 0, 0.50);
     glRectf(0, 0, -1, +1);
+    glEnable(GL_CULL_FACE);
 
     glPointSize(8.0);
     glLineWidth(1);
-
-    glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
-
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
 
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
