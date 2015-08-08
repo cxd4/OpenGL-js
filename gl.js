@@ -359,7 +359,7 @@ function glLineWidth(width) {
  * on as of yet and is therefore another universal function.
  */
     GL.lineWidth(width);
-	return;
+    return;
 }
 
 /*
@@ -390,7 +390,7 @@ function glPointSize(size) {
  * fixme:  Um, how do I force JavaScript var's to float types?
  */
     experimental_point_size = size + 0.000000000001;
-	return;
+    return;
 }
 
 function glColor4f(red, green, blue, alpha) {
