@@ -2,7 +2,7 @@ body {
     background-color:  #000000;
     color           :  #00FF00;
     font-family     :  Courier New, Courier, monospace;
-    white-space     :  pre;
+ /* white-space     :  pre; */
 }
 
 canvas {
