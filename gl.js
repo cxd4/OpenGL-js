@@ -417,7 +417,6 @@ function glColor4f(red, green, blue, alpha) {
 function glRectf(x1, y1, x2, y2) {
     "use strict";
     var rectangle = [];
-    var temporary;
     var x = 0, y = 1, coordinates_per_vertex = 2;
 
     rectangle[0 * coordinates_per_vertex + x] = x1;
