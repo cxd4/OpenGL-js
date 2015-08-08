@@ -18,6 +18,8 @@ function main_GL() {
         return;
     }
 
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
