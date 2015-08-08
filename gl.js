@@ -375,7 +375,7 @@ function glLineWidth(width) {
  * Thank Khronos.
  */
 
-var experimental_point_size = 1.000000000001;
+var experimental_point_size = "1.0";
 function glPointSize(size) {
     "use strict";
 
@@ -386,10 +386,11 @@ function glPointSize(size) {
  * but I am not a JavaScript expert (e.g. GLSL string manipulation) and am
  * going to try using this global variable instead.  It will be read into the
  * vertex shader the next time that glVertexPointer is called.
- *
- * fixme:  Um, how do I force JavaScript var's to float types?
  */
-    experimental_point_size = size + 0.000000000001;
+    experimental_point_size = size;
+    if (Math.floor(size) === Math.ceil(size)) {
+        experimental_point_size += ".0"; /* GLSL error if you pass int types */
+    }
     return;
 }
 
