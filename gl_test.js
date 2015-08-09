@@ -18,6 +18,7 @@ function display() {
         0, 1, 0
     ];
 
+/*
     glDisable(GL_CULL_FACE);
     glColor4f(1, 0, 0, 0.50);
     glRectf(0, 0, -1, -1);
@@ -28,6 +29,7 @@ function display() {
     glColor4f(1, 1, 0, 0.50);
     glRectf(0, 0, -1, +1);
     glEnable(GL_CULL_FACE);
+*/
 
     glColor4f(1, 1, 1, 1);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -50,8 +52,6 @@ function display() {
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-
-    glFlush();
     return;
 }
 
@@ -68,7 +68,7 @@ function init() {
     circle[4 * i + 1] = circle[4 * 1 + 1];
 
     glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -76,7 +76,7 @@ function init() {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    glPointSize(8.0);
+    glPointSize(1.0);
     glLineWidth(1);
 
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -98,7 +98,7 @@ function main_GL() {
  // console.log("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
     init();
-    setInterval(display, 3000);
+    setInterval(display, 1000 / 10);
     do {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
