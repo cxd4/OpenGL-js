@@ -1,12 +1,17 @@
+var angles = [
+    0 * (360 / 3) + 90,
+    1 * (360 / 3) + 90,
+    2 * (360 / 3) + 90
+];
 var circle = [];
+var triangle = [
+    0, 1,
+    -Math.sqrt(3) / 2, -0.5,
+    +Math.sqrt(3) / 2, -0.5
+];
 
 function display() {
     "use strict";
-    var triangle = [
-        0, 1,
-        -Math.sqrt(3) / 2, -0.5,
-        +Math.sqrt(3) / 2, -0.5
-    ];
     var colors = [
         1, 0, 0,
         0, 0, 1,
@@ -40,14 +45,13 @@ function display() {
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(3, GL_FLOAT, 0, colors);
 
- // glDrawArrays(GL_TRIANGLES, 0, 3);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, [0, 1, 2]);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    animate_triangle(3.0);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
 
     glFlush();
-    glFinish();
     return;
 }
 
@@ -99,5 +103,28 @@ function main_GL() {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
     } while (error_code !== GL_NO_ERROR);
+    return;
+}
+
+function animate_triangle(degrees) {
+    "use strict";
+    var i = 0;
+
+    do {
+        angles[i] += degrees;
+        if (angles[i] >= 360) {
+            angles[i] -= 360;
+        }
+        i += 1;
+    } while (i < 3);
+
+    triangle[0] = Math.cos(angles[0] * Math.PI / 180.0);
+    triangle[1] = Math.sin(angles[0] * Math.PI / 180.0);
+    triangle[2] = Math.cos(angles[1] * Math.PI / 180.0);
+    triangle[3] = Math.sin(angles[1] * Math.PI / 180.0);
+    triangle[4] = Math.cos(angles[2] * Math.PI / 180.0);
+    triangle[5] = Math.sin(angles[2] * Math.PI / 180.0);
+
+    glVertexPointer(2, GL_FLOAT, 0, triangle);
     return;
 }
