@@ -455,12 +455,9 @@ var dummy_ID_pos = 0,
     dummy_ID_col = 1;
 
 var dummy_scripts = [
-    "varying highp vec4 out_color;" +
-            "attribute highp vec4 pos;" +
-            "attribute highp vec4 col;" +
+    "attribute highp vec4 pos;" +
             "void main(void) {" +
             "    gl_Position = vec4(pos);" +
-            "    out_color = vec4(col);" +
             "}",
 
     "varying highp vec4 out_color;" +
@@ -502,6 +499,10 @@ function glEnableClientState(capability) {
         break;
     case GL_COLOR_ARRAY:
         dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
+        if (dummy_ID_col === -1) {
+         // return;
+            dummy_ID_col = 1;
+        } // happens on optimizing GLSL compilers when changing from glColor4f
         index = dummy_ID_col;
         break;
     default:
