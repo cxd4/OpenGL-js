@@ -40,7 +40,6 @@ function display() {
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, 360);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 360 + 1 + 1);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(2, GL_FLOAT, 0, triangle);
 
     glEnableClientState(GL_COLOR_ARRAY);
@@ -49,7 +48,6 @@ function display() {
     glDrawArrays(GL_TRIANGLES, 0, 3);
     animate_triangle(60 / frames_per_second);
 
-    glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
     return;
 }
