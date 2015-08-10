@@ -4,6 +4,7 @@ var angles = [
     2 * (360 / 3) + 90
 ];
 var circle = [];
+var colors = [];
 var triangle = [
     0, 1,
     -Math.sqrt(3) / 2, -0.5,
@@ -12,11 +13,6 @@ var triangle = [
 
 function display() {
     "use strict";
-    var colors = [
-        1, 0, 0,
-        0, 0, 1,
-        0, 1, 0
-    ];
 
 /*
     glDisable(GL_CULL_FACE);
@@ -66,6 +62,12 @@ function init() {
     }
     circle[2 * i + 0] = circle[2 * 1 + 0];
     circle[2 * i + 1] = circle[2 * 1 + 1];
+
+    colors = [
+        1, 0, 0,
+        0, 0, 1,
+        0, 1, 0
+    ];
 
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
