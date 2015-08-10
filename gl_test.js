@@ -11,6 +11,8 @@ var triangle = [
     +Math.sqrt(3) / 2, -0.5
 ];
 
+var frames_per_second = 10;
+
 function display() {
     "use strict";
 
@@ -44,7 +46,7 @@ function display() {
     glColorPointer(3, GL_FLOAT, 0, colors);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    animate_triangle(3.0);
+    animate_triangle(60 / frames_per_second);
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -100,7 +102,7 @@ function main_GL() {
  // console.log("GL_EXTENSIONS:  " + glGetString(GL_EXTENSIONS));
 
     init();
-    setInterval(display, 1000 / 10);
+    setInterval(display, 1000 / frames_per_second);
     do {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
