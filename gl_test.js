@@ -1,7 +1,7 @@
 var angles = [
-    0 * (360 / 3) + 90,
-    1 * (360 / 3) + 90,
-    2 * (360 / 3) + 90
+    0 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
+    1 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
+    2 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2)
 ];
 var circle = [];
 var colors = [];
@@ -114,22 +114,25 @@ function main_GL() {
 function animate_triangle(degrees) {
     "use strict";
     var i = 0;
+    var radians = degrees * Math.PI / 180.0;
+    var radians_in_360_degress = 360 * Math.PI / 180.0;
 
+    angles[0] += radians;
+    angles[1] += radians;
+    angles[2] += radians;
     do {
-        angles[i] += degrees;
-        if (angles[i] >= 360) {
-            angles[i] -= 360;
+        if (angles[i] >= radians_in_360_degress) {
+            angles[i] -= radians_in_360_degress;
         }
         i += 1;
     } while (i < 3);
 
-    triangle[0] = Math.cos(angles[0] * Math.PI / 180.0);
-    triangle[1] = Math.sin(angles[0] * Math.PI / 180.0);
-    triangle[2] = Math.cos(angles[1] * Math.PI / 180.0);
-    triangle[3] = Math.sin(angles[1] * Math.PI / 180.0);
-    triangle[4] = Math.cos(angles[2] * Math.PI / 180.0);
-    triangle[5] = Math.sin(angles[2] * Math.PI / 180.0);
+    triangle[0] = Math.cos(angles[0]);
+    triangle[1] = Math.sin(angles[0]);
+    triangle[2] = Math.cos(angles[1]);
+    triangle[3] = Math.sin(angles[1]);
+    triangle[4] = Math.cos(angles[2]);
+    triangle[5] = Math.sin(angles[2]);
 
-    glVertexPointer(2, GL_FLOAT, 0, triangle);
     return;
 }
