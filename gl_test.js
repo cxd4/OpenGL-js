@@ -37,6 +37,7 @@ function display() {
  * the perfect triangle, which will be drawn in front of it.
  */
     glVertexPointer(2, GL_FLOAT, 0, circle);
+ // glDrawArrays(GL_LINE_LOOP, 0 + 1, 360);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 360 + 1 + 1);
 
     glEnableClientState(GL_VERTEX_ARRAY);
