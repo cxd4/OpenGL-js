@@ -1,3 +1,5 @@
+var coordinates_per_vertex = 4;
+
 var angles = [
     0 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
     1 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
@@ -5,11 +7,7 @@ var angles = [
 ];
 var circle = [];
 var colors = [];
-var triangle = [
-    0, 1,
-    -Math.sqrt(3) / 2, -0.5,
-    +Math.sqrt(3) / 2, -0.5
-];
+var triangle = [];
 
 var frames_per_second = 10;
 
@@ -36,11 +34,11 @@ function display() {
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
  */
-    glVertexPointer(2, GL_FLOAT, 0, circle);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, 360);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 360 + 1 + 1);
 
-    glVertexPointer(2, GL_FLOAT, 0, triangle);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
 
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(3, GL_FLOAT, 0, colors);
@@ -54,15 +52,42 @@ function display() {
 
 function init() {
     "use strict";
-    var i;
+    var i, j;
 
-    circle[2 * 0 + 0] = circle[2 * 0 + 1] = 0.0;
+    circle[0] = circle[1] = circle[2] = 0.0;
+    circle[3] = 1.0;
     for (i = 0 + 1; i < 360 + 1; i += 1) {
-        circle[2 * i + 0] = Math.cos(i * Math.PI / 180);
-        circle[2 * i + 1] = Math.sin(i * Math.PI / 180);
+        circle[coordinates_per_vertex * i + 0] = Math.cos(i * Math.PI / 180);
+        circle[coordinates_per_vertex * i + 1] = Math.sin(i * Math.PI / 180);
+        if (coordinates_per_vertex > 2) {
+            circle[coordinates_per_vertex * i + 2] = 0.0;
+        }
+        if (coordinates_per_vertex > 3) {
+            circle[coordinates_per_vertex * i + 3] = 1.0;
+        }
     }
-    circle[2 * i + 0] = circle[2 * 1 + 0];
-    circle[2 * i + 1] = circle[2 * 1 + 1];
+    for (j = 0; j < coordinates_per_vertex; j += 1) {
+        circle[coordinates_per_vertex * i + j]
+      = circle[coordinates_per_vertex * 1 + j];
+    }
+
+    triangle[coordinates_per_vertex * 0 + 0] = Math.cos(90 * Math.PI / 180);
+    triangle[coordinates_per_vertex * 0 + 1] = Math.sin(90 * Math.PI / 180);
+    triangle[coordinates_per_vertex * 1 + 0] = Math.cos(210 * Math.PI / 180);
+    triangle[coordinates_per_vertex * 1 + 1] = Math.sin(210 * Math.PI / 180);
+    triangle[coordinates_per_vertex * 2 + 0] = Math.cos(330 * Math.PI / 180);
+    triangle[coordinates_per_vertex * 2 + 1] = Math.sin(330 * Math.PI / 180);
+
+    if (coordinates_per_vertex > 2) {
+        for (i = 0; i < 3; i += 1) {
+            triangle[coordinates_per_vertex * i + 2] = 0.0;
+        }
+    }
+    if (coordinates_per_vertex > 3) {
+        for (i = 0; i < 3; i += 1) {
+            triangle[coordinates_per_vertex * i + 3] = 1.0;
+        }
+    }
 
     colors = [
         1, 0, 0,
@@ -125,12 +150,12 @@ function animate_triangle(degrees) {
         i += 1;
     } while (i < 3);
 
-    triangle[0] = Math.cos(angles[0]);
-    triangle[1] = Math.sin(angles[0]);
-    triangle[2] = Math.cos(angles[1]);
-    triangle[3] = Math.sin(angles[1]);
-    triangle[4] = Math.cos(angles[2]);
-    triangle[5] = Math.sin(angles[2]);
+    triangle[0 * coordinates_per_vertex + 0] = Math.cos(angles[0]);
+    triangle[0 * coordinates_per_vertex + 1] = Math.sin(angles[0]);
+    triangle[1 * coordinates_per_vertex + 0] = Math.cos(angles[1]);
+    triangle[1 * coordinates_per_vertex + 1] = Math.sin(angles[1]);
+    triangle[2 * coordinates_per_vertex + 0] = Math.cos(angles[2]);
+    triangle[2 * coordinates_per_vertex + 1] = Math.sin(angles[2]);
 
     return;
 }
