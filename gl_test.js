@@ -1,4 +1,12 @@
 var coordinates_per_vertex = 4;
+var attribs_interleaved = 1; /* Multiply by 1 for "false". :) */
+/*
+ * Interleaved arrays are, on some implementations, faster than storing
+ * color and vertex position arrays separately, but with the JavaScript
+ * language then I do not know how to implement them, because normally for
+ * interleaved arrays addressing offsets into static memory need to be
+ * prepared, and I don't think JavaScript has much "addressing" concept.
+ */
 
 var angles = [
     0 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
@@ -13,6 +21,7 @@ var frames_per_second = 10;
 
 function display() {
     "use strict";
+    var stride = 0 * (coordinates_per_vertex * attribs_interleaved);
 
 /*
     glDisable(GL_CULL_FACE);
@@ -34,11 +43,11 @@ function display() {
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
  */
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, circle);
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, 360);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 360 + 1 + 1);
 
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
 
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(4, GL_FLOAT, 0, colors);
@@ -139,6 +148,7 @@ function animate_triangle(degrees) {
     var i = 0;
     var radians = degrees * Math.PI / 180.0;
     var radians_in_360_degress = 360 * Math.PI / 180.0;
+    var stride = coordinates_per_vertex * attribs_interleaved;
 
     angles[0] += radians;
     angles[1] += radians;
@@ -150,12 +160,12 @@ function animate_triangle(degrees) {
         i += 1;
     } while (i < 3);
 
-    triangle[0 * coordinates_per_vertex + 0] = Math.cos(angles[0]);
-    triangle[0 * coordinates_per_vertex + 1] = Math.sin(angles[0]);
-    triangle[1 * coordinates_per_vertex + 0] = Math.cos(angles[1]);
-    triangle[1 * coordinates_per_vertex + 1] = Math.sin(angles[1]);
-    triangle[2 * coordinates_per_vertex + 0] = Math.cos(angles[2]);
-    triangle[2 * coordinates_per_vertex + 1] = Math.sin(angles[2]);
+    triangle[0 * stride + 0] = Math.cos(angles[0]);
+    triangle[0 * stride + 1] = Math.sin(angles[0]);
+    triangle[1 * stride + 0] = Math.cos(angles[1]);
+    triangle[1 * stride + 1] = Math.sin(angles[1]);
+    triangle[2 * stride + 0] = Math.cos(angles[2]);
+    triangle[2 * stride + 1] = Math.sin(angles[2]);
 
     return;
 }
