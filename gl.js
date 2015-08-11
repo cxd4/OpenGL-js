@@ -445,7 +445,6 @@ function glRectf(x1, y1, x2, y2) {
  *     * glColorPointer
  *     * glTexCoordPointer
  *     * glNormalPointer
- *     * glIndexPointer
  *     * glEnableClientState
  *     * glDisableClientState
  */
@@ -456,14 +455,13 @@ var dummy_ID_pos = 0,
 
 var dummy_scripts = [
     "attribute highp vec4 pos;" +
-            "void main(void) {" +
-            "    gl_Position = vec4(pos);" +
-            "}",
+    "void main(void) {" +
+    "    gl_Position = pos;" +
+    "}",
 
-    "varying highp vec4 out_color;" +
-            "void main(void) {" +
-            "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
-            "}"
+    "void main(void) {" +
+    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
+    "}"
 ];
 function glEnableClientState(capability) {
     "use strict";
@@ -563,11 +561,11 @@ function glVertexPointer(size, type, stride, pointer) {
     }
     dummy_scripts[0] =
             "attribute highp vec" + size + " pos;" +
-            "attribute highp vec4 col;" +
-            "varying highp vec4 out_color;" +
+            "attribute lowp vec4 col;" +
+            "varying lowp vec4 out_color;" +
             "void main(void) {" +
             "    gl_Position = vec4(" + coordinates + ");" +
-            "    out_color = vec4(col);" +
+            "    out_color = col;" +
             "    gl_PointSize = " + experimental_point_size + ";" +
             "}";
 
@@ -594,7 +592,7 @@ function glColorPointer(size, type, stride, pointer) {
         break;
     }
     dummy_scripts[1] =
-            "varying highp vec4 out_color;" +
+            "varying lowp vec4 out_color;" +
             "void main(void) {" +
             "    gl_FragColor = " + color_RGB_A + ";" +
             "}";
