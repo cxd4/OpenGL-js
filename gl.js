@@ -375,22 +375,17 @@ function glLineWidth(width) {
  * Thank Khronos.
  */
 
-var experimental_point_size = "1.0";
 function glPointSize(size) {
     "use strict";
 
 /*
  * Unlike glLineWidth, glPointSize wasn't so lucky in the API's "evolution".
- *
- * There is a GLSL output symbol linked directly to rasterization point size,
- * but I am not a JavaScript expert (e.g. GLSL string manipulation) and am
- * going to try using this global variable instead.  It will be read into the
- * vertex shader the next time that glVertexPointer is called.
  */
-    experimental_point_size = size;
     if (Math.floor(size) === Math.ceil(size)) {
-        experimental_point_size += ".0"; /* GLSL error if you pass int types */
+        size += ".0"; /* GLSL error if you pass int types */
     }
+
+    dummy_scripts[0].replace("}", "gl_PointSize = " + size + ";}");
     return;
 }
 
@@ -566,7 +561,6 @@ function glVertexPointer(size, type, stride, pointer) {
             "void main(void) {" +
             "    gl_Position = vec4(" + coordinates + ");" +
             "    out_color = col;" +
-            "    gl_PointSize = " + experimental_point_size + ";" +
             "}";
 
     if (GL.isShader(dummy_vtx) === GL_TRUE) {
