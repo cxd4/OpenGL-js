@@ -41,7 +41,7 @@ function display() {
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
 
     glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(3, GL_FLOAT, 0, colors);
+    glColorPointer(4, GL_FLOAT, 0, colors);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
     animate_triangle(60 / frames_per_second);
@@ -90,9 +90,9 @@ function init() {
     }
 
     colors = [
-        1, 0, 0,
-        0, 0, 1,
-        0, 1, 0
+        1, 0, 0, 1.00,
+        0, 0, 1, 1.00,
+        0, 1, 0, 1.00
     ];
 
     glEnable(GL_BLEND);

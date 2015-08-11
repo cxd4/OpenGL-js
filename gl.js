@@ -583,7 +583,7 @@ function glColorPointer(size, type, stride, pointer) {
     case 3: // r, g, b, 1
         color_RGB_A = "vec4(out_color.rgb, 1.0)";
         break;
-    case 4: // r, g, b, a
+    case 4: // r, g, b, inverse-transparency
         color_RGB_A = "out_color";
         break;
     }
