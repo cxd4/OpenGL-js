@@ -377,6 +377,7 @@ function glLineWidth(width) {
 
 function glPointSize(size) {
     "use strict";
+    var result;
 
 /*
  * Unlike glLineWidth, glPointSize wasn't so lucky in the API's "evolution".
@@ -385,7 +386,8 @@ function glPointSize(size) {
         size += ".0"; /* GLSL error if you pass int types */
     }
 
-    dummy_scripts[0].replace("}", "gl_PointSize = " + size + ";}");
+    result = dummy_scripts[0].replace("}", "gl_PointSize = " + size + ";}");
+    dummy_scripts[0] = result;
     return;
 }
 
