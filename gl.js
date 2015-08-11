@@ -541,7 +541,7 @@ function glVertexPointer(size, type, stride, pointer) {
     var coordinates;
 
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
-    GL.vertexAttribPointer(dummy_ID_pos, size, type, GL_FALSE, stride, 0);
+    GL.vertexAttribPointer(dummy_ID_pos, size, type, false, stride, 0);
 
     switch (size) {
     case 2: // P(x, y, 0, 1)
@@ -563,7 +563,7 @@ function glVertexPointer(size, type, stride, pointer) {
             "    out_color = col;" +
             "}";
 
-    if (GL.isShader(dummy_vtx) === GL_TRUE) {
+    if (GL.isShader(dummy_vtx) === true) {
         GL.shaderSource(dummy_vtx, dummy_scripts[0]);
         GL.compileShader(dummy_vtx);
         GL.linkProgram(dummy_shader_program);
@@ -575,7 +575,7 @@ function glColorPointer(size, type, stride, pointer) {
     var color_RGB_A;
 
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
-    GL.vertexAttribPointer(dummy_ID_col, size, type, GL_FALSE, stride, 0);
+    GL.vertexAttribPointer(dummy_ID_col, size, type, false, stride, 0);
 
     switch (size) {
     case 3: // r, g, b, 1
@@ -591,7 +591,7 @@ function glColorPointer(size, type, stride, pointer) {
             "    gl_FragColor = " + color_RGB_A + ";" +
             "}";
 
-    if (GL.isShader(dummy_frag) === GL_TRUE) {
+    if (GL.isShader(dummy_frag) === true) {
         GL.shaderSource(dummy_frag, dummy_scripts[1]);
         GL.compileShader(dummy_frag);
         GL.linkProgram(dummy_shader_program);
