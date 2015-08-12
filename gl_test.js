@@ -17,6 +17,13 @@ var circle = [];
 var colors = [];
 var triangle = [];
 
+/*
+ * Circles conceptually cannot exist in hardware-accelerated graphics, so we
+ * have to draw something like a 360-sided regular polygon. (Though, usually
+ * something less than a quarter that precise is still a convincing circle.)
+ */
+var circle_precision = 360;
+
 var frames_per_second = 10;
 
 function display() {
@@ -44,8 +51,8 @@ function display() {
  * the perfect triangle, which will be drawn in front of it.
  */
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, circle);
- // glDrawArrays(GL_LINE_LOOP, 0 + 1, 360);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 360 + 1 + 1);
+ // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
 
@@ -65,12 +72,16 @@ function init() {
 
     circle[0] = circle[1] = circle[2] = 0.0;
     circle[3] = 1.0;
-    for (i = 0 + 1; i < 360 + 1; i += 1) {
+    for (i = 0 + 1; i < circle_precision + 1; i += 1) {
         var x, y, z, radius;
+        var degrees, radians;
 
         radius = 1.0; /* Unit circle has a radius of (r = 1). */
-        x = Math.cos(i * Math.PI / 180);
-        y = Math.sin(i * Math.PI / 180);
+        degrees = i * (360 / circle_precision);
+        radians = degrees * (Math.PI / 180.0);
+
+        x = Math.cos(radians);
+        y = Math.sin(radians);
         z = Math.sqrt(Math.abs(radius - x*x - y*y)); // not finished yet
         circle[coordinates_per_vertex * i + 0] = x;
         circle[coordinates_per_vertex * i + 1] = y;
