@@ -24,7 +24,7 @@ var triangle = [];
  */
 var circle_precision = 360;
 
-var frames_per_second = 10;
+var frames_per_second = 60;
 
 function display() {
     "use strict";
