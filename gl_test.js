@@ -69,23 +69,23 @@ function display() {
 function init() {
     "use strict";
     var i, j;
+    var radius = 1.0; /* Unit circle has a radius of (r = 1). */
 
     circle[0] = circle[1] = circle[2] = 0.0;
     circle[3] = 1.0;
     for (i = 0 + 1; i < circle_precision + 1; i += 1) {
-        var x, y, z, radius;
+        var x, y, z;
         var degrees, radians;
 
-        radius = 1.0; /* Unit circle has a radius of (r = 1). */
         degrees = i * (360 / circle_precision);
         radians = degrees * (Math.PI / 180.0);
 
-        x = Math.cos(radians);
-        y = Math.sin(radians);
-        z = Math.sqrt(Math.abs(radius - x*x - y*y)); // not finished yet
+        x = Math.cos(radians) / radius;
+        y = Math.sin(radians) / radius;
+        z = Math.sqrt(Math.abs(radius*radius - x*x - y*y));
         circle[coordinates_per_vertex * i + 0] = x;
         circle[coordinates_per_vertex * i + 1] = y;
-        circle[coordinates_per_vertex * i + 2] = z;
+        circle[coordinates_per_vertex * i + 2] = z*0; // Spheres don't work yet.
         if (coordinates_per_vertex > 3) {
             circle[coordinates_per_vertex * i + 3] = 1.0 / radius;
         }
