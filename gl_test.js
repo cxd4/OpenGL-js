@@ -66,13 +66,17 @@ function init() {
     circle[0] = circle[1] = circle[2] = 0.0;
     circle[3] = 1.0;
     for (i = 0 + 1; i < 360 + 1; i += 1) {
-        circle[coordinates_per_vertex * i + 0] = Math.cos(i * Math.PI / 180);
-        circle[coordinates_per_vertex * i + 1] = Math.sin(i * Math.PI / 180);
-        if (coordinates_per_vertex > 2) {
-            circle[coordinates_per_vertex * i + 2] = 0.0;
-        }
+        var x, y, z, radius;
+
+        radius = 1.0; /* Unit circle has a radius of (r = 1). */
+        x = Math.cos(i * Math.PI / 180);
+        y = Math.sin(i * Math.PI / 180);
+        z = Math.sqrt(Math.abs(radius - x*x - y*y)); // not finished yet
+        circle[coordinates_per_vertex * i + 0] = x;
+        circle[coordinates_per_vertex * i + 1] = y;
+        circle[coordinates_per_vertex * i + 2] = z;
         if (coordinates_per_vertex > 3) {
-            circle[coordinates_per_vertex * i + 3] = 1.0;
+            circle[coordinates_per_vertex * i + 3] = 1.0 / radius;
         }
     }
     for (j = 0; j < coordinates_per_vertex; j += 1) {
