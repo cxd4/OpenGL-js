@@ -43,7 +43,7 @@ function display() {
     glEnable(GL_CULL_FACE);
 */
 
-    glColor4f(1, 1, 1, 1);
+    glColor4f(0.333, 0.000, 0.667, 0.5);
     glEnableClientState(GL_VERTEX_ARRAY);
 
 /*
