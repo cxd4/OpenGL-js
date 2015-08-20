@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+    This test WebGL page is created to compare performance results from
+    flood-filling the screen with a solid pixel color.
+
+    The raster method is to clear the screen with:
+        glClearColor(red, green, blue, opacity);
+        glClear(GL_COLOR_BUFFER_BIT/* | depth | accum */);
+    The vector method is to draw a solid rectangle, from two triangles:
+        glColor4f(red, green, blue, opacity);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        webGL.bufferData(
+            webGL.ARRAY_BUFFER,
+            new Float32Array([-1, -1, +1, -1, -1, +1, +1, +1]),
+            webGL.STATIC_DRAW
+        );
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
+-->
+
+<head>
+<title>Raster/Vector Pixel Fill Test</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="gl.css" type="text/css">
+<script type="text/javascript" src="gl.js"></script>
+<script type="text/javascript">
+var frames_per_second = 60;
+var coordinates_per_vertex = 2;
+
+function fill_raster() {
+    glClearColor(Math.random(), Math.random(), Math.random(), Math.random());
+    glClear(GL_COLOR_BUFFER_BIT);
+    return;
+}
+function fill_vector() {
+    fragment_GLSL =
+        "void main(void) {\n" +
+        "    gl_FragColor = vec4(" + Math.random() + ", " + Math.random() +
+        ", " + Math.random() + ", " + Math.random() + ");\n" +
+        "}\n";
+    GL.shaderSource(fragment_shader, fragment_GLSL);
+    GL.compileShader(fragment_shader);
+    GL.linkProgram(shader_program);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
+    return;
+}
+
+function main_GL() {
+    if (GL_initialize(document, "GL_canvas") === null) {
+        alert("Failed to initialize WebGL.");
+    }
+
+    init();
+ // setInterval(fill_raster, 1000 / frames_per_second);
+    setInterval(fill_vector, 1000 / frames_per_second);
+    return;
+}
+
+var screen = [
+    -1, -1, // lower-left
+    +1, -1, // lower-right
+    -1, +1, // upper-left
+    +1, +1, // upper-right
+];
+var vertex_shader, vertex_GLSL =
+    "attribute vec" + coordinates_per_vertex + " position;\n" +
+    "void main(void) {\n" +
+    "    gl_Position = vec4(position, 0.0, 1.0);\n" +
+    "}\n";
+var fragment_shader, fragment_GLSL =
+    "void main(void) {\n" +
+    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+    "}\n";
+var shader_program, vertex_attribute_ID, vertex_buffer_object;
+
+function init() {
+    glScissor(0, 0, 64, 64);
+ // glEnable(GL_SCISSOR_TEST);
+    glClearColor(1, 1, 1, 0.5);
+
+    vertex_shader = GL.createShader(GL.VERTEX_SHADER);
+    fragment_shader = GL.createShader(GL.FRAGMENT_SHADER);
+    shader_program = GL.createProgram();
+
+    GL.shaderSource(vertex_shader, vertex_GLSL);
+    GL.shaderSource(fragment_shader, fragment_GLSL);
+
+    GL.attachShader(shader_program, vertex_shader);
+    GL.attachShader(shader_program, fragment_shader);
+
+    GL.compileShader(vertex_shader);
+    GL.compileShader(fragment_shader);
+
+    GL.linkProgram(shader_program);
+    GL.useProgram(shader_program);
+
+    vertex_attribute_ID = GL.getAttribLocation(shader_program, "position");
+    GL.enableVertexAttribArray(vertex_attribute_ID);
+
+    vertex_buffer_object = GL.createBuffer();
+    GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer_object);
+
+    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(screen), GL.STATIC_DRAW);
+    GL.vertexAttribPointer(
+        vertex_attribute_ID, coordinates_per_vertex, GL_FLOAT, GL_FALSE, 0, 0
+    );
+}
+</script>
+</head>
+
+<body onload="main_GL()">
+<canvas id="GL_canvas" width="1024" height="1024">
+Your browser doesn't appear to support the <code>&lt;CANVAS&gt;</code> element.
+</canvas>
+</body>
+</html>
