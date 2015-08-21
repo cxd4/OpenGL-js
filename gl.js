@@ -38,9 +38,10 @@ function GL_initialize(ML_interface, canvas_name) {
     dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
     dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
 
-    GL.deleteShader(dummy_vtx);
-    GL.deleteShader(dummy_frag);
-    GL.deleteProgram(dummy_shader_program);
+    buffer_objects[dummy_ID_pos] = GL.createBuffer();
+    buffer_objects[dummy_ID_col] = GL.createBuffer();
+    GL.deleteBuffer(buffer_objects[dummy_ID_pos]);
+    GL.deleteBuffer(buffer_objects[dummy_ID_col]);
     return (GL);
 }
 
@@ -412,17 +413,6 @@ function glColor4f(red, green, blue, alpha) {
             red + ", " + green + ", " + blue + ", " + alpha + ");" +
             "}";
 
-    if (GL.isShader(dummy_vtx) === false) {
-        dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
-        GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-        GL.attachShader(dummy_shader_program, dummy_vtx);
-        GL.compileShader(dummy_vtx);
-    }
-    if (GL.isShader(dummy_frag) === false) {
-        dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
-        GL.attachShader(dummy_shader_program, dummy_frag);
-    }
-
     GL.shaderSource(dummy_frag, dummy_scripts[1]);
     GL.compileShader(dummy_frag);
     GL.linkProgram(dummy_shader_program);
@@ -497,8 +487,9 @@ function glEnableClientState(capability) {
         return;
     }
     GL.enableVertexAttribArray(index);
-    buffer_objects[index] = GL.createBuffer();
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[index]);
+    if (GL.isBuffer(buffer_objects[index]) === false) {
+        buffer_objects[index] = GL.createBuffer();
+    }
     return;
 }
 function glDisableClientState(capability) {
@@ -517,16 +508,9 @@ function glDisableClientState(capability) {
         return;
     }
     GL.disableVertexAttribArray(index);
-    GL.bindBuffer(GL.ARRAY_BUFFER, null);
-    GL.deleteBuffer(buffer_objects[index]);
-
-    if (GL.isShader(dummy_vtx) === GL_TRUE) {
-        GL.detachShader(dummy_shader_program, dummy_vtx);
-        GL.deleteShader(dummy_vtx);
-    }
-    if (GL.isShader(dummy_frag) === GL_TRUE) {
-        GL.detachShader(dummy_shader_program, dummy_frag);
-        GL.deleteShader(dummy_frag);
+    if (GL.isBuffer(buffer_objects[index]) !== false) {
+        GL.bindBuffer(GL.ARRAY_BUFFER, null);
+        GL.deleteBuffer(buffer_objects[index]);
     }
     return;
 }
@@ -534,6 +518,7 @@ function glVertexPointer(size, type, stride, pointer) {
     "use strict";
     var coordinates;
 
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[dummy_ID_pos]);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_pos, size, type, false, stride, 0);
 
@@ -557,17 +542,16 @@ function glVertexPointer(size, type, stride, pointer) {
             "    out_color = col;" +
             "}";
 
-    if (GL.isShader(dummy_vtx) === true) {
-        GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-        GL.compileShader(dummy_vtx);
-        GL.linkProgram(dummy_shader_program);
-    }
+    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+    GL.compileShader(dummy_vtx);
+    GL.linkProgram(dummy_shader_program);
     return;
 }
 function glColorPointer(size, type, stride, pointer) {
     "use strict";
     var color_RGB_A;
 
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[dummy_ID_col]);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_col, size, type, false, stride, 0);
 
@@ -585,10 +569,8 @@ function glColorPointer(size, type, stride, pointer) {
             "    gl_FragColor = " + color_RGB_A + ";" +
             "}";
 
-    if (GL.isShader(dummy_frag) === true) {
-        GL.shaderSource(dummy_frag, dummy_scripts[1]);
-        GL.compileShader(dummy_frag);
-        GL.linkProgram(dummy_shader_program);
-    }
+    GL.shaderSource(dummy_frag, dummy_scripts[1]);
+    GL.compileShader(dummy_frag);
+    GL.linkProgram(dummy_shader_program);
     return;
 }
