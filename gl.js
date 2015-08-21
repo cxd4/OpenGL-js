@@ -412,11 +412,20 @@ function glColor4f(red, green, blue, alpha) {
             red + ", " + green + ", " + blue + ", " + alpha + ");" +
             "}";
 
-    if (GL.isShader(dummy_frag) === GL_TRUE) {
-        GL.shaderSource(dummy_frag, dummy_scripts[1]);
-        GL.compileShader(dummy_frag);
-        GL.linkProgram(dummy_shader_program);
+    if (GL.isShader(dummy_vtx) === false) {
+        dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
+        GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+        GL.attachShader(dummy_shader_program, dummy_vtx);
+        GL.compileShader(dummy_vtx);
     }
+    if (GL.isShader(dummy_frag) === false) {
+        dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
+        GL.attachShader(dummy_shader_program, dummy_frag);
+    }
+
+    GL.shaderSource(dummy_frag, dummy_scripts[1]);
+    GL.compileShader(dummy_frag);
+    GL.linkProgram(dummy_shader_program);
     return;
 }
 
@@ -475,29 +484,6 @@ var dummy_scripts = [
 function glEnableClientState(capability) {
     "use strict";
     var index;
-
-    if (GL.isProgram(dummy_shader_program)) {
-        GL.deleteProgram(dummy_shader_program);
-    }
-    dummy_shader_program = GL.createProgram();
-
-    if (GL.isShader(dummy_vtx) === GL_FALSE) {
-        dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
-    }
-    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-    GL.attachShader(dummy_shader_program, dummy_vtx);
-
-    if (GL.isShader(dummy_frag) === GL_FALSE) {
-        dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
-    }
-    GL.shaderSource(dummy_frag, dummy_scripts[1]);
-    GL.attachShader(dummy_shader_program, dummy_frag);
-
-    GL.compileShader(dummy_vtx);
-    GL.compileShader(dummy_frag);
-
-    GL.linkProgram(dummy_shader_program);
-    GL.useProgram(dummy_shader_program);
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
