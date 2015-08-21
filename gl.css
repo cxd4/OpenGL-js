@@ -3,7 +3,7 @@ body {
     color           :  #00FF00;
     font-family     :  Courier New, Courier, monospace;
  /* white-space     :  pre; */
-    background-image:  url("checkerboard.bmp");
+    background-image:  url("checkerboard.gif");
 }
 
 canvas {
