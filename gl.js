@@ -21,17 +21,25 @@ function GL_initialize(ML_interface, canvas_name) {
     }
     emulate_GL_macros(GL);
 
-/*
- * JavaScript WebGL types for shaders and shader programs are something more
- * complex than the unsigned integer types the C functions use, so I think we
- * have to create a temporary program and shaders, then delete them.
- */
     dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
-    GL.deleteShader(dummy_vtx);
     dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
-    GL.deleteShader(dummy_frag);
-
     dummy_shader_program = GL.createProgram();
+
+    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+    GL.attachShader(dummy_shader_program, dummy_vtx);
+    GL.shaderSource(dummy_frag, dummy_scripts[1]);
+    GL.attachShader(dummy_shader_program, dummy_frag);
+
+    GL.compileShader(dummy_vtx);
+    GL.compileShader(dummy_frag);
+    GL.linkProgram(dummy_shader_program);
+    GL.useProgram(dummy_shader_program);
+
+    dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
+    dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
+
+    GL.deleteShader(dummy_vtx);
+    GL.deleteShader(dummy_frag);
     GL.deleteProgram(dummy_shader_program);
     return (GL);
 }
@@ -452,12 +460,16 @@ var dummy_ID_pos = 0,
 
 var dummy_scripts = [
     "attribute highp vec4 pos;" +
+    "attribute lowp vec4 col;" +
+    "varying lowp vec4 out_color;" +
     "void main(void) {" +
     "    gl_Position = pos;" +
+    "    out_color = col;" +
     "}",
 
+    "varying lowp vec4 out_color;" +
     "void main(void) {" +
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
+    "    gl_FragColor = out_color;" +
     "}"
 ];
 function glEnableClientState(capability) {
@@ -489,15 +501,9 @@ function glEnableClientState(capability) {
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
-        dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
         index = dummy_ID_pos;
         break;
     case GL_COLOR_ARRAY:
-        dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
-        if (dummy_ID_col === -1) {
-         // return;
-            dummy_ID_col = 1;
-        } // happens on optimizing GLSL compilers when changing from glColor4f
         index = dummy_ID_col;
         break;
     default:
