@@ -55,8 +55,8 @@ function display() {
 
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
 
-    glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(4, GL_FLOAT, 0, colors);
+    glEnableClientState(GL_COLOR_ARRAY);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableClientState(GL_COLOR_ARRAY);
 

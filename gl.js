@@ -518,6 +518,9 @@ function glVertexPointer(size, type, stride, pointer) {
     "use strict";
     var coordinates;
 
+    if (GL.isBuffer(buffer_objects[0]) === false) {
+        buffer_objects[0] = GL.createBuffer();
+    }
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_pos, size, type, false, stride, 0);
@@ -551,6 +554,9 @@ function glColorPointer(size, type, stride, pointer) {
     "use strict";
     var color_RGB_A;
 
+    if (GL.isBuffer(buffer_objects[2]) === false) {
+        buffer_objects[2] = GL.createBuffer();
+    }
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_col, size, type, false, stride, 0);
