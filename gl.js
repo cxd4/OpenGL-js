@@ -483,8 +483,7 @@ function glEnableClientState(capability) {
         index = dummy_ID_col;
         break;
     default:
-        index = capability - GL_VERTEX_ARRAY;
-        return;
+        index = -1; // Force GL_INVALID_VALUE assertion.
     }
     GL.enableVertexAttribArray(index);
     if (GL.isBuffer(buffer_objects[index]) === false) {
@@ -504,8 +503,7 @@ function glDisableClientState(capability) {
         index = dummy_ID_col;
         break;
     default:
-        index = capability - GL_VERTEX_ARRAY;
-        return;
+        index = -1;
     }
     GL.disableVertexAttribArray(index);
     if (GL.isBuffer(buffer_objects[index]) !== false) {
