@@ -44,7 +44,6 @@ function display() {
 */
 
     glColor4f(0.333, 0.000, 0.667, 0.5);
-    glEnableClientState(GL_VERTEX_ARRAY);
 
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
@@ -58,11 +57,10 @@ function display() {
 
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(4, GL_FLOAT, 0, colors);
-
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    animate_triangle(60 / frames_per_second);
-
     glDisableClientState(GL_COLOR_ARRAY);
+
+    animate_triangle(60 / frames_per_second);
     return;
 }
 
@@ -112,6 +110,7 @@ function init() {
             triangle[coordinates_per_vertex * i + 3] = 1.0;
         }
     }
+    glEnableClientState(GL_VERTEX_ARRAY);
 
     colors = [
         1, 0, 0, 0.80,
