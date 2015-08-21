@@ -38,10 +38,10 @@ function GL_initialize(ML_interface, canvas_name) {
     dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
     dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
 
-    buffer_objects[dummy_ID_pos] = GL.createBuffer();
-    buffer_objects[dummy_ID_col] = GL.createBuffer();
-    GL.deleteBuffer(buffer_objects[dummy_ID_pos]);
-    GL.deleteBuffer(buffer_objects[dummy_ID_col]);
+    buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+    buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+    GL.deleteBuffer(buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY]);
+    GL.deleteBuffer(buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY]);
     return (GL);
 }
 
@@ -474,6 +474,7 @@ var dummy_scripts = [
 function glEnableClientState(capability) {
     "use strict";
     var index;
+    var enumeration_offset = capability - GL_VERTEX_ARRAY;
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
@@ -486,14 +487,15 @@ function glEnableClientState(capability) {
         index = -1; // Force GL_INVALID_VALUE assertion.
     }
     GL.enableVertexAttribArray(index);
-    if (GL.isBuffer(buffer_objects[index]) === false) {
-        buffer_objects[index] = GL.createBuffer();
+    if (GL.isBuffer(buffer_objects[enumeration_offset]) === false) {
+        buffer_objects[enumeration_offset] = GL.createBuffer();
     }
     return;
 }
 function glDisableClientState(capability) {
     "use strict";
     var index;
+    var enumeration_offset = capability - GL_VERTEX_ARRAY;
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
@@ -506,9 +508,9 @@ function glDisableClientState(capability) {
         index = -1;
     }
     GL.disableVertexAttribArray(index);
-    if (GL.isBuffer(buffer_objects[index]) !== false) {
+    if (GL.isBuffer(buffer_objects[enumeration_offset]) !== false) {
         GL.bindBuffer(GL.ARRAY_BUFFER, null);
-        GL.deleteBuffer(buffer_objects[index]);
+        GL.deleteBuffer(buffer_objects[enumeration_offset]);
     }
     return;
 }
@@ -516,7 +518,7 @@ function glVertexPointer(size, type, stride, pointer) {
     "use strict";
     var coordinates;
 
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[dummy_ID_pos]);
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_pos, size, type, false, stride, 0);
 
@@ -549,7 +551,7 @@ function glColorPointer(size, type, stride, pointer) {
     "use strict";
     var color_RGB_A;
 
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[dummy_ID_col]);
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
     GL.vertexAttribPointer(dummy_ID_col, size, type, false, stride, 0);
 
