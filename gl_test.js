@@ -14,7 +14,6 @@ var angles = [
     2 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2)
 ];
 var circle = [];
-var colors = [];
 var triangle = [];
 
 /*
@@ -53,10 +52,8 @@ function display() {
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
-
-    glColorPointer(4, GL_FLOAT, 0, colors);
     glEnableClientState(GL_COLOR_ARRAY);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableClientState(GL_COLOR_ARRAY);
 
@@ -111,12 +108,14 @@ function init() {
         }
     }
     glEnableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 
-    colors = [
+    var colors = [
         1, 0, 0, 0.80,
         0, 0, 1, 0.80,
         0, 1, 0, 0.80
     ];
+    glColorPointer(4, GL_FLOAT, 0, colors);
 
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
