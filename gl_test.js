@@ -8,11 +8,6 @@ var attribs_interleaved = 1; /* Multiply by 1 for "false". :) */
  * prepared, and I don't think JavaScript has much "addressing" concept.
  */
 
-var angles = [
-    0 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
-    1 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2),
-    2 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2)
-];
 var circle = [];
 
 var channels = 4;
