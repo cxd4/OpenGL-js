@@ -488,6 +488,7 @@ function glEnableClientState(capability) {
         index = dummy_ID_col;
         GL.shaderSource(dummy_frag, dummy_scripts[1]);
         GL.compileShader(dummy_frag);
+        GL.linkProgram(dummy_shader_program);
         break;
     default:
         index = -1; // Force GL_INVALID_VALUE assertion.

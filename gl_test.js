@@ -52,8 +52,8 @@ function display() {
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
-    glEnableClientState(GL_COLOR_ARRAY);
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
+    glEnableClientState(GL_COLOR_ARRAY);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableClientState(GL_COLOR_ARRAY);
 
