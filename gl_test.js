@@ -14,7 +14,9 @@ var angles = [
     2 * (360 / 3) * (Math.PI / 180) + (Math.PI / 2)
 ];
 var circle = [];
-var triangle = [];
+
+var channels = 4;
+var colors = [];
 
 /*
  * Circles conceptually cannot exist in hardware-accelerated graphics, so we
@@ -23,11 +25,18 @@ var triangle = [];
  */
 var circle_precision = 360;
 
+var rotate_CCW_by_90_degrees = circle_precision / 4;
+var index_buffer = [
+    0*circle_precision/3 + rotate_CCW_by_90_degrees,
+    1*circle_precision/3 + rotate_CCW_by_90_degrees,
+    2*circle_precision/3 + rotate_CCW_by_90_degrees,
+];
+
 var frames_per_second = 60;
 
 function display() {
     "use strict";
-    var stride = 0 * (coordinates_per_vertex * attribs_interleaved);
+    var i;
 
 /*
     glDisable(GL_CULL_FACE);
@@ -46,16 +55,33 @@ function display() {
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
  */
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, circle);
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, stride, triangle);
+    colors[channels * index_buffer[0] + 0] = 1.0000; // red
+    colors[channels * index_buffer[0] + 1] = 0.0000;
+    colors[channels * index_buffer[0] + 2] = 0.0000;
+
+    colors[channels * index_buffer[1] + 0] = 0.0000;
+    colors[channels * index_buffer[1] + 1] = 0.0000;
+    colors[channels * index_buffer[1] + 2] = 1.0000; // blue
+
+    colors[channels * index_buffer[2] + 0] = 0.0000;
+    colors[channels * index_buffer[2] + 1] = 1.0000; // green
+    colors[channels * index_buffer[2] + 2] = 0.0000;
+
     glEnableClientState(GL_COLOR_ARRAY);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glColorPointer(channels, GL_FLOAT, 0, colors);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, index_buffer);
     glDisableClientState(GL_COLOR_ARRAY);
 
-    animate_triangle(60 / frames_per_second);
+    for (i = 0; i < 3; i += 1) {
+        index_buffer[i] += 60 / frames_per_second;
+        if (index_buffer[i] >= circle_precision + 1) {
+            index_buffer[i] %= circle_precision + 1;
+            index_buffer[i] += 1; /* Element 0 is just the center of the fan. */
+        } /* Element (n + 1) is just a copy of the fan's first triangle vtx.. */
+    }
     return;
 }
 
@@ -97,33 +123,18 @@ function init() {
         circle[coordinates_per_vertex * i + j]
       = circle[coordinates_per_vertex * 1 + j];
     }
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
 
-    triangle[coordinates_per_vertex * 0 + 0] = Math.cos(90 * Math.PI / 180);
-    triangle[coordinates_per_vertex * 0 + 1] = Math.sin(90 * Math.PI / 180);
-    triangle[coordinates_per_vertex * 1 + 0] = Math.cos(210 * Math.PI / 180);
-    triangle[coordinates_per_vertex * 1 + 1] = Math.sin(210 * Math.PI / 180);
-    triangle[coordinates_per_vertex * 2 + 0] = Math.cos(330 * Math.PI / 180);
-    triangle[coordinates_per_vertex * 2 + 1] = Math.sin(330 * Math.PI / 180);
-
-    if (coordinates_per_vertex > 2) {
-        for (i = 0; i < 3; i += 1) {
-            triangle[coordinates_per_vertex * i + 2] = 0.0;
-        }
-    }
-    if (coordinates_per_vertex > 3) {
-        for (i = 0; i < 3; i += 1) {
-            triangle[coordinates_per_vertex * i + 3] = 1.0;
-        }
-    }
     glEnableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-
-    var colors = [
-        1, 0, 0, 0.80,
-        0, 0, 1, 0.80,
-        0, 1, 0, 0.80
-    ];
-    glColorPointer(4, GL_FLOAT, 0, colors);
+    for (i = 0; i < circle_precision + 1 + 1; i += 1) {
+        colors[channels * i + 0] = 0.50;
+        colors[channels * i + 1] = 0.50;
+        colors[channels * i + 2] = 0.50;
+        if (channels >= 4) {
+            colors[channels * i + 3] = 0.80;
+        }
+    }
 
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
@@ -161,32 +172,5 @@ function main_GL() {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
     } while (error_code !== GL_NO_ERROR);
-    return;
-}
-
-function animate_triangle(degrees) {
-    "use strict";
-    var i = 0;
-    var radians = degrees * Math.PI / 180.0;
-    var radians_in_360_degress = 360 * Math.PI / 180.0;
-    var stride = coordinates_per_vertex * attribs_interleaved;
-
-    angles[0] += radians;
-    angles[1] += radians;
-    angles[2] += radians;
-    do {
-        if (angles[i] >= radians_in_360_degress) {
-            angles[i] -= radians_in_360_degress;
-        }
-        i += 1;
-    } while (i < 3);
-
-    triangle[0 * stride + 0] = Math.cos(angles[0]);
-    triangle[0 * stride + 1] = Math.sin(angles[0]);
-    triangle[1 * stride + 0] = Math.cos(angles[1]);
-    triangle[1 * stride + 1] = Math.sin(angles[1]);
-    triangle[2 * stride + 0] = Math.cos(angles[2]);
-    triangle[2 * stride + 1] = Math.sin(angles[2]);
-
     return;
 }
