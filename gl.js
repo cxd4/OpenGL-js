@@ -506,6 +506,9 @@ function glDisableClientState(capability) {
         break;
     case GL_COLOR_ARRAY:
         index = dummy_ID_col;
+        GL.shaderSource(dummy_frag, dummy_scripts[2]);
+        GL.compileShader(dummy_frag);
+        GL.linkProgram(dummy_shader_program);
         break;
     default:
         index = -1;

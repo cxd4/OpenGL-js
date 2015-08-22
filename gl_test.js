@@ -42,8 +42,6 @@ function display() {
     glEnable(GL_CULL_FACE);
 */
 
-    glColor4f(0.333, 0.000, 0.667, 0.5);
-
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
@@ -65,6 +63,16 @@ function init() {
     "use strict";
     var i, j;
     var radius = 1.0; /* Unit circle has a radius of (r = 1). */
+
+/*
+ * Behind the rainbow triangle will be a semitransparent indigo circle.
+ * Why indigo?  Meh.  Cool color.
+ *
+ * Because of the transparency blending both the triangle and the circle
+ * to the checkerboard background, most shades of indigo in this test case
+ * will be misinterpreted commonly as purple or magenta.
+ */
+    glColor4f(0.333, 0.000, 0.667, 0.5);
 
     circle[0] = circle[1] = circle[2] = 0.0;
     circle[3] = 1.0;
