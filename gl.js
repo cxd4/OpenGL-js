@@ -405,13 +405,16 @@ function glColor4f(red, green, blue, alpha) {
  * glColor* is all removed from OpenGL ES 2+.
  * However, glColor4f, in particular, was available on OpenGL ES 1.0.
  */
-    dummy_scripts[1] =
+    dummy_scripts[2] =
             "void main(void) {" +
             "    gl_FragColor = vec4(" +
             red + ", " + green + ", " + blue + ", " + alpha + ");" +
             "}";
 
-    GL.shaderSource(dummy_frag, dummy_scripts[1]);
+    if (GL.getVertexAttrib(dummy_ID_col, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
+        return;
+    } // Do not apply glColor4f if vertex color arrays are already enabled.
+    GL.shaderSource(dummy_frag, dummy_scripts[2]);
     GL.compileShader(dummy_frag);
     GL.linkProgram(dummy_shader_program);
     return;
@@ -467,6 +470,10 @@ var dummy_scripts = [
     "varying lowp vec4 out_color;" +
     "void main(void) {" +
     "    gl_FragColor = out_color;" +
+    "}",
+
+    "void main(void) {" +
+    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
     "}"
 ];
 function glEnableClientState(capability) {
@@ -479,6 +486,8 @@ function glEnableClientState(capability) {
         break;
     case GL_COLOR_ARRAY:
         index = dummy_ID_col;
+        GL.shaderSource(dummy_frag, dummy_scripts[1]);
+        GL.compileShader(dummy_frag);
         break;
     default:
         index = -1; // Force GL_INVALID_VALUE assertion.
@@ -558,6 +567,9 @@ function glColorPointer(size, type, stride, pointer) {
             "    gl_FragColor = " + color_RGB_A + ";" +
             "}";
 
+    if (!GL.getVertexAttrib(dummy_ID_col, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
+        return;
+    } // Do not compile the color data in yet, until glEnableClientState.
     GL.shaderSource(dummy_frag, dummy_scripts[1]);
     GL.compileShader(dummy_frag);
     GL.linkProgram(dummy_shader_program);
