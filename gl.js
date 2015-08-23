@@ -1,11 +1,11 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 var dummy_shader_program;
 
-var emulated_vertex_IBO;
 
 function GL_initialize(ML_interface, canvas_name) {
     "use strict";
     var canvas;
+    var emulated_vertex_IBO;
 
 /*
  * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
@@ -44,6 +44,7 @@ function GL_initialize(ML_interface, canvas_name) {
     buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
 
     emulated_vertex_IBO = GL.createBuffer();
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
     return (GL);
 }
 
@@ -221,7 +222,6 @@ function glDrawElements(mode, count, type, indices) {
     "use strict";
     var vertex_indices;
 
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
     switch (type) {
     case GL_UNSIGNED_BYTE:
         vertex_indices = new Uint8Array(indices);
@@ -230,11 +230,9 @@ function glDrawElements(mode, count, type, indices) {
         vertex_indices = new Uint16Array(indices);
         break;
     }
-
     GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, vertex_indices, GL.STATIC_DRAW);
-    GL.drawElements(mode, count, type, 0);
 
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, null);
+    GL.drawElements(mode, count, type, 0);
     return;
 } /* All versions of OpenGL since 1.1 have this function. */
 
