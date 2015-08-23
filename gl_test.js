@@ -18,7 +18,7 @@ var colors = [];
  * have to draw something like a 360-sided regular polygon. (Though, usually
  * something less than a quarter that precise is still a convincing circle.)
  */
-var circle_precision = 360;
+var circle_precision = 180;
 
 var rotate_CCW_by_90_degrees = circle_precision / 4;
 var index_buffer = [
@@ -67,7 +67,7 @@ function display() {
 
     glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(channels, GL_FLOAT, 0, colors);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, index_buffer);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, index_buffer);
     glDisableClientState(GL_COLOR_ARRAY);
 
     for (i = 0; i < 3; i += 1) {
