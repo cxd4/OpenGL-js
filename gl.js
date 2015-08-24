@@ -43,8 +43,17 @@ function GL_initialize(ML_interface, canvas_name) {
     buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
     buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
 
+/*
+ * With OpenGL ES, only up to GL_UNSIGNED_SHORT is acceptable for array
+ * element indices, which means array[0] .. array[65535].
+ *
+ * 64 KB of VRAM should be plenty, as it accounts for loading an element
+ * array buffer of up to 32768 16-bit unsigned short's.  (Maybe some people
+ * will try to load more, though I am not sure that that's a smart idea.)
+ */
     emulated_vertex_IBO = GL.createBuffer();
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
+    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
     return (GL);
 }
 
@@ -230,7 +239,7 @@ function glDrawElements(mode, count, type, indices) {
         vertex_indices = new Uint16Array(indices);
         break;
     }
-    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, vertex_indices, GL.STATIC_DRAW);
+    GL.bufferSubData(GL.ELEMENT_ARRAY_BUFFER, 0, vertex_indices);
 
     GL.drawElements(mode, count, type, 0);
     return;
