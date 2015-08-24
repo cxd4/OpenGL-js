@@ -31,6 +31,7 @@ var frames_per_second = 60;
 
 function display() {
     "use strict";
+    var old_angle, new_angle;
     var i;
 
 /*
@@ -53,19 +54,11 @@ function display() {
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
-    colors[channels * index_buffer[0] + 0] = 1.0000; // red
-    colors[channels * index_buffer[0] + 1] = 0.0000;
-    colors[channels * index_buffer[0] + 2] = 0.0000;
+    old_angle = index_buffer[0] * (360 / circle_precision) - 90;
+    if (old_angle < 0) {
+        old_angle += 360;
+    }
 
-    colors[channels * index_buffer[1] + 0] = 0.0000;
-    colors[channels * index_buffer[1] + 1] = 0.0000;
-    colors[channels * index_buffer[1] + 2] = 1.0000; // blue
-
-    colors[channels * index_buffer[2] + 0] = 0.0000;
-    colors[channels * index_buffer[2] + 1] = 1.0000; // green
-    colors[channels * index_buffer[2] + 2] = 0.0000;
-
-    glColorPointer(channels, GL_FLOAT, 0, colors);
     glEnableClientState(GL_COLOR_ARRAY);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, index_buffer);
     glDisableClientState(GL_COLOR_ARRAY);
@@ -76,6 +69,22 @@ function display() {
             index_buffer[i] %= circle_precision + 1;
             index_buffer[i] += 1; /* Element 0 is just the center of the fan. */
         } /* Element (n + 1) is just a copy of the fan's first triangle vtx.. */
+    }
+
+    new_angle = index_buffer[0] * (360 / circle_precision) - 90;
+    if (new_angle < 0) {
+        new_angle += 360;
+    }
+
+/*
+ * If we have just now crossed in between one of the 3 120-degree portions of
+ * the circle, then it becomes necessary to synchronize all of the colors.
+ */
+ // if (true) {
+ // if (global_count >= circle_precision / 3) {
+    if (old_angle % 120 > new_angle % 120) {
+        synchronise_colors();
+        glColorPointer(channels, GL_FLOAT, 0, colors);
     }
     return;
 }
@@ -119,17 +128,16 @@ function init() {
       = circle[coordinates_per_vertex * 1 + j];
     }
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
-
     glEnableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    for (i = 0; i < circle_precision + 1 + 1; i += 1) {
-        colors[channels * i + 0] = 0.50;
-        colors[channels * i + 1] = 0.50;
-        colors[channels * i + 2] = 0.50;
-        if (channels >= 4) {
+
+    synchronise_colors();
+    if (channels >= 4) {
+        for (i = 0; i < circle_precision + 1 + 1; i += 1) {
             colors[channels * i + 3] = 0.80;
         }
     }
+    glDisableClientState(GL_COLOR_ARRAY);
+    glColorPointer(channels, GL_FLOAT, 0, colors);
 
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
@@ -167,5 +175,46 @@ function main_GL() {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
     } while (error_code !== GL_NO_ERROR);
+    return;
+}
+
+function synchronise_colors() {
+    var i, j;
+    var rotate_CCW_by_120_deg = circle_precision / 3;
+
+    for (i = 0; i < rotate_CCW_by_120_deg; i += 1) {
+        j = (index_buffer[0] + i) % (circle_precision + 1);
+        if (j === 0) {
+            j = 1;
+            rotate_CCW_by_120_deg += 1;
+        } // Skip the binding center point of circle (not part of the tri).
+        colors[channels * j + 0] = 1.0000; // red
+        colors[channels * j + 1] = 0.0000;
+        colors[channels * j + 2] = 0.0000;
+    }
+
+    rotate_CCW_by_120_deg = circle_precision / 3;
+    for (i = 0; i < rotate_CCW_by_120_deg; i += 1) {
+        j = (index_buffer[1] + i) % (circle_precision + 1);
+        if (j === 0) {
+            j = 1;
+            rotate_CCW_by_120_deg += 1;
+        }
+        colors[channels * j + 0] = 0.0000;
+        colors[channels * j + 1] = 0.0000;
+        colors[channels * j + 2] = 1.0000; // blue
+    }
+
+    rotate_CCW_by_120_deg = circle_precision / 3;
+    for (i = 0; i < rotate_CCW_by_120_deg; i += 1) {
+        j = (index_buffer[2] + i) % (circle_precision + 1);
+        if (j === 0) {
+            j = 1;
+            rotate_CCW_by_120_deg += 1;
+        }
+        colors[channels * j + 0] = 0.0000;
+        colors[channels * j + 1] = 1.0000; // green
+        colors[channels * j + 2] = 0.0000;
+    }
     return;
 }
