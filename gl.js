@@ -54,6 +54,24 @@ function GL_initialize(ML_interface, canvas_name) {
     emulated_vertex_IBO = GL.createBuffer();
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
     GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
+
+/*
+ * Similarly to the above, we can also prevent having to constantly re-
+ * allocate the vertex attribute buffers by allocating them only once and
+ * keeping all future updates to glBufferSubData, not glBufferData.
+ *
+ * GL_FLOAT is the largest data type supported on OpenGL ES (GL_DOUBLE with
+ * the normal OpenGL specs), so we need to account for 4 bytes times the
+ * maximum number of plausible elements one would try to keep updating.
+ *
+ * I'm supposing that about 256K of VRAM per attribute should be reasonable.
+ * This accounts for caching up to 65,536 vertices of type GL_FLOAT.
+ */
+
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
     return (GL);
 }
 
@@ -529,7 +547,7 @@ function glVertexPointer(size, type, stride, pointer) {
     var coordinates;
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
-    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
+    GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
     GL.vertexAttribPointer(dummy_ID_pos, size, type, false, stride, 0);
 
     switch (size) {
@@ -562,7 +580,7 @@ function glColorPointer(size, type, stride, pointer) {
     var color_RGB_A;
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
-    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(pointer), GL.STATIC_DRAW);
+    GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
     GL.vertexAttribPointer(dummy_ID_col, size, type, false, stride, 0);
 
     switch (size) {
