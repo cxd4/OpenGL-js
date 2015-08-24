@@ -65,7 +65,7 @@ function GL_initialize(ML_interface, canvas_name) {
  * maximum number of plausible elements one would try to keep updating.
  *
  * I'm supposing that about 256K of VRAM per attribute should be reasonable.
- * This accounts for caching up to 65,536 vertices of type GL_FLOAT.
+ * This accounts for caching up to 32,768 2-D X,Y vertices of type GL_FLOAT.
  */
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
