@@ -148,6 +148,19 @@ function emulate_GL_macros(context) {
     GL_SCISSOR_TEST = context.SCISSOR_TEST;
     GL_STENCIL_TEST = context.STENCIL_TEST;
 
+/*
+ * blender functions when merging source frame buffer pixels in front of dst.
+ * not implemented:  SRC_ALPHA_SATURATE, DST_COLOR and ONE_MINUS_DST_COLOR
+ */
+    GL_ZERO = context.ZERO;
+    GL_ONE = context.ONE;
+    GL_SRC_COLOR = context.SRC_COLOR;
+    GL_ONE_MINUS_SRC_COLOR = context.ONE_MINUS_SRC_COLOR;
+    GL_SRC_ALPHA = context.SRC_ALPHA;
+    GL_ONE_MINUS_SRC_ALPHA = context.ONE_MINUS_SRC_ALPHA;
+    GL_DST_ALPHA = context.DST_ALPHA;
+    GL_ONE_MINUS_DST_ALPHA = context.ONE_MINUS_DST_ALPHA;
+
     GL_CW = context.CW;
     GL_CCW = context.CCW;
 
@@ -223,6 +236,15 @@ var GL_FALSE,
     GL_SCISSOR_TEST,
     GL_STENCIL_TEST,
 
+    GL_ZERO,
+    GL_ONE,
+    GL_SRC_COLOR,
+    GL_ONE_MINUS_SRC_COLOR,
+    GL_SRC_ALPHA,
+    GL_ONE_MINUS_SRC_ALPHA,
+    GL_DST_ALPHA,
+    GL_ONE_MINUS_DST_ALPHA,
+
     GL_CW,
     GL_CCW,
 
@@ -280,6 +302,12 @@ function glIsEnabled(capability) {
     return GL.isEnabled(capability);
 }
 
+function glBlendFunc(source_factor, destination_factor) {
+    "use strict";
+
+    GL.blendFunc(source_factor, destination_factor);
+    return;
+} /* All versions of OpenGL and OpenGL ES have this function; it's universal. */
 function glClear(buffers_mask) {
     "use strict";
 

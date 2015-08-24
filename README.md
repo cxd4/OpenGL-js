@@ -17,7 +17,7 @@ While most of the universal functions and features are supported, there are a fe
 * glHint
 * glGetBooleanv, glGetIntegerv and glGetFloatv
 * glClearStencil, glStencilMask and glDepthMask
-* glBlendFunc, glStencilFunc, glStencilOp, and glDepthFunc
+* glStencilFunc, glStencilOp, and glDepthFunc
 * glTexImage2D, gl(Get)TexParameter(f/i)(v), glPixelStorei and any pixel upload operation
 
 It is not possible to do pixel transfers yet with this wrapper alone, except to do frame buffer reads using `glReadPixels` which is, fortunately, one of the universal OpenGL commands and has been implemented here.

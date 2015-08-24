@@ -140,18 +140,19 @@ function init() {
     glColorPointer(channels, GL_FLOAT, 0, colors);
 
     glEnable(GL_BLEND);
-    glDisable(GL_CULL_FACE);
+ // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glClearColor(0.00, 0.00, 0.00, 0.00);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+    glDisable(GL_CULL_FACE);
 
     glPointSize(1.0);
     glLineWidth(1);
-
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     return;
 }
 
