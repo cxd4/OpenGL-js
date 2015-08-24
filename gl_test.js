@@ -65,8 +65,8 @@ function display() {
     colors[channels * index_buffer[2] + 1] = 1.0000; // green
     colors[channels * index_buffer[2] + 2] = 0.0000;
 
-    glEnableClientState(GL_COLOR_ARRAY);
     glColorPointer(channels, GL_FLOAT, 0, colors);
+    glEnableClientState(GL_COLOR_ARRAY);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, index_buffer);
     glDisableClientState(GL_COLOR_ARRAY);
 
