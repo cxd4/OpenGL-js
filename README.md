@@ -28,7 +28,6 @@ Drawing even a single point to the screen is impossible without breaking either 
 * glDisableClientState (available in GL (ES) 1.1, runs on top of WebGL `disableVertexAttribArray`)
 * glVertexPointer (available in GL (ES) 1.1, runs on top of WebGL `vertexAttribPointer`)
 * glColorPointer (available in GL (ES) 1.1, also runs on top of WebGL `vertexAttribPointer`)
-* glRectf (available in OpenGL 1.0 but unavailable in OpenGL ES and deprecated)
 * glColor4f (available in OpenGL (ES) 1.0, runs on top of simple GLSL fragment shader)
 * glPointSize (available in OpenGL (ES) 1.0, runs on top of GLSL vertex shader)
 

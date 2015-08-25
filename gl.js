@@ -474,29 +474,6 @@ function glColor4f(red, green, blue, alpha) {
     return;
 }
 
-function glRectf(x1, y1, x2, y2) {
-    "use strict";
-    var rectangle = [];
-    var x = 0, y = 1, coordinates_per_vertex = 2;
-
-    rectangle[0 * coordinates_per_vertex + x] = x1;
-    rectangle[0 * coordinates_per_vertex + y] = y1;
-
-    rectangle[1 * coordinates_per_vertex + x] = x2;
-    rectangle[1 * coordinates_per_vertex + y] = y1;
-
-    rectangle[2 * coordinates_per_vertex + x] = x1;
-    rectangle[2 * coordinates_per_vertex + y] = y2;
-
-    rectangle[3 * coordinates_per_vertex + x] = x2;
-    rectangle[3 * coordinates_per_vertex + y] = y2;
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, rectangle);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
-    return;
-}
-
 /*
  * universal functions since OpenGL 1.1 and available on OpenGL ES 1.x,
  * but revised in the GL3 deprecation to different function names:
