@@ -1,7 +1,6 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 var dummy_shader_program;
 
-
 function GL_initialize(ML_interface, canvas_name) {
     "use strict";
     var canvas;
@@ -12,14 +11,18 @@ function GL_initialize(ML_interface, canvas_name) {
  * currently available as an extension in most browsers (planned for HTML5).
  */
     canvas = ML_interface.getElementById(canvas_name);
-    GL = canvas.getContext("webgl");
+
+    try {
+        GL = canvas.getContext("webgl");
+        if (!GL) {
+            GL = canvas.getContext("experimental-webgl");
+         // alert("Warning:  Experimental WebGL implementation.");
+        }
+    } catch (error) {
+    }
 
     if (!GL) {
-        GL = canvas.getContext("experimental-webgl");
-        if (!GL) {
-            return null;
-        }
-     // trace_error("Warning:  Experimental WebGL implementation.");
+        return null;
     }
     emulate_GL_macros(GL);
 
