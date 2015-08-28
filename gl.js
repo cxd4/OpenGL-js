@@ -1,82 +1,77 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 var dummy_shader_program;
 
-function GL_initialize(ML_interface, canvas_name) {
-    "use strict";
-    var canvas;
-    var emulated_vertex_IBO;
+var GL_FALSE,
+    GL_TRUE,
 
-/*
- * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
- * currently available as an extension in most browsers (planned for HTML5).
- */
-    canvas = ML_interface.getElementById(canvas_name);
+    GL_NO_ERROR,
+    GL_INVALID_ENUM,
+    GL_INVALID_VALUE,
+    GL_INVALID_OPERATION,
+    GL_INVALID_FRAMEBUFFER_OPERATION,
+    GL_OUT_OF_MEMORY,
 
-    try {
-        GL = canvas.getContext("webgl");
-        if (!GL) {
-            GL = canvas.getContext("experimental-webgl");
-         // alert("Warning:  Experimental WebGL implementation.");
-        }
-    } catch (error) {
-    }
+    GL_RGB,
+    GL_ALPHA,
+    GL_RGBA,
 
-    if (!GL) {
-        return null;
-    }
-    emulate_GL_macros(GL);
+    GL_BYTE,
+    GL_UNSIGNED_BYTE,
+    GL_UNSIGNED_SHORT_5_6_5,
+    GL_UNSIGNED_SHORT_4_4_4_4,
+    GL_UNSIGNED_SHORT_5_5_5_1,
+    GL_SHORT,
+    GL_UNSIGNED_SHORT,
+    GL_UNSIGNED_INT,
+    GL_FLOAT,
 
-    dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
-    dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
-    dummy_shader_program = GL.createProgram();
+    GL_POINTS,
+    GL_LINE_STRIP,
+    GL_LINE_LOOP,
+    GL_LINES,
+    GL_TRIANGLE_STRIP,
+    GL_TRIANGLE_FAN,
+    GL_TRIANGLES,
 
-    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-    GL.attachShader(dummy_shader_program, dummy_vtx);
-    GL.shaderSource(dummy_frag, dummy_scripts[1]);
-    GL.attachShader(dummy_shader_program, dummy_frag);
+    GL_VERTEX_ARRAY,
+    GL_COLOR_ARRAY,
+    GL_NORMAL_ARRAY,
+    GL_TEXTURE_COORD_ARRAY,
 
-    GL.compileShader(dummy_vtx);
-    GL.compileShader(dummy_frag);
-    GL.linkProgram(dummy_shader_program);
-    GL.useProgram(dummy_shader_program);
+    GL_BLEND,
+    GL_CULL_FACE,
+    GL_DEPTH_TEST,
+    GL_DITHER,
+    GL_POLYGON_OFFSET_FILL,
+    GL_SAMPLE_ALPHA_TO_COVERAGE,
+    GL_SAMPLE_COVERAGE,
+    GL_SCISSOR_TEST,
+    GL_STENCIL_TEST,
 
-    dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
-    dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
+    GL_ZERO,
+    GL_ONE,
+    GL_SRC_COLOR,
+    GL_ONE_MINUS_SRC_COLOR,
+    GL_SRC_ALPHA,
+    GL_ONE_MINUS_SRC_ALPHA,
+    GL_DST_ALPHA,
+    GL_ONE_MINUS_DST_ALPHA,
 
-    buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
-    buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+    GL_CW,
+    GL_CCW,
 
-/*
- * With OpenGL ES, only up to GL_UNSIGNED_SHORT is acceptable for array
- * element indices, which means array[0] .. array[65535].
- *
- * 64 KB of VRAM should be plenty, as it accounts for loading an element
- * array buffer of up to 32768 16-bit unsigned short's.  (Maybe some people
- * will try to load more, though I am not sure that that's a smart idea.)
- */
-    emulated_vertex_IBO = GL.createBuffer();
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
-    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
+    GL_FRONT,
+    GL_BACK,
+    GL_FRONT_AND_BACK,
 
-/*
- * Similarly to the above, we can also prevent having to constantly re-
- * allocate the vertex attribute buffers by allocating them only once and
- * keeping all future updates to glBufferSubData, not glBufferData.
- *
- * GL_FLOAT is the largest data type supported on OpenGL ES (GL_DOUBLE with
- * the normal OpenGL specs), so we need to account for 4 bytes times the
- * maximum number of plausible elements one would try to keep updating.
- *
- * I'm supposing that about 256K of VRAM per attribute should be reasonable.
- * This accounts for caching up to 32,768 2-D X,Y vertices of type GL_FLOAT.
- */
+    GL_VENDOR,
+    GL_RENDERER,
+    GL_VERSION,
+    GL_EXTENSIONS,
 
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
-    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
-    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
-    return (GL);
-}
+    GL_COLOR_BUFFER_BIT,
+    GL_DEPTH_BUFFER_BIT,
+    GL_STENCIL_BUFFER_BIT;
 
 function emulate_GL_macros(context) {
     "use strict";
@@ -192,77 +187,106 @@ function emulate_GL_macros(context) {
     return;
 }
 
-var GL_FALSE,
-    GL_TRUE,
+var buffer_objects = [];
+var dummy_vtx, dummy_frag;
+var dummy_ID_pos = 0,
+    dummy_ID_col = 1;
 
-    GL_NO_ERROR,
-    GL_INVALID_ENUM,
-    GL_INVALID_VALUE,
-    GL_INVALID_OPERATION,
-    GL_INVALID_FRAMEBUFFER_OPERATION,
-    GL_OUT_OF_MEMORY,
+var dummy_scripts = [
+    "attribute highp vec4 pos;" +
+    "attribute lowp vec4 col;" +
+    "varying lowp vec4 out_color;" +
+    "void main(void) {" +
+    "    gl_Position = pos;" +
+    "    out_color = col;" +
+    "}",
 
-    GL_RGB,
-    GL_ALPHA,
-    GL_RGBA,
+    "varying lowp vec4 out_color;" +
+    "void main(void) {" +
+    "    gl_FragColor = out_color;" +
+    "}",
 
-    GL_BYTE,
-    GL_UNSIGNED_BYTE,
-    GL_UNSIGNED_SHORT_5_6_5,
-    GL_UNSIGNED_SHORT_4_4_4_4,
-    GL_UNSIGNED_SHORT_5_5_5_1,
-    GL_SHORT,
-    GL_UNSIGNED_SHORT,
-    GL_UNSIGNED_INT,
-    GL_FLOAT,
+    "void main(void) {" +
+    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
+    "}"
+];
 
-    GL_POINTS,
-    GL_LINE_STRIP,
-    GL_LINE_LOOP,
-    GL_LINES,
-    GL_TRIANGLE_STRIP,
-    GL_TRIANGLE_FAN,
-    GL_TRIANGLES,
+function GL_initialize(ML_interface, canvas_name) {
+    "use strict";
+    var canvas;
+    var emulated_vertex_IBO;
 
-    GL_VERTEX_ARRAY,
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_TEXTURE_COORD_ARRAY,
+/*
+ * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
+ * currently available as an extension in most browsers (planned for HTML5).
+ */
+    canvas = ML_interface.getElementById(canvas_name);
 
-    GL_BLEND,
-    GL_CULL_FACE,
-    GL_DEPTH_TEST,
-    GL_DITHER,
-    GL_POLYGON_OFFSET_FILL,
-    GL_SAMPLE_ALPHA_TO_COVERAGE,
-    GL_SAMPLE_COVERAGE,
-    GL_SCISSOR_TEST,
-    GL_STENCIL_TEST,
+    try {
+        GL = canvas.getContext("webgl");
+        if (!GL) {
+            GL = canvas.getContext("experimental-webgl");
+         // alert("Warning:  Experimental WebGL implementation.");
+        }
+    } catch (error) {
+    }
 
-    GL_ZERO,
-    GL_ONE,
-    GL_SRC_COLOR,
-    GL_ONE_MINUS_SRC_COLOR,
-    GL_SRC_ALPHA,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_DST_ALPHA,
-    GL_ONE_MINUS_DST_ALPHA,
+    if (!GL) {
+        return null;
+    }
+    emulate_GL_macros(GL);
 
-    GL_CW,
-    GL_CCW,
+    dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
+    dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
+    dummy_shader_program = GL.createProgram();
 
-    GL_FRONT,
-    GL_BACK,
-    GL_FRONT_AND_BACK,
+    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
+    GL.attachShader(dummy_shader_program, dummy_vtx);
+    GL.shaderSource(dummy_frag, dummy_scripts[1]);
+    GL.attachShader(dummy_shader_program, dummy_frag);
 
-    GL_VENDOR,
-    GL_RENDERER,
-    GL_VERSION,
-    GL_EXTENSIONS,
+    GL.compileShader(dummy_vtx);
+    GL.compileShader(dummy_frag);
+    GL.linkProgram(dummy_shader_program);
+    GL.useProgram(dummy_shader_program);
 
-    GL_COLOR_BUFFER_BIT,
-    GL_DEPTH_BUFFER_BIT,
-    GL_STENCIL_BUFFER_BIT;
+    dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
+    dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
+
+    buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+    buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+
+/*
+ * With OpenGL ES, only up to GL_UNSIGNED_SHORT is acceptable for array
+ * element indices, which means array[0] .. array[65535].
+ *
+ * 64 KB of VRAM should be plenty, as it accounts for loading an element
+ * array buffer of up to 32768 16-bit unsigned short's.  (Maybe some people
+ * will try to load more, though I am not sure that that's a smart idea.)
+ */
+    emulated_vertex_IBO = GL.createBuffer();
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
+    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
+
+/*
+ * Similarly to the above, we can also prevent having to constantly re-
+ * allocate the vertex attribute buffers by allocating them only once and
+ * keeping all future updates to glBufferSubData, not glBufferData.
+ *
+ * GL_FLOAT is the largest data type supported on OpenGL ES (GL_DOUBLE with
+ * the normal OpenGL specs), so we need to account for 4 bytes times the
+ * maximum number of plausible elements one would try to keep updating.
+ *
+ * I'm supposing that about 256K of VRAM per attribute should be reasonable.
+ * This accounts for caching up to 32,768 2-D X,Y vertices of type GL_FLOAT.
+ */
+
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    return (GL);
+}
 
 function glDrawArrays(mode, first, count) {
     "use strict";
@@ -487,29 +511,6 @@ function glColor4f(red, green, blue, alpha) {
  *     * glEnableClientState
  *     * glDisableClientState
  */
-var buffer_objects = [];
-var dummy_vtx, dummy_frag;
-var dummy_ID_pos = 0,
-    dummy_ID_col = 1;
-
-var dummy_scripts = [
-    "attribute highp vec4 pos;" +
-    "attribute lowp vec4 col;" +
-    "varying lowp vec4 out_color;" +
-    "void main(void) {" +
-    "    gl_Position = pos;" +
-    "    out_color = col;" +
-    "}",
-
-    "varying lowp vec4 out_color;" +
-    "void main(void) {" +
-    "    gl_FragColor = out_color;" +
-    "}",
-
-    "void main(void) {" +
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
-    "}"
-];
 function glEnableClientState(capability) {
     "use strict";
     var index;
