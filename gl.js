@@ -1,5 +1,5 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
-var dummy_shader_program;
+var dummy_shader = {};
 
 var GL_FALSE,
     GL_TRUE,
@@ -188,10 +188,6 @@ function emulate_GL_macros(context) {
 }
 
 var buffer_objects = [];
-var dummy_vtx, dummy_frag;
-var dummy_ID_pos = 0,
-    dummy_ID_col = 1;
-
 var dummy_scripts = [
     "attribute highp vec4 pos;" +
     "attribute lowp vec4 col;" +
@@ -236,22 +232,22 @@ function GL_initialize(ML_interface, canvas_name) {
     }
     emulate_GL_macros(GL);
 
-    dummy_vtx = GL.createShader(GL.VERTEX_SHADER);
-    dummy_frag = GL.createShader(GL.FRAGMENT_SHADER);
-    dummy_shader_program = GL.createProgram();
+    dummy_shader.vtx = GL.createShader(GL.VERTEX_SHADER);
+    dummy_shader.frag = GL.createShader(GL.FRAGMENT_SHADER);
+    dummy_shader.program = GL.createProgram();
 
-    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-    GL.attachShader(dummy_shader_program, dummy_vtx);
-    GL.shaderSource(dummy_frag, dummy_scripts[1]);
-    GL.attachShader(dummy_shader_program, dummy_frag);
+    GL.shaderSource(dummy_shader.vtx, dummy_scripts[0]);
+    GL.attachShader(dummy_shader.program, dummy_shader.vtx);
+    GL.shaderSource(dummy_shader.frag, dummy_scripts[1]);
+    GL.attachShader(dummy_shader.program, dummy_shader.frag);
 
-    GL.compileShader(dummy_vtx);
-    GL.compileShader(dummy_frag);
-    GL.linkProgram(dummy_shader_program);
-    GL.useProgram(dummy_shader_program);
+    GL.compileShader(dummy_shader.vtx);
+    GL.compileShader(dummy_shader.frag);
+    GL.linkProgram(dummy_shader.program);
+    GL.useProgram(dummy_shader.program);
 
-    dummy_ID_pos = GL.getAttribLocation(dummy_shader_program, "pos");
-    dummy_ID_col = GL.getAttribLocation(dummy_shader_program, "col");
+    dummy_shader.pos = GL.getAttribLocation(dummy_shader.program, "pos");
+    dummy_shader.col = GL.getAttribLocation(dummy_shader.program, "col");
 
     buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
     buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
@@ -492,12 +488,12 @@ function glColor4f(red, green, blue, alpha) {
             red + ", " + green + ", " + blue + ", " + alpha + ");" +
             "}";
 
-    if (GL.getVertexAttrib(dummy_ID_col, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
+    if (GL.getVertexAttrib(dummy_shader.col, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
         return;
     } // Do not apply glColor4f if vertex color arrays are already enabled.
-    GL.shaderSource(dummy_frag, dummy_scripts[2]);
-    GL.compileShader(dummy_frag);
-    GL.linkProgram(dummy_shader_program);
+    GL.shaderSource(dummy_shader.frag, dummy_scripts[2]);
+    GL.compileShader(dummy_shader.frag);
+    GL.linkProgram(dummy_shader.program);
     return;
 }
 
@@ -517,13 +513,13 @@ function glEnableClientState(capability) {
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
-        index = dummy_ID_pos;
+        index = dummy_shader.pos;
         break;
     case GL_COLOR_ARRAY:
-        index = dummy_ID_col;
-        GL.shaderSource(dummy_frag, dummy_scripts[1]);
-        GL.compileShader(dummy_frag);
-        GL.linkProgram(dummy_shader_program);
+        index = dummy_shader.col;
+        GL.shaderSource(dummy_shader.frag, dummy_scripts[1]);
+        GL.compileShader(dummy_shader.frag);
+        GL.linkProgram(dummy_shader.program);
         break;
     default:
         index = -1; // Force GL_INVALID_VALUE assertion.
@@ -537,13 +533,13 @@ function glDisableClientState(capability) {
 
     switch (capability) {
     case GL_VERTEX_ARRAY:
-        index = dummy_ID_pos;
+        index = dummy_shader.pos;
         break;
     case GL_COLOR_ARRAY:
-        index = dummy_ID_col;
-        GL.shaderSource(dummy_frag, dummy_scripts[2]);
-        GL.compileShader(dummy_frag);
-        GL.linkProgram(dummy_shader_program);
+        index = dummy_shader.col;
+        GL.shaderSource(dummy_shader.frag, dummy_scripts[2]);
+        GL.compileShader(dummy_shader.frag);
+        GL.linkProgram(dummy_shader.program);
         break;
     default:
         index = -1;
@@ -557,7 +553,7 @@ function glVertexPointer(size, type, stride, pointer) {
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
     GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
-    GL.vertexAttribPointer(dummy_ID_pos, size, type, false, stride, 0);
+    GL.vertexAttribPointer(dummy_shader.pos, size, type, false, stride, 0);
 
     switch (size) {
     case 2: // P(x, y, 0, 1)
@@ -579,9 +575,9 @@ function glVertexPointer(size, type, stride, pointer) {
             "    out_color = col;" +
             "}";
 
-    GL.shaderSource(dummy_vtx, dummy_scripts[0]);
-    GL.compileShader(dummy_vtx);
-    GL.linkProgram(dummy_shader_program);
+    GL.shaderSource(dummy_shader.vtx, dummy_scripts[0]);
+    GL.compileShader(dummy_shader.vtx);
+    GL.linkProgram(dummy_shader.program);
     return;
 }
 function glColorPointer(size, type, stride, pointer) {
@@ -590,7 +586,7 @@ function glColorPointer(size, type, stride, pointer) {
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
     GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
-    GL.vertexAttribPointer(dummy_ID_col, size, type, false, stride, 0);
+    GL.vertexAttribPointer(dummy_shader.col, size, type, false, stride, 0);
 
     switch (size) {
     case 3: // r, g, b, 1
@@ -606,11 +602,11 @@ function glColorPointer(size, type, stride, pointer) {
             "    gl_FragColor = " + color_RGB_A + ";" +
             "}";
 
-    if (!GL.getVertexAttrib(dummy_ID_col, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
+    if (!GL.getVertexAttrib(dummy_shader.col, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
         return;
     } // Do not compile the color data in yet, until glEnableClientState.
-    GL.shaderSource(dummy_frag, dummy_scripts[1]);
-    GL.compileShader(dummy_frag);
-    GL.linkProgram(dummy_shader_program);
+    GL.shaderSource(dummy_shader.frag, dummy_scripts[1]);
+    GL.compileShader(dummy_shader.frag);
+    GL.linkProgram(dummy_shader.program);
     return;
 }
