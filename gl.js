@@ -548,6 +548,7 @@ function GL_initialize(ML_interface, canvas_name) {
          // alert("Warning:  Experimental WebGL implementation.");
         }
     } catch (error) {
+        ML_interface.write("WebGL getContext() exception:  " + error);
     }
 
     if (!GL) {
