@@ -207,83 +207,6 @@ var dummy_scripts = [
     "}"
 ];
 
-function GL_initialize(ML_interface, canvas_name) {
-    "use strict";
-    var canvas;
-    var emulated_vertex_IBO;
-
-/*
- * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
- * currently available as an extension in most browsers (planned for HTML5).
- */
-    canvas = ML_interface.getElementById(canvas_name);
-
-    try {
-        GL = canvas.getContext("webgl");
-        if (!GL) {
-            GL = canvas.getContext("experimental-webgl");
-         // alert("Warning:  Experimental WebGL implementation.");
-        }
-    } catch (error) {
-    }
-
-    if (!GL) {
-        return null;
-    }
-    emulate_GL_macros(GL);
-
-    dummy_shader.vtx = GL.createShader(GL.VERTEX_SHADER);
-    dummy_shader.frag = GL.createShader(GL.FRAGMENT_SHADER);
-    dummy_shader.program = GL.createProgram();
-
-    GL.shaderSource(dummy_shader.vtx, dummy_scripts[0]);
-    GL.attachShader(dummy_shader.program, dummy_shader.vtx);
-    GL.shaderSource(dummy_shader.frag, dummy_scripts[1]);
-    GL.attachShader(dummy_shader.program, dummy_shader.frag);
-
-    GL.compileShader(dummy_shader.vtx);
-    GL.compileShader(dummy_shader.frag);
-    GL.linkProgram(dummy_shader.program);
-    GL.useProgram(dummy_shader.program);
-
-    dummy_shader.pos = GL.getAttribLocation(dummy_shader.program, "pos");
-    dummy_shader.col = GL.getAttribLocation(dummy_shader.program, "col");
-
-    buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
-    buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
-
-/*
- * With OpenGL ES, only up to GL_UNSIGNED_SHORT is acceptable for array
- * element indices, which means array[0] .. array[65535].
- *
- * 64 KB of VRAM should be plenty, as it accounts for loading an element
- * array buffer of up to 32768 16-bit unsigned short's.  (Maybe some people
- * will try to load more, though I am not sure that that's a smart idea.)
- */
-    emulated_vertex_IBO = GL.createBuffer();
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
-    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
-
-/*
- * Similarly to the above, we can also prevent having to constantly re-
- * allocate the vertex attribute buffers by allocating them only once and
- * keeping all future updates to glBufferSubData, not glBufferData.
- *
- * GL_FLOAT is the largest data type supported on OpenGL ES (GL_DOUBLE with
- * the normal OpenGL specs), so we need to account for 4 bytes times the
- * maximum number of plausible elements one would try to keep updating.
- *
- * I'm supposing that about 256K of VRAM per attribute should be reasonable.
- * This accounts for caching up to 32,768 2-D X,Y vertices of type GL_FLOAT.
- */
-
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
-    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
-    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
-    return (GL);
-}
-
 function glDrawArrays(mode, first, count) {
     "use strict";
 
@@ -609,4 +532,81 @@ function glColorPointer(size, type, stride, pointer) {
     GL.compileShader(dummy_shader.frag);
     GL.linkProgram(dummy_shader.program);
     return;
+}
+
+function GL_initialize(ML_interface, canvas_name) {
+    "use strict";
+    var canvas;
+    var emulated_vertex_IBO;
+
+/*
+ * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
+ * currently available as an extension in most browsers (planned for HTML5).
+ */
+    canvas = ML_interface.getElementById(canvas_name);
+
+    try {
+        GL = canvas.getContext("webgl");
+        if (!GL) {
+            GL = canvas.getContext("experimental-webgl");
+         // alert("Warning:  Experimental WebGL implementation.");
+        }
+    } catch (error) {
+    }
+
+    if (!GL) {
+        return null;
+    }
+    emulate_GL_macros(GL);
+
+    dummy_shader.vtx = GL.createShader(GL.VERTEX_SHADER);
+    dummy_shader.frag = GL.createShader(GL.FRAGMENT_SHADER);
+    dummy_shader.program = GL.createProgram();
+
+    GL.shaderSource(dummy_shader.vtx, dummy_scripts[0]);
+    GL.attachShader(dummy_shader.program, dummy_shader.vtx);
+    GL.shaderSource(dummy_shader.frag, dummy_scripts[1]);
+    GL.attachShader(dummy_shader.program, dummy_shader.frag);
+
+    GL.compileShader(dummy_shader.vtx);
+    GL.compileShader(dummy_shader.frag);
+    GL.linkProgram(dummy_shader.program);
+    GL.useProgram(dummy_shader.program);
+
+    dummy_shader.pos = GL.getAttribLocation(dummy_shader.program, "pos");
+    dummy_shader.col = GL.getAttribLocation(dummy_shader.program, "col");
+
+    buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+    buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+
+/*
+ * With OpenGL ES, only up to GL_UNSIGNED_SHORT is acceptable for array
+ * element indices, which means array[0] .. array[65535].
+ *
+ * 64 KB of VRAM should be plenty, as it accounts for loading an element
+ * array buffer of up to 32768 16-bit unsigned short's.  (Maybe some people
+ * will try to load more, though I am not sure that that's a smart idea.)
+ */
+    emulated_vertex_IBO = GL.createBuffer();
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
+    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
+
+/*
+ * Similarly to the above, we can also prevent having to constantly re-
+ * allocate the vertex attribute buffers by allocating them only once and
+ * keeping all future updates to glBufferSubData, not glBufferData.
+ *
+ * GL_FLOAT is the largest data type supported on OpenGL ES (GL_DOUBLE with
+ * the normal OpenGL specs), so we need to account for 4 bytes times the
+ * maximum number of plausible elements one would try to keep updating.
+ *
+ * I'm supposing that about 256K of VRAM per attribute should be reasonable.
+ * This accounts for caching up to 32,768 2-D X,Y vertices of type GL_FLOAT.
+ */
+
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    return (GL);
 }
