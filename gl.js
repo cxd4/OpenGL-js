@@ -191,9 +191,11 @@ var buffer_objects = [];
 var dummy_scripts = [
     "attribute highp vec4 pos;" +
     "attribute lowp vec4 col;" +
+    "uniform float point_size;" +
     "varying lowp vec4 out_color;" +
     "void main(void) {" +
     "    gl_Position = pos;" +
+    "    gl_PointSize = point_size;" +
     "    out_color = col;" +
     "}",
 
@@ -384,17 +386,9 @@ function glLineWidth(width) {
 
 function glPointSize(size) {
     "use strict";
-    var result;
+    var location = GL.getUniformLocation(dummy_shader.program, "point_size");
 
-/*
- * Unlike glLineWidth, glPointSize wasn't so lucky in the API's "evolution".
- */
-    if (Math.floor(size) === Math.ceil(size)) {
-        size += ".0"; /* GLSL error if you pass int types */
-    }
-
-    result = dummy_scripts[0].replace("}", "gl_PointSize = " + size + ";}");
-    dummy_scripts[0] = result;
+    GL.uniform1f(location, size);
     return;
 }
 
@@ -492,9 +486,11 @@ function glVertexPointer(size, type, stride, pointer) {
     dummy_scripts[0] =
             "attribute highp vec" + size + " pos;" +
             "attribute lowp vec4 col;" +
+            "uniform float point_size;" +
             "varying lowp vec4 out_color;" +
             "void main(void) {" +
             "    gl_Position = vec4(" + coordinates + ");" +
+            "    gl_PointSize = point_size;" +
             "    out_color = col;" +
             "}";
 
@@ -609,5 +605,18 @@ function GL_initialize(ML_interface, canvas_name) {
     GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
     GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+
+/*
+ * Finally, we need to emulate the initial GL state machine settings.
+ *
+ * For example, the default OpenGL color is white:  glColor4i(1, 1, 1, 1);
+ * Another example:  Point sizes during GL_POINTS raster art, glPointSize(1);
+ *
+ * Because shader-based "modern" OpenGL needs to emulate these using GLSL and
+ * uniform attributes, we need to initialize the uniforms in this wrapper.
+ */
+    glColor4f(1.0, 1.0, 1.0, 1.0);
+    glPointSize(1.0);
+
     return (GL);
 }

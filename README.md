@@ -29,7 +29,7 @@ Drawing even a single point to the screen is impossible without breaking either 
 * glVertexPointer (available in GL (ES) 1.1, runs on top of WebGL `vertexAttribPointer`)
 * glColorPointer (available in GL (ES) 1.1, also runs on top of WebGL `vertexAttribPointer`)
 * glColor4f (available in OpenGL (ES) 1.0, runs on top of simple GLSL fragment shader)
-* glPointSize (available in OpenGL (ES) 1.0, runs on top of GLSL vertex shader)
+* glPointSize (available in OpenGL (ES) 1.0, runs on top of glUniform1f vertex shader uploads)
 
 There is no support for `glTexCoordPointer` (or any connected pixel upload operation) due to the amount of complication this adds to the underlying GLSL shaders used to support the exposure of these high-level functions.  There is also no support for `glIndexPointer` because color-indexed rendering mode is not universal to all versions of OpenGL (ES), nor is it significant to simple computer-aided design applications like RGBA rendering is.  Finally, `glNormalPointer` is unimplemented because normalization is not a familiar concept to the author of this wrapper and due to the fact that such complications to GLSL fragment shading would perhaps be left best to the modern OpenGL programmer who is fine with the deprecation model.
 
