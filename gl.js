@@ -403,6 +403,13 @@ function GL_initialize(ML_interface, canvas_name) {
     var canvas;
     var emulated_vertex_IBO;
 
+ // Prevent re-assigning the context if it already was set with a valid context.
+    if (GL) {
+        if (GL.isContextLost() === GL_FALSE) {
+            return (GL);
+        }
+    }
+
 /*
  * Rendering OpenGL in a web browser requires the <CANVAS> element, which is
  * currently available as an extension in most browsers (planned for HTML5).
