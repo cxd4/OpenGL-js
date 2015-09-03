@@ -99,8 +99,6 @@ var
     GL_COLOR_BUFFER_BIT = 0x00004000,
     GL_STENCIL_BUFFER_BIT = 0x00000400;
 
-var buffer_objects = [];
-
 function glDrawArrays(mode, first, count) {
     "use strict";
 
@@ -361,7 +359,7 @@ function glDisableClientState(capability) {
 function glVertexPointer(size, type, stride, pointer) {
     "use strict";
 
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
+    GL.bindBuffer(GL.ARRAY_BUFFER, GL_state.buffer_objects[0]);
     GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
     GL.vertexAttribPointer(0, size, type, false, stride, 0);
 
@@ -382,7 +380,7 @@ function glVertexPointer(size, type, stride, pointer) {
 function glColorPointer(size, type, stride, pointer) {
     "use strict";
 
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
+    GL.bindBuffer(GL.ARRAY_BUFFER, GL_state.buffer_objects[2]);
     GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
     GL.vertexAttribPointer(1, size, type, false, stride, 0);
 
@@ -519,8 +517,9 @@ function GL_initialize(ML_interface, canvas_name) {
         i += 1;
     }
 
-    buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
-    buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
+    GL_state.buffer_objects = [];
+    GL_state.buffer_objects[0] = GL.createBuffer();
+    GL_state.buffer_objects[2] = GL.createBuffer();
 
 /*
  * With OpenGL ES, only up to GL_UNSIGNED_SHORT is acceptable for array
@@ -547,9 +546,9 @@ function GL_initialize(ML_interface, canvas_name) {
  * This accounts for caching up to 32,768 2-D X,Y vertices of type GL_FLOAT.
  */
 
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
+    GL.bindBuffer(GL.ARRAY_BUFFER, GL_state.buffer_objects[2]);
     GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
-    GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
+    GL.bindBuffer(GL.ARRAY_BUFFER, GL_state.buffer_objects[0]);
     GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
 
 /*
