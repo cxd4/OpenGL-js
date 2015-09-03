@@ -188,26 +188,6 @@ function emulate_GL_macros(context) {
 }
 
 var buffer_objects = [];
-var dummy_scripts = [
-    "attribute highp vec4 pos;" +
-    "attribute lowp vec4 col;" +
-    "uniform float point_size;" +
-    "varying lowp vec4 out_color;" +
-    "void main(void) {" +
-    "    gl_Position = pos;" +
-    "    gl_PointSize = point_size;" +
-    "    out_color = col;" +
-    "}",
-
-    "varying lowp vec4 out_color;" +
-    "void main(void) {" +
-    "    gl_FragColor = out_color;" +
-    "}",
-
-    "void main(void) {" +
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);" +
-    "}"
-];
 
 function glDrawArrays(mode, first, count) {
     "use strict";
@@ -386,7 +366,16 @@ function glLineWidth(width) {
 
 function glPointSize(size) {
     "use strict";
-    var location = GL.getUniformLocation(GL_state.program, "point_size");
+    var location;
+
+/*
+ * Like its cousin, glLineWidth, glPointSize went back and forth between
+ * deprecation.  Ultimately, in WebGL, it must be emulated as a GLSL uniform.
+ */
+    location = GL.getUniformLocation(
+        GL_state.programs[GL_state.p][GL_state.qx],
+        "point_size"
+    );
 
     GL.uniform1f(location, size);
     return;
@@ -394,23 +383,18 @@ function glPointSize(size) {
 
 function glColor4f(red, green, blue, alpha) {
     "use strict";
+    var location;
 
 /*
  * glColor* is all removed from OpenGL ES 2+.
  * However, glColor4f, in particular, was available on OpenGL ES 1.0.
  */
-    dummy_scripts[2] =
-            "void main(void) {" +
-            "    gl_FragColor = vec4(" +
-            red + ", " + green + ", " + blue + ", " + alpha + ");" +
-            "}";
+    location = GL.getUniformLocation(
+        GL_state.programs[GL_state.p][0],
+        "const_color"
+    );
 
-    if (GL.getVertexAttrib(1, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
-        return;
-    } // Do not apply glColor4f if vertex color arrays are already enabled.
-    GL.shaderSource(GL_state.frag, dummy_scripts[2]);
-    GL.compileShader(GL_state.frag);
-    GL.linkProgram(GL_state.program);
+    GL.uniform4fv(location, [red, green, blue, alpha]);
     return;
 }
 
@@ -434,9 +418,8 @@ function glEnableClientState(capability) {
         break;
     case GL_COLOR_ARRAY:
         index = 1;
-        GL.shaderSource(GL_state.frag, dummy_scripts[1]);
-        GL.compileShader(GL_state.frag);
-        GL.linkProgram(GL_state.program);
+        GL_state.qx = GL_state.q;
+        GL.useProgram(GL_state.programs[GL_state.p][GL_state.q]);
         break;
     default:
         index = -1; // Force GL_INVALID_VALUE assertion.
@@ -454,9 +437,8 @@ function glDisableClientState(capability) {
         break;
     case GL_COLOR_ARRAY:
         index = 1;
-        GL.shaderSource(GL_state.frag, dummy_scripts[2]);
-        GL.compileShader(GL_state.frag);
-        GL.linkProgram(GL_state.program);
+        GL_state.qx = 0;
+        GL.useProgram(GL_state.programs[GL_state.p][GL_state.qx]);
         break;
     default:
         index = -1;
@@ -466,7 +448,6 @@ function glDisableClientState(capability) {
 }
 function glVertexPointer(size, type, stride, pointer) {
     "use strict";
-    var coordinates;
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
     GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
@@ -474,34 +455,20 @@ function glVertexPointer(size, type, stride, pointer) {
 
     switch (size) {
     case 2: // P(x, y, 0, 1)
-        coordinates = "pos, 0.0, 1.0";
+        GL_state.p = 2;
         break;
     case 3: // P(x, y, z, 1)
-        coordinates = "pos, 1.0";
+        GL_state.p = 1;
         break;
     case 4: // P(x, y, z, w)
-        coordinates = "pos";
+        GL_state.p = 0;
         break;
     }
-    dummy_scripts[0] =
-            "attribute highp vec" + size + " pos;" +
-            "attribute lowp vec4 col;" +
-            "uniform float point_size;" +
-            "varying lowp vec4 out_color;" +
-            "void main(void) {" +
-            "    gl_Position = vec4(" + coordinates + ");" +
-            "    gl_PointSize = point_size;" +
-            "    out_color = col;" +
-            "}";
-
-    GL.shaderSource(GL_state.vtx, dummy_scripts[0]);
-    GL.compileShader(GL_state.vtx);
-    GL.linkProgram(GL_state.program);
+    GL.useProgram(GL_state.programs[GL_state.p][GL_state.qx]);
     return;
 }
 function glColorPointer(size, type, stride, pointer) {
     "use strict";
-    var color_RGB_A;
 
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[2]);
     GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(pointer));
@@ -509,24 +476,16 @@ function glColorPointer(size, type, stride, pointer) {
 
     switch (size) {
     case 3: // r, g, b, 1
-        color_RGB_A = "vec4(out_color.rgb, 1.0)";
+        GL_state.q = 2;
         break;
     case 4: // r, g, b, inverse-transparency
-        color_RGB_A = "out_color";
+        GL_state.q = 1;
         break;
     }
-    dummy_scripts[1] =
-            "varying lowp vec4 out_color;" +
-            "void main(void) {" +
-            "    gl_FragColor = " + color_RGB_A + ";" +
-            "}";
-
-    if (!GL.getVertexAttrib(1, GL.VERTEX_ATTRIB_ARRAY_ENABLED)) {
-        return;
-    } // Do not compile the color data in yet, until glEnableClientState.
-    GL.shaderSource(GL_state.frag, dummy_scripts[1]);
-    GL.compileShader(GL_state.frag);
-    GL.linkProgram(GL_state.program);
+    if (GL_state.qx !== 0) { // Color arrays NOT disabled for using glColor4f?
+        GL_state.qx = GL_state.q;
+    }
+    GL.useProgram(GL_state.programs[GL_state.p][GL_state.qx]);
     return;
 }
 
@@ -556,23 +515,98 @@ function GL_initialize(ML_interface, canvas_name) {
     }
     emulate_GL_macros(GL);
 
-    GL_state.vtx = GL.createShader(GL.VERTEX_SHADER);
-    GL_state.frag = GL.createShader(GL.FRAGMENT_SHADER);
-    GL_state.program = GL.createProgram();
+/*
+ * Here comes the ugly part....
+ */
+    var vs = "attribute highp ";
+    var v = "\tgl_Position = vec4(";
+    var cs = "varying lowp ";
+    var c = "\tgl_FragColor = ";
 
-    GL.shaderSource(GL_state.vtx, dummy_scripts[0]);
-    GL.attachShader(GL_state.program, GL_state.vtx);
-    GL.shaderSource(GL_state.frag, dummy_scripts[1]);
-    GL.attachShader(GL_state.program, GL_state.frag);
+    var ps = "uniform float point_size;\n";
+    var gl_PS = "\tgl_PointSize = point_size;\n";
 
-    GL.compileShader(GL_state.vtx);
-    GL.compileShader(GL_state.frag);
-    GL.linkProgram(GL_state.program);
-    GL.useProgram(GL_state.program);
+    var entry = "void main(void) {\n";
+    var esc = "}\n";
 
-    GL.bindAttribLocation(GL_state.program, 0, "pos");
-    GL.bindAttribLocation(GL_state.program, 1, "col");
- // GL.bindAttribLocation(GL_state.program, 2, "tex");
+    var cs_uni = "uniform lowp vec4 const_color;\n";
+    var csw = "\toutc = col;\n";
+    var ca = "attribute lowp ";
+    var s = [null, ca + "vec4 col;\n", ca + "vec3 col;\n"];
+
+    var col = [cs_uni, cs + "vec4 outc;\n", cs + "vec3 outc;\n"];
+    var glCol = [c + "const_color;\n", c + "outc;\n", c + "vec4(outc, 1.0);\n"];
+
+    var pos = [vs + "vec4 pos;\n", vs + "vec3 pos;\n", vs + "vec2 pos;\n"];
+    var glPos = [v + "pos);\n", v + "pos, 1.0);\n", v + "pos, 0.0, 1.0);\n"];
+
+    var GLSL_scripts = [
+        [ // 4-dimensional positions with constant color
+            pos[0] + ps + entry + glPos[0] + gl_PS + esc,
+            col[0] + entry + glCol[0] + esc
+        ],
+        [ // 4-dimensional positions with 4-channel color
+            pos[0] + ps + col[1] + s[1] + entry + glPos[0] + gl_PS + csw + esc,
+            col[1] + entry + glCol[1] + esc
+        ],
+        [ // 4-dimensional positions with 3-channel color
+            pos[0] + ps + col[2] + s[2] + entry + glPos[0] + gl_PS + csw + esc,
+            col[2] + entry + glCol[2] + esc
+        ],
+        [ // 3-dimensional positions with constant color
+            pos[1] + ps + entry + glPos[1] + gl_PS + esc,
+            col[0] + entry + glCol[0] + esc
+        ],
+        [ // 3-dimensional positions with 4-channel color
+            pos[1] + ps + col[1] + s[1] + entry + glPos[1] + gl_PS + csw + esc,
+            col[1] + entry + glCol[1] + esc
+        ],
+        [ // 3-dimensional positions with 3-channel color
+            pos[1] + ps + col[2] + s[2] + entry + glPos[1] + gl_PS + csw + esc,
+            col[2] + entry + glCol[2] + esc
+        ],
+        [ // 2-dimensional positions with constant color
+            pos[2] + ps + entry + glPos[2] + gl_PS + esc,
+            col[0] + entry + glCol[0] + esc
+        ],
+        [ // 2-dimensional positions with 4-channel color
+            pos[2] + ps + col[1] + s[1] + entry + glPos[2] + gl_PS + csw + esc,
+            col[1] + entry + glCol[1] + esc
+        ],
+        [ // 2-dimensional positions with 3-channel color
+            pos[2] + ps + col[2] + s[2] + entry + glPos[2] + gl_PS + csw + esc,
+            col[2] + entry + glCol[2] + esc
+        ]
+    ];
+    GL_state.programs = [];
+    GL_state.programs[0] = [];
+    GL_state.programs[1] = [];
+    GL_state.programs[2] = [];
+
+    var temp_vertex_shader, temp_fragment_shader;
+    var p, q, i = 0;
+    while (i < 3 * 3) {
+        q = i % 3;
+        p = (i - q) / 3;
+        GL_state.programs[p][q] = GL.createProgram();
+        temp_vertex_shader = GL.createShader(GL.VERTEX_SHADER);
+        temp_fragment_shader = GL.createShader(GL.FRAGMENT_SHADER);
+
+        GL.shaderSource(temp_vertex_shader, GLSL_scripts[i][0]);
+        GL.attachShader(GL_state.programs[p][q], temp_vertex_shader);
+        GL.shaderSource(temp_fragment_shader, GLSL_scripts[i][1]);
+        GL.attachShader(GL_state.programs[p][q], temp_fragment_shader);
+
+        GL.compileShader(temp_vertex_shader);
+        GL.compileShader(temp_fragment_shader);
+        GL.bindAttribLocation(GL_state.programs[p][q], 0, "pos");
+        GL.bindAttribLocation(GL_state.programs[p][q], 1, "col");
+
+        GL.linkProgram(GL_state.programs[p][q]);
+        GL.deleteShader(temp_vertex_shader);
+        GL.deleteShader(temp_fragment_shader);
+        i += 1;
+    }
 
     buffer_objects[GL_VERTEX_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
     buffer_objects[GL_COLOR_ARRAY - GL_VERTEX_ARRAY] = GL.createBuffer();
@@ -606,6 +640,14 @@ function GL_initialize(ML_interface, canvas_name) {
     GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
     GL.bindBuffer(GL.ARRAY_BUFFER, buffer_objects[0]);
     GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+
+/*
+ * Preserve and track the current vertex program ID, as a 2-D array of names.
+ */
+    GL_state.p = 0;
+    GL_state.q = 0;
+    GL.useProgram(GL_state.programs[GL_state.p][GL_state.q]);
+    GL_state.qx = 0; // color backup state hack
 
 /*
  * Finally, we need to emulate the initial GL state machine settings.
