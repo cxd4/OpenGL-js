@@ -25,7 +25,7 @@ var
  // GL_STACK_UNDERFLOW = 0x0504, // WebGL.STACK_UNDERFLOW is undefined.
     GL_OUT_OF_MEMORY = 0x0505,
     GL_INVALID_FRAMEBUFFER_OPERATION = 0x0506, // not universal
-    GL_CONTEXT_LOST = 0x0507, // not universal
+    GL_CONTEXT_LOST = undefined, // not universal
 
  // glReadPixels()
     GL_ALPHA = 0x1906,
@@ -422,6 +422,7 @@ function GL_initialize(ML_interface, canvas_name) {
     if (!GL) {
         return null;
     }
+    GL_CONTEXT_LOST = GL.CONTEXT_LOST_WEBGL;
 
 /*
  * Here comes the ugly part....
