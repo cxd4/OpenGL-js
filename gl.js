@@ -1,191 +1,103 @@
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
 
-var GL_FALSE,
-    GL_TRUE,
+/*
+ * GL constants known to the C pre-processor.
+ *
+ * Instead of saying WebGLContext.BLEND or GL.BLEND all the time, we should
+ * be able to say GL_BLEND as we can already do in the C language binding.
+ *
+ * Carefully triple-checked and taken from the JavaScript console debugger,
+ * the OpenGL ES 1.1 specifications and the online OpenGL specifications.
+ * Derived by setting GL_$name = WebGLContext.$name in the debugger.
+ */
+var
+    GL_FALSE = false, // C macro is 0, but strict JS equality needs false.
+    GL_TRUE = true, // C macro is 1, but strict JS equality needs true.
+    // Example:  (glIsEnabled(GL_BLEND) == 1) passes, but (... === 1) fails.
 
-    GL_NO_ERROR,
-    GL_INVALID_ENUM,
-    GL_INVALID_VALUE,
-    GL_INVALID_OPERATION,
-    GL_INVALID_FRAMEBUFFER_OPERATION,
-    GL_OUT_OF_MEMORY,
+ // glGetError(void)
+    GL_NO_ERROR = 0,
+    GL_INVALID_ENUM = 0x0500,
+    GL_INVALID_VALUE = 0x0501,
+    GL_INVALID_OPERATION = 0x0502,
+ // GL_STACK_OVERFLOW = 0x0503, // WebGL.STACK_OVERFLOW is undefined.
+ // GL_STACK_UNDERFLOW = 0x0504, // WebGL.STACK_UNDERFLOW is undefined.
+    GL_OUT_OF_MEMORY = 0x0505,
+    GL_INVALID_FRAMEBUFFER_OPERATION = 0x0506, // not universal
+    GL_CONTEXT_LOST = 0x0507, // not universal
 
-    GL_RGB,
-    GL_ALPHA,
-    GL_RGBA,
+ // glReadPixels()
+    GL_ALPHA = 0x1906,
+    GL_RGB = 0x1907,
+    GL_RGBA = 0x1908,
 
-    GL_BYTE,
-    GL_UNSIGNED_BYTE,
-    GL_UNSIGNED_SHORT_5_6_5,
-    GL_UNSIGNED_SHORT_4_4_4_4,
-    GL_UNSIGNED_SHORT_5_5_5_1,
-    GL_SHORT,
-    GL_UNSIGNED_SHORT,
+    GL_BYTE = 0x1400,
+    GL_UNSIGNED_BYTE = 0x1401,
+    GL_SHORT = 0x1402,
+    GL_UNSIGNED_SHORT = 0x1403,
     GL_UNSIGNED_INT,
-    GL_FLOAT,
+    GL_FLOAT = 0x1406,
+    GL_UNSIGNED_SHORT_5_6_5 = 33635,
+    GL_UNSIGNED_SHORT_4_4_4_4 = 32819,
+    GL_UNSIGNED_SHORT_5_5_5_1 = 32820,
 
-    GL_POINTS,
-    GL_LINE_STRIP,
-    GL_LINE_LOOP,
-    GL_LINES,
-    GL_TRIANGLE_STRIP,
-    GL_TRIANGLE_FAN,
-    GL_TRIANGLES,
+ // rendering primitives
+    GL_POINTS = 0,
+    GL_LINES = 1,
+    GL_LINE_LOOP = 2,
+    GL_LINE_STRIP = 3,
+    GL_TRIANGLES = 4,
+    GL_TRIANGLE_STRIP = 5,
+    GL_TRIANGLE_FAN = 6,
 
-    GL_VERTEX_ARRAY,
-    GL_COLOR_ARRAY,
-    GL_NORMAL_ARRAY,
-    GL_TEXTURE_COORD_ARRAY,
+ // client-side vertex array states (emulated--unavailable in WebGL)
+    GL_VERTEX_ARRAY = 0x8074, // emulated
+    GL_NORMAL_ARRAY = 0x8075,
+    GL_COLOR_ARRAY = 0x8076, // emulated
+    GL_TEXTURE_COORD_ARRAY = 0x8078,
 
-    GL_BLEND,
-    GL_CULL_FACE,
-    GL_DEPTH_TEST,
-    GL_DITHER,
-    GL_POLYGON_OFFSET_FILL,
-    GL_SAMPLE_ALPHA_TO_COVERAGE,
-    GL_SAMPLE_COVERAGE,
-    GL_SCISSOR_TEST,
-    GL_STENCIL_TEST,
+ // glIsEnabled(), glEnable() and glDisable()
+    GL_CULL_FACE = 2884,
+    GL_BLEND = 3042,
+    GL_DITHER = 3024,
+    GL_STENCIL_TEST = 2960,
+    GL_DEPTH_TEST = 2929,
+    GL_SCISSOR_TEST = 3089,
+    GL_POLYGON_OFFSET_FILL = 0x8037,
+    GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E,
+    GL_SAMPLE_COVERAGE = 0x80A0,
 
-    GL_ZERO,
-    GL_ONE,
-    GL_SRC_COLOR,
-    GL_ONE_MINUS_SRC_COLOR,
-    GL_SRC_ALPHA,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_DST_ALPHA,
-    GL_ONE_MINUS_DST_ALPHA,
+ // glBlendFunc()
+    GL_ZERO = 0,
+    GL_ONE = 1,
+    GL_SRC_COLOR = 0x0300,
+    GL_ONE_MINUS_SRC_COLOR = 0x0301,
+    GL_SRC_ALPHA = 0x0302,
+    GL_ONE_MINUS_SRC_ALPHA = 0x0303,
+    GL_DST_ALPHA = 0x0304,
+    GL_ONE_MINUS_DST_ALPHA = 0x0305,
 
-    GL_CW,
-    GL_CCW,
+ // glFrontFace()
+    GL_CW = 0x0900,
+    GL_CCW = 0x0901,
 
-    GL_FRONT,
-    GL_BACK,
-    GL_FRONT_AND_BACK,
+ // glCullFace()
+    GL_FRONT = 0x404,
+    GL_BACK = 0x405,
+    GL_FRONT_AND_BACK = 0x408,
 
-    GL_VENDOR,
-    GL_RENDERER,
-    GL_VERSION,
-    GL_EXTENSIONS,
+ // glGetString(GLenum) -- return values
+    GL_VENDOR = 0x1F00,
+    GL_RENDERER = 0x1F01,
+    GL_VERSION = 0x1F02,
+    GL_EXTENSIONS = 0x1F03,
 
-    GL_COLOR_BUFFER_BIT,
-    GL_DEPTH_BUFFER_BIT,
-    GL_STENCIL_BUFFER_BIT;
-
-function emulate_GL_macros(context) {
-    "use strict";
-
-/*
- * known enumerations for OpenGL error codes
- */
-    GL_NO_ERROR = context.NO_ERROR;
-    GL_INVALID_ENUM = context.INVALID_ENUM;
-    GL_INVALID_VALUE = context.INVALID_VALUE;
-    GL_INVALID_OPERATION = context.INVALID_OPERATION;
- // GL_STACK_OVERFLOW = context.STACK_OVERFLOW; // not possible with OpenGL ES
- // GL_STACK_UNDERFLOW = context.STACK_UNDERFLOW; // not possible with OpenGL ES
-    GL_INVALID_FRAMEBUFFER_OPERATION = context.INVALID_FRAMEBUFFER_OPERATION;
-    GL_OUT_OF_MEMORY = context.OUT_OF_MEMORY;
-
-/*
- * pixel transfer mode enumerations
- * The only 100% universally portable pair is GL_RGBA with GL_UNSIGNED_BYTE.
- */
-    GL_RGB = context.RGB;
-    GL_ALPHA = context.ALPHA;
-    GL_RGBA = context.RGBA;
-
-    GL_UNSIGNED_BYTE = context.UNSIGNED_BYTE;
-    GL_UNSIGNED_SHORT_5_6_5 = context.UNSIGNED_SHORT_5_6_5;
-    GL_UNSIGNED_SHORT_4_4_4_4 = context.UNSIGNED_SHORT_4_4_4_4;
-    GL_UNSIGNED_SHORT_5_5_5_1 = context.UNSIGNED_SHORT_5_5_5_1;
-
-    GL_BYTE = context.BYTE;
-    GL_UNSIGNED_SHORT = context.UNSIGNED_SHORT;
-    GL_SHORT = context.SHORT;
-    GL_UNSIGNED_INT = context.UNSIGNED_INT;
-    GL_FLOAT = context.FLOAT;
-
-/*
- * geometric primitives for drawing in vector space
- */
-    GL_POINTS = context.POINTS;
-    GL_LINE_STRIP = context.LINE_STRIP;
-    GL_LINE_LOOP = context.LINE_LOOP;
-    GL_LINES = context.LINES;
-    GL_TRIANGLE_STRIP = context.TRIANGLE_STRIP;
-    GL_TRIANGLE_FAN = context.TRIANGLE_FAN;
-    GL_TRIANGLES = context.TRIANGLES;
-
-/*
- * vertex attribute caches...position, color, normalization, and raster
- * Palette-based (color table) rendering is not available on GL ES 1.
- *
- * These are the OpenGL ES 1.x definitions for the macros, as they were
- * removed afterwards in order to force everyone to equip GLSL shaders.
- */
-    GL_VERTEX_ARRAY = 0x8074;
-    GL_COLOR_ARRAY = 0x8076;
-    GL_NORMAL_ARRAY = 0x8075;
-    GL_TEXTURE_COORD_ARRAY = 0x8078;
-
-/*
- * capability enumerations for glIsEnabled, glEnable and glDisable
- *
- * These were all taken from the OpenGL ES 2.0 reference, but a couple of
- * them I am sure are not universal to all OpenGL versions.
- */
-    GL_BLEND = context.BLEND;
-    GL_CULL_FACE = context.CULL_FACE;
-    GL_DEPTH_TEST = context.DEPTH_TEST;
-    GL_DITHER = context.DITHER;
-    GL_POLYGON_OFFSET_FILL = context.POLYGON_OFFSET_FILL;
-    GL_SAMPLE_ALPHA_TO_COVERAGE = context.SAMPLE_ALPHA_TO_COVERAGE;
-    GL_SAMPLE_COVERAGE = context.SAMPLE_COVERAGE;
-    GL_SCISSOR_TEST = context.SCISSOR_TEST;
-    GL_STENCIL_TEST = context.STENCIL_TEST;
-
-/*
- * blender functions when merging source frame buffer pixels in front of dst.
- * not implemented:  SRC_ALPHA_SATURATE, DST_COLOR and ONE_MINUS_DST_COLOR
- */
-    GL_ZERO = context.ZERO;
-    GL_ONE = context.ONE;
-    GL_SRC_COLOR = context.SRC_COLOR;
-    GL_ONE_MINUS_SRC_COLOR = context.ONE_MINUS_SRC_COLOR;
-    GL_SRC_ALPHA = context.SRC_ALPHA;
-    GL_ONE_MINUS_SRC_ALPHA = context.ONE_MINUS_SRC_ALPHA;
-    GL_DST_ALPHA = context.DST_ALPHA;
-    GL_ONE_MINUS_DST_ALPHA = context.ONE_MINUS_DST_ALPHA;
-
-    GL_CW = context.CW;
-    GL_CCW = context.CCW;
-
-    GL_FRONT = context.FRONT;
-    GL_BACK = context.BACK;
-    GL_FRONT_AND_BACK = context.FRONT_AND_BACK;
-
-/*
- * universally accepted queries for glGetString(macro)
- */
-    GL_VENDOR = context.VENDOR;
-    GL_RENDERER = context.RENDERER;
-    GL_VERSION = context.VERSION;
-    GL_EXTENSIONS = 0x1F03; // universal to OpenGL and GL ES but not to WebGL
-
-/*
- * bit masks for wiping with glClear
- */
-    GL_COLOR_BUFFER_BIT = context.COLOR_BUFFER_BIT;
-    GL_DEPTH_BUFFER_BIT = context.DEPTH_BUFFER_BIT;
- // GL_ACCUM_BUFFER_BIT = context.ACCUM_BUFFER_BIT; // not supported in ES
-    GL_STENCIL_BUFFER_BIT = context.STENCIL_BUFFER_BIT;
-
-    GL_FALSE = false;
-    GL_TRUE = true;
-    return;
-}
+ // glClear(GLbitfield) -- bit masks
+    GL_DEPTH_BUFFER_BIT = 0x00000100,
+ // GL_ACCUM_BUFFER_BIT = 0x00000200, // WebGL.ACCUM_BUFFER_BIT is undefined.
+    GL_COLOR_BUFFER_BIT = 0x00004000,
+    GL_STENCIL_BUFFER_BIT = 0x00000400;
 
 var buffer_objects = [];
 
@@ -513,7 +425,6 @@ function GL_initialize(ML_interface, canvas_name) {
     if (!GL) {
         return null;
     }
-    emulate_GL_macros(GL);
 
 /*
  * Here comes the ugly part....
