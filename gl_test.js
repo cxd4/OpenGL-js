@@ -1,12 +1,4 @@
 var coordinates_per_vertex = 4;
-var attribs_interleaved = 1; /* Multiply by 1 for "false". :) */
-/*
- * Interleaved arrays are, on some implementations, faster than storing
- * color and vertex position arrays separately, but with the JavaScript
- * language then I do not know how to implement them, because normally for
- * interleaved arrays addressing offsets into static memory need to be
- * prepared, and I don't think JavaScript has much "addressing" concept.
- */
 
 var circle = [];
 
