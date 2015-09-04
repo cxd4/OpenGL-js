@@ -538,7 +538,7 @@ function GL_initialize(ML_interface, canvas_name) {
  */
     emulated_vertex_IBO = GL.createBuffer();
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, emulated_vertex_IBO);
-    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.STATIC_DRAW);
+    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, 64 * 1024, GL.DYNAMIC_DRAW);
 
 /*
  * Similarly to the above, we can also prevent having to constantly re-
@@ -554,9 +554,9 @@ function GL_initialize(ML_interface, canvas_name) {
  */
 
     GL.bindBuffer(GL.ARRAY_BUFFER, GL_state.buffer_objects[2]);
-    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.DYNAMIC_DRAW);
     GL.bindBuffer(GL.ARRAY_BUFFER, GL_state.buffer_objects[0]);
-    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.STATIC_DRAW);
+    GL.bufferData(GL.ARRAY_BUFFER, 256 * 1024, GL.DYNAMIC_DRAW);
 
 /*
  * Preserve and track the current vertex program ID, as a 2-D array of names.
