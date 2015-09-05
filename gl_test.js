@@ -1,9 +1,7 @@
+var frames_per_second = 60;
+
 var coordinates_per_vertex = 4;
-
-var circle = [];
-
 var channels = 4;
-var colors = [];
 
 /*
  * Circles conceptually cannot exist in hardware-accelerated graphics, so we
@@ -11,59 +9,50 @@ var colors = [];
  * something less than a quarter that precise is still a convincing circle.)
  */
 var circle_precision = 180;
+var circle = [];
 
-var rotate_CCW_by_90_degrees = circle_precision / 4;
-var index_buffer = [
-    0*circle_precision/3 + rotate_CCW_by_90_degrees,
-    1*circle_precision/3 + rotate_CCW_by_90_degrees,
-    2*circle_precision/3 + rotate_CCW_by_90_degrees,
+var angles = [
+    0 + 90,
+    120 + 90,
+    240 + 90
 ];
 
-var frames_per_second = 60;
+var triangle = [
+    null, null, 0.0, 1.0,
+    null, null, 0.0, 1.0,
+    null, null, 0.0, 1.0
+];
 
 function display() {
     "use strict";
-    var old_angle, new_angle;
+    var radians;
     var i;
 
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
  */
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
-    old_angle = index_buffer[0] * (360 / circle_precision) - 90;
-    if (old_angle < 0) {
-        old_angle += 360;
+    i = 0;
+    while (i < 3) {
+        radians = angles[i] * Math.PI / 180;
+        triangle[i * coordinates_per_vertex + 0] = Math.cos(radians);
+        triangle[i * coordinates_per_vertex + 1] = Math.sin(radians);
+        i += 1;
     }
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
 
     glEnableClientState(GL_COLOR_ARRAY);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, index_buffer);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, [0, 1, 2]);
     glDisableClientState(GL_COLOR_ARRAY);
 
-    for (i = 0; i < 3; i += 1) {
-        index_buffer[i] += 60 / frames_per_second;
-        if (index_buffer[i] >= circle_precision + 1) {
-            index_buffer[i] %= circle_precision + 1;
-            index_buffer[i] += 1; /* Element 0 is just the center of the fan. */
-        } /* Element (n + 1) is just a copy of the fan's first triangle vtx.. */
-    }
-
-    new_angle = index_buffer[0] * (360 / circle_precision) - 90;
-    if (new_angle < 0) {
-        new_angle += 360;
-    }
-
-/*
- * If we have just now crossed in between one of the 3 120-degree portions of
- * the circle, then it becomes necessary to synchronize all of the colors.
- */
- // if (true) {
- // if (global_count >= circle_precision / 3) {
-    if (old_angle % 120 > new_angle % 120) {
-        synchronise_colors();
-        glColorPointer(channels, GL_FLOAT, 0, colors);
+    i = 0;
+    while (i < 3) {
+        angles[i] += 360 / circle_precision;
+        i += 1;
     }
     return;
 }
@@ -72,6 +61,11 @@ function init() {
     "use strict";
     var i, j;
     var radius = 1.0; /* Unit circle has a radius of (r = 1). */
+    var colors = [
+        1, 0, 0, 0.80,
+        0, 0, 1, 0.80,
+        0, 1, 0, 0.80
+    ];
 
 /*
  * Behind the rainbow triangle will be a semitransparent indigo circle.
@@ -106,15 +100,8 @@ function init() {
         circle[coordinates_per_vertex * i + j]
       = circle[coordinates_per_vertex * 1 + j];
     }
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    synchronise_colors();
-    if (channels >= 4) {
-        for (i = 0; i < circle_precision + 1 + 1; i += 1) {
-            colors[channels * i + 3] = 0.80;
-        }
-    }
     glDisableClientState(GL_COLOR_ARRAY);
     glColorPointer(channels, GL_FLOAT, 0, colors);
 
@@ -155,46 +142,5 @@ function main_GL() {
         error_code = glGetError();
         console.log("OpenGL error status:  " + error_code);
     } while (error_code !== GL_NO_ERROR);
-    return;
-}
-
-function synchronise_colors() {
-    var i, j;
-    var rotate_CCW_by_120_deg = circle_precision / 3;
-
-    for (i = 0; i < rotate_CCW_by_120_deg; i += 1) {
-        j = (index_buffer[0] + i) % (circle_precision + 1);
-        if (j === 0) {
-            j = 1;
-            rotate_CCW_by_120_deg += 1;
-        } // Skip the binding center point of circle (not part of the tri).
-        colors[channels * j + 0] = 1.0000; // red
-        colors[channels * j + 1] = 0.0000;
-        colors[channels * j + 2] = 0.0000;
-    }
-
-    rotate_CCW_by_120_deg = circle_precision / 3;
-    for (i = 0; i < rotate_CCW_by_120_deg; i += 1) {
-        j = (index_buffer[1] + i) % (circle_precision + 1);
-        if (j === 0) {
-            j = 1;
-            rotate_CCW_by_120_deg += 1;
-        }
-        colors[channels * j + 0] = 0.0000;
-        colors[channels * j + 1] = 0.0000;
-        colors[channels * j + 2] = 1.0000; // blue
-    }
-
-    rotate_CCW_by_120_deg = circle_precision / 3;
-    for (i = 0; i < rotate_CCW_by_120_deg; i += 1) {
-        j = (index_buffer[2] + i) % (circle_precision + 1);
-        if (j === 0) {
-            j = 1;
-            rotate_CCW_by_120_deg += 1;
-        }
-        colors[channels * j + 0] = 0.0000;
-        colors[channels * j + 1] = 1.0000; // green
-        colors[channels * j + 2] = 0.0000;
-    }
     return;
 }
