@@ -292,18 +292,25 @@ function glPointSize(size) {
 
 function glColor4f(red, green, blue, alpha) {
     "use strict";
-    var location;
+    var IDs = [];
+    var i = 0;
 
 /*
  * glColor* is all removed from OpenGL ES 2+.
  * However, glColor4f, in particular, was available on OpenGL ES 1.0.
  */
-    location = GL.getUniformLocation(
-        GL_state.programs[GL_state.p][0],
-        "const_color"
-    );
+    IDs[0] = GL.getUniformLocation(GL_state.programs[0][0], "const_color");
+    IDs[1] = GL.getUniformLocation(GL_state.programs[1][0], "const_color");
+    IDs[2] = GL.getUniformLocation(GL_state.programs[2][0], "const_color");
 
-    GL.uniform4fv(location, [red, green, blue, alpha]);
+    i = 0;
+    while (i < 3) {
+        GL.useProgram(GL_state.programs[i][0]);
+        GL.uniform4fv(IDs[i], [red, green, blue, alpha]);
+        i += 1;
+    }
+
+    GL.useProgram(GL_state.programs[GL_state.p][GL_state.qx]); // restored
     return;
 }
 

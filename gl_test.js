@@ -1,6 +1,6 @@
 var frames_per_second = 60;
 
-var coordinates_per_vertex = 4;
+var coordinates_per_vertex = 2;
 var channels = 4;
 
 /*
@@ -77,8 +77,13 @@ function init() {
  */
     glColor4f(0.333, 0.000, 0.667, 0.5);
 
-    circle[0] = circle[1] = circle[2] = 0.0;
-    circle[3] = 1.0;
+    circle[0] = circle[1] = 0.0;
+    if (coordinates_per_vertex > 2) {
+        circle[0 * coordinates_per_vertex + 2] = 0;
+    }
+    if (coordinates_per_vertex > 3) {
+        circle[0 * coordinates_per_vertex + 3] = 1.0 / radius;
+    }
     for (i = 0 + 1; i < circle_precision + 1; i += 1) {
         var x, y, z;
         var degrees, radians;
@@ -91,14 +96,16 @@ function init() {
         z = Math.sqrt(Math.abs(radius*radius - x*x - y*y));
         circle[coordinates_per_vertex * i + 0] = x;
         circle[coordinates_per_vertex * i + 1] = y;
-        circle[coordinates_per_vertex * i + 2] = z*0; // Spheres don't work yet.
+        if (coordinates_per_vertex > 2) {
+            circle[coordinates_per_vertex * i + 3] = z * 0; // doesn't work
+        }
         if (coordinates_per_vertex > 3) {
             circle[coordinates_per_vertex * i + 3] = 1.0 / radius;
         }
     }
     for (j = 0; j < coordinates_per_vertex; j += 1) {
-        circle[coordinates_per_vertex * i + j]
-      = circle[coordinates_per_vertex * 1 + j];
+        circle[coordinates_per_vertex * i + j]  // vertex beyond final vertex...
+      = circle[coordinates_per_vertex * 1 + j]; // ...respecifies first vertex
     }
     glEnableClientState(GL_VERTEX_ARRAY);
 
