@@ -303,7 +303,6 @@ function glColor4f(red, green, blue, alpha) {
     IDs[1] = GL.getUniformLocation(GL_state.programs[1][0], "const_color");
     IDs[2] = GL.getUniformLocation(GL_state.programs[2][0], "const_color");
 
-    i = 0;
     while (i < 3) {
         GL.useProgram(GL_state.programs[i][0]);
         GL.uniform4fv(IDs[i], [red, green, blue, alpha]);
