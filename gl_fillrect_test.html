@@ -24,7 +24,7 @@
 <script type="text/javascript" src="gl.js"></script>
 <script type="text/javascript">
 var frames_per_second = 60;
-var coordinates_per_vertex = 2;
+var coordinates_per_vertex = 4;
 
 var static_color_ID;
 
@@ -59,16 +59,17 @@ function main_GL() {
     return;
 }
 
+var inverse_radius = 1.0;
 var screen = [
-    -1, -1, // lower-left
-    +1, -1, // lower-right
-    -1, +1, // upper-left
-    +1, +1, // upper-right
+    -1, -1, 0, inverse_radius, // lower-left
+    +1, -1, 0, inverse_radius, // lower-right
+    -1, +1, 0, inverse_radius, // upper-left
+    +1, +1, 0, inverse_radius, // upper-right
 ];
 var vertex_shader, vertex_GLSL =
     "attribute vec" + coordinates_per_vertex + " position;\n" +
     "void main(void) {\n" +
-    "    gl_Position = vec4(position, 0.0, 1.0);\n" +
+    "    gl_Position = vec4(position);\n" +
     "}\n";
 var fragment_shader, fragment_GLSL =
     "uniform lowp vec4 static_color;\n" +
