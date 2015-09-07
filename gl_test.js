@@ -9,49 +9,34 @@ var channels = 4;
  * something less than a quarter that precise is still a convincing circle.)
  */
 var circle_precision = 180;
-var circle = [];
 
-var angles = [
-    0 + 90,
-    120 + 90,
-    240 + 90
-];
-
-var triangle = [
-    null, null, 0.0, 1.0,
-    null, null, 0.0, 1.0,
-    null, null, 0.0, 1.0
+var index_buffer = [
+    0 * (circle_precision / 3) + circle_precision / 4 + 1,
+    1 * (circle_precision / 3) + circle_precision / 4 + 1,
+    2 * (circle_precision / 3) + circle_precision / 4 + 1
 ];
 
 function display() {
     "use strict";
-    var radians;
-    var i;
+    var i = 0;
 
 /*
  * Draw the unit circle (a circle with a radius of 1.0) to circumscribe
  * the perfect triangle, which will be drawn in front of it.
  */
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
  // glDrawArrays(GL_LINE_LOOP, 0 + 1, circle_precision);
     glDrawArrays(GL_TRIANGLE_FAN, 0, circle_precision + 1 + 1);
 
-    i = 0;
-    while (i < 3) {
-        radians = angles[i] * Math.PI / 180;
-        triangle[i * coordinates_per_vertex + 0] = Math.cos(radians);
-        triangle[i * coordinates_per_vertex + 1] = Math.sin(radians);
-        i += 1;
-    }
-    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, triangle);
-
     glEnableClientState(GL_COLOR_ARRAY);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, [0, 1, 2]);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, index_buffer);
     glDisableClientState(GL_COLOR_ARRAY);
 
-    i = 0;
     while (i < 3) {
-        angles[i] += 360 / circle_precision;
+        if (index_buffer[i] === circle_precision - 1) {
+            index_buffer[i] = 1; // 0 the circle center pt--invalid for triangle
+        } else {
+            index_buffer[i] += 1;
+        }
         i += 1;
     }
     return;
@@ -59,13 +44,9 @@ function display() {
 
 function init() {
     "use strict";
+    var circle = [], colors = [];
     var i, j;
     var radius = 1.0; /* Unit circle has a radius of (r = 1). */
-    var colors = [
-        1, 0, 0, 0.80,
-        0, 0, 1, 0.80,
-        0, 1, 0, 0.80
-    ];
 
 /*
  * Behind the rainbow triangle will be a semitransparent indigo circle.
@@ -108,7 +89,31 @@ function init() {
       = circle[coordinates_per_vertex * 1 + j]; // ...respecifies first vertex
     }
     glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
 
+    for (i = 0; i < circle_precision / 3; i += 1) {
+        j = (index_buffer[0] + i) % circle_precision;
+        colors[channels * j + 0] = 1.0 - (i * 3 / circle_precision);
+        colors[channels * j + 1] = 0.0;
+        colors[channels * j + 2] = 0.0 + (i * 3 / circle_precision);
+    } // loop to initialize color-shifting from red to blue
+    for (i = 0; i < circle_precision / 3; i += 1) {
+        j = (index_buffer[1] + i) % circle_precision;
+        colors[channels * j + 0] = 0.0;
+        colors[channels * j + 1] = 0.0 + (i * 3 / circle_precision);
+        colors[channels * j + 2] = 1.0 - (i * 3 / circle_precision);
+    } // loop to initialize color-shifting from blue to green
+    for (i = 0; i < circle_precision / 3; i += 1) {
+        j = (index_buffer[2] + i) % circle_precision;
+        colors[channels * j + 0] = 0.0 + (i * 3 / circle_precision);
+        colors[channels * j + 1] = 1.0 - (i * 3 / circle_precision);
+        colors[channels * j + 2] = 0.0;
+    } // loop to initialize color-shifting from green to red
+    if (channels > 3) {
+        for (i = 0; i < circle_precision; i += 1) {
+            colors[channels * i + 3] = 0.80;
+        }
+    } // If alpha is on, have the triangle 20% transparent.
     glDisableClientState(GL_COLOR_ARRAY);
     glColorPointer(channels, GL_FLOAT, 0, colors);
 
