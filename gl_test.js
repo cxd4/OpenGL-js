@@ -97,7 +97,7 @@ function init() {
         circle[coordinates_per_vertex * i + 0] = x;
         circle[coordinates_per_vertex * i + 1] = y;
         if (coordinates_per_vertex > 2) {
-            circle[coordinates_per_vertex * i + 3] = z * 0; // doesn't work
+            circle[coordinates_per_vertex * i + 2] = z * 0; // doesn't work
         }
         if (coordinates_per_vertex > 3) {
             circle[coordinates_per_vertex * i + 3] = 1.0 / radius;
