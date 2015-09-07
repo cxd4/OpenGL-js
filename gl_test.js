@@ -32,10 +32,10 @@ function display() {
     glDisableClientState(GL_COLOR_ARRAY);
 
     while (i < 3) {
-        if (index_buffer[i] === circle_precision - 1) {
-            index_buffer[i] = 1; // 0 the circle center pt--invalid for triangle
+        if (index_buffer[i] === 1) {
+            index_buffer[i] = circle_precision - 1;
         } else {
-            index_buffer[i] += 1;
+            index_buffer[i] -= 1;
         }
         i += 1;
     }
@@ -96,19 +96,19 @@ function init() {
         colors[channels * j + 0] = 1.0 - (i * 3 / circle_precision);
         colors[channels * j + 1] = 0.0;
         colors[channels * j + 2] = 0.0 + (i * 3 / circle_precision);
-    } // loop to initialize color-shifting from red to blue
+    } // loop to initialize color-shifting from red to blue (CCW)
     for (i = 0; i < circle_precision / 3; i += 1) {
         j = (index_buffer[1] + i) % circle_precision;
         colors[channels * j + 0] = 0.0;
         colors[channels * j + 1] = 0.0 + (i * 3 / circle_precision);
         colors[channels * j + 2] = 1.0 - (i * 3 / circle_precision);
-    } // loop to initialize color-shifting from blue to green
+    } // loop to initialize color-shifting from blue to green (CCW)
     for (i = 0; i < circle_precision / 3; i += 1) {
         j = (index_buffer[2] + i) % circle_precision;
         colors[channels * j + 0] = 0.0 + (i * 3 / circle_precision);
         colors[channels * j + 1] = 1.0 - (i * 3 / circle_precision);
         colors[channels * j + 2] = 0.0;
-    } // loop to initialize color-shifting from green to red
+    } // loop to initialize color-shifting from green to red (CCW)
     if (channels > 3) {
         for (i = 0; i < circle_precision; i += 1) {
             colors[channels * i + 3] = 0.80;
