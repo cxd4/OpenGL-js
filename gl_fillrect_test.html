@@ -26,20 +26,23 @@
 var frames_per_second = 60;
 var coordinates_per_vertex = 2;
 
+var static_color_ID;
+
 function fill_raster() {
     glClearColor(Math.random(), Math.random(), Math.random(), Math.random());
     glClear(GL_COLOR_BUFFER_BIT);
     return;
 }
 function fill_vector() {
-    fragment_GLSL =
-        "void main(void) {\n" +
-        "    gl_FragColor = vec4(" + Math.random() + ", " + Math.random() +
-        ", " + Math.random() + ", " + Math.random() + ");\n" +
-        "}\n";
-    GL.shaderSource(fragment_shader, fragment_GLSL);
-    GL.compileShader(fragment_shader);
-    GL.linkProgram(shader_program);
+    var color_vector = [];
+    var i = 0;
+
+    while (i < 4) {
+        color_vector[i] = Math.random();
+        i += 1;
+    }
+    GL.uniform4fv(static_color_ID, color_vector);
+ // GL.uniform4f(ID, r, g, b, a); 1.2% faster on Direct3D 9 ANGLE (IE 11) ??
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
     return;
@@ -68,8 +71,9 @@ var vertex_shader, vertex_GLSL =
     "    gl_Position = vec4(position, 0.0, 1.0);\n" +
     "}\n";
 var fragment_shader, fragment_GLSL =
+    "uniform lowp vec4 static_color;\n" +
     "void main(void) {\n" +
-    "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+    "    gl_FragColor = static_color;\n" +
     "}\n";
 var shader_program, vertex_attribute_ID, vertex_buffer_object;
 
@@ -94,6 +98,7 @@ function init() {
     GL.linkProgram(shader_program);
     GL.useProgram(shader_program);
 
+    static_color_ID = GL.getUniformLocation(shader_program, "static_color");
     vertex_attribute_ID = GL.getAttribLocation(shader_program, "position");
     GL.enableVertexAttribArray(vertex_attribute_ID);
 
