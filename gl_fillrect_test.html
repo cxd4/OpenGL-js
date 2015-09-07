@@ -23,7 +23,6 @@
 <link rel="stylesheet" href="gl.css" type="text/css">
 <script type="text/javascript" src="gl.js"></script>
 <script type="text/javascript">
-var frames_per_second = 60;
 var coordinates_per_vertex = 4;
 
 var static_color_ID;
@@ -49,13 +48,16 @@ function fill_vector() {
 }
 
 function main_GL() {
+    var frames_per_second = 60;
+    var milliseconds_per_frame = 1000 / frames_per_second;
+    var fill_test = (false ? fill_raster : fill_vector);
+
     if (GL_initialize(document, "GL_canvas") === null) {
         alert("Failed to initialize WebGL.");
     }
 
     init();
- // setInterval(fill_raster, 1000 / frames_per_second);
-    setInterval(fill_vector, 1000 / frames_per_second);
+    setInterval(fill_test, milliseconds_per_frame);
     return;
 }
 
