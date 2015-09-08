@@ -111,7 +111,7 @@ function init() {
         colors[channels * j + 2] = 0.0;
     } // loop to initialize color-shifting from green to red (CCW)
     if (channels > 3) {
-        for (i = 0; i < circle_precision; i += 1) {
+        for (i = 0; i < circle_precision + 1; i += 1) {
             colors[channels * i + 3] = 0.90;
         }
     } // If alpha is on, have the triangle 10% transparent.
