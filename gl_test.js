@@ -112,15 +112,15 @@ function init() {
     } // loop to initialize color-shifting from green to red (CCW)
     if (channels > 3) {
         for (i = 0; i < circle_precision; i += 1) {
-            colors[channels * i + 3] = 0.80;
+            colors[channels * i + 3] = 0.90;
         }
-    } // If alpha is on, have the triangle 20% transparent.
+    } // If alpha is on, have the triangle 10% transparent.
     glDisableClientState(GL_COLOR_ARRAY);
     glColorPointer(channels, GL_FLOAT, 0, colors);
 
     glEnable(GL_BLEND);
- // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+ // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glClearColor(0.00, 0.00, 0.00, 0.00);
