@@ -47,6 +47,7 @@ function init() {
     var circle = [], colors = [];
     var i, j;
     var radius = 1.0; /* Unit circle has a radius of (r = 1). */
+    var arc_120_degrees = circle_precision / 3;
 
 /*
  * Behind the rainbow triangle will be a semitransparent indigo circle.
@@ -93,20 +94,20 @@ function init() {
 
     for (i = 0; i < circle_precision / 3; i += 1) {
         j = (index_buffer[0] + i) % circle_precision;
-        colors[channels * j + 0] = 1.0 - (i * 3 / circle_precision);
+        colors[channels * j + 0] = 1.0 - (i / arc_120_degrees);
         colors[channels * j + 1] = 0.0;
-        colors[channels * j + 2] = 0.0 + (i * 3 / circle_precision);
+        colors[channels * j + 2] = 0.0 + (i / arc_120_degrees);
     } // loop to initialize color-shifting from red to blue (CCW)
     for (i = 0; i < circle_precision / 3; i += 1) {
         j = (index_buffer[1] + i) % circle_precision;
         colors[channels * j + 0] = 0.0;
-        colors[channels * j + 1] = 0.0 + (i * 3 / circle_precision);
-        colors[channels * j + 2] = 1.0 - (i * 3 / circle_precision);
+        colors[channels * j + 1] = 0.0 + (i / arc_120_degrees);
+        colors[channels * j + 2] = 1.0 - (i / arc_120_degrees);
     } // loop to initialize color-shifting from blue to green (CCW)
     for (i = 0; i < circle_precision / 3; i += 1) {
         j = (index_buffer[2] + i) % circle_precision;
-        colors[channels * j + 0] = 0.0 + (i * 3 / circle_precision);
-        colors[channels * j + 1] = 1.0 - (i * 3 / circle_precision);
+        colors[channels * j + 0] = 0.0 + (i / arc_120_degrees);
+        colors[channels * j + 1] = 1.0 - (i / arc_120_degrees);
         colors[channels * j + 2] = 0.0;
     } // loop to initialize color-shifting from green to red (CCW)
     if (channels > 3) {
