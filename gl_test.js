@@ -31,6 +31,7 @@ function display() {
     glEnableClientState(GL_COLOR_ARRAY);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, index_buffer);
     glDisableClientState(GL_COLOR_ARRAY);
+ // Delete above DisableClientState call to draw the circle with rainbow shades.
 
     while (i < 3) {
         if (index_buffer[i] === 1) {
@@ -45,7 +46,10 @@ function display() {
 
 function init() {
     "use strict";
-    var circle = [], colors = [0, 0, 0, 1.00];
+    var one_third = 1.0 / 3.0;
+ // Automatic GL fragment shading converges triangle R,G,B to this center color.
+
+    var circle = [], colors = [one_third, one_third, one_third, 0.00];
     var i, j;
     var radius = 1.0; /* Unit circle has a radius of (r = 1). */
 
@@ -93,23 +97,30 @@ function init() {
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
 
     for (i = 0; i < arc_120_degrees; i += 1) {
-        j = (index_buffer[0] + i) % circle_precision;
+        j = index_buffer[0] + i;
         colors[channels * j + 0] = 1.0 - (i / arc_120_degrees);
         colors[channels * j + 1] = 0.0;
         colors[channels * j + 2] = 0.0 + (i / arc_120_degrees);
     } // loop to initialize color-shifting from red to blue (CCW)
     for (i = 0; i < arc_120_degrees; i += 1) {
-        j = (index_buffer[1] + i) % circle_precision;
+        j = index_buffer[1] + i;
         colors[channels * j + 0] = 0.0;
         colors[channels * j + 1] = 0.0 + (i / arc_120_degrees);
         colors[channels * j + 2] = 1.0 - (i / arc_120_degrees);
     } // loop to initialize color-shifting from blue to green (CCW)
     for (i = 0; i < arc_120_degrees; i += 1) {
-        j = (index_buffer[2] + i) % circle_precision;
+        j = index_buffer[2] + i;
+        if (j >= circle_precision + 1) {
+            j -= circle_precision;
+        }
         colors[channels * j + 0] = 0.0 + (i / arc_120_degrees);
         colors[channels * j + 1] = 1.0 - (i / arc_120_degrees);
         colors[channels * j + 2] = 0.0;
     } // loop to initialize color-shifting from green to red (CCW)
+
+    for (j = 0; j < channels; j += 1) {
+        colors[channels * (circle_precision + 1) + j] = colors[channels + j];
+    } // #0 is the center; #1 to #360 are the angles; #361 needs a copy of #1.
     if (channels > 3) {
         for (i = 1; i < circle_precision + 1 + 1; i += 1) {
             colors[channels * i + 3] = 0.90;
@@ -118,7 +129,7 @@ function init() {
     glDisableClientState(GL_COLOR_ARRAY);
     glColorPointer(channels, GL_FLOAT, 0, colors);
 
-    glEnable(GL_BLEND);
+    glDisable(GL_BLEND);
  // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
