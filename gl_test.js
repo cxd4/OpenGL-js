@@ -1,6 +1,6 @@
 var frames_per_second = 60;
 
-var coordinates_per_vertex = 2;
+var coordinates_per_vertex = 4;
 var channels = 4;
 
 /*
