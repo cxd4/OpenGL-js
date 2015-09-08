@@ -9,11 +9,12 @@ var channels = 4;
  * something less than a quarter that precise is still a convincing circle.)
  */
 var circle_precision = 180;
+var arc_120_degrees = circle_precision / 3;
 
 var index_buffer = [
-    0 * (circle_precision / 3) + circle_precision / 4 + 1,
-    1 * (circle_precision / 3) + circle_precision / 4 + 1,
-    2 * (circle_precision / 3) + circle_precision / 4 + 1
+    0*arc_120_degrees + circle_precision/4 + 1,
+    1*arc_120_degrees + circle_precision/4 + 1,
+    2*arc_120_degrees + circle_precision/4 + 1
 ];
 
 function display() {
@@ -47,7 +48,6 @@ function init() {
     var circle = [], colors = [];
     var i, j;
     var radius = 1.0; /* Unit circle has a radius of (r = 1). */
-    var arc_120_degrees = circle_precision / 3;
 
 /*
  * Behind the rainbow triangle will be a semitransparent indigo circle.
@@ -92,19 +92,19 @@ function init() {
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(coordinates_per_vertex, GL_FLOAT, 0, circle);
 
-    for (i = 0; i < circle_precision / 3; i += 1) {
+    for (i = 0; i < arc_120_degrees; i += 1) {
         j = (index_buffer[0] + i) % circle_precision;
         colors[channels * j + 0] = 1.0 - (i / arc_120_degrees);
         colors[channels * j + 1] = 0.0;
         colors[channels * j + 2] = 0.0 + (i / arc_120_degrees);
     } // loop to initialize color-shifting from red to blue (CCW)
-    for (i = 0; i < circle_precision / 3; i += 1) {
+    for (i = 0; i < arc_120_degrees; i += 1) {
         j = (index_buffer[1] + i) % circle_precision;
         colors[channels * j + 0] = 0.0;
         colors[channels * j + 1] = 0.0 + (i / arc_120_degrees);
         colors[channels * j + 2] = 1.0 - (i / arc_120_degrees);
     } // loop to initialize color-shifting from blue to green (CCW)
-    for (i = 0; i < circle_precision / 3; i += 1) {
+    for (i = 0; i < arc_120_degrees; i += 1) {
         j = (index_buffer[2] + i) % circle_precision;
         colors[channels * j + 0] = 0.0 + (i / arc_120_degrees);
         colors[channels * j + 1] = 1.0 - (i / arc_120_degrees);
