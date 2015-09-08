@@ -293,6 +293,7 @@ function glPointSize(size) {
 function glColor4f(red, green, blue, alpha) {
     "use strict";
     var IDs = [];
+    var color_vector = [red, green, blue, alpha];
     var i = 0;
 
 /*
@@ -305,7 +306,7 @@ function glColor4f(red, green, blue, alpha) {
 
     while (i < 3) {
         GL.useProgram(GL_state.programs[i][0]);
-        GL.uniform4fv(IDs[i], [red, green, blue, alpha]);
+        GL.uniform4fv(IDs[i], color_vector);
         i += 1;
     }
 
