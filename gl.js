@@ -430,7 +430,7 @@ function GL_get_context(ML_interface, canvas_name) {
          // alert("Warning:  Experimental WebGL implementation.");
         }
     } catch (error) {
-        ML_interface.write("WebGL getContext() exception:\n" + error);
+        ML_interface.write("WebGL getContext() exception.<BR>" + error);
     }
 
     if (!GL) {
