@@ -405,7 +405,7 @@ function glColorPointer(size, type, stride, pointer) {
     return;
 }
 
-function GL_initialize(ML_interface, canvas_name) {
+function GL_get_context(ML_interface, canvas_name) {
     "use strict";
     var canvas;
     var emulated_vertex_IBO;

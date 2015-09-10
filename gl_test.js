@@ -150,7 +150,7 @@ function main_GL() {
     "use strict";
     var error_code;
 
-    if (GL_initialize(document, "GL_canvas") === null) {
+    if (GL_get_context(document, "GL_canvas") === null) {
         alert("Failed to initialize WebGL.");
         return;
     }
