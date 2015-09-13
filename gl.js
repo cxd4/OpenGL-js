@@ -116,6 +116,7 @@ function glDrawElements(mode, count, type, indices) {
         vertex_indices = new Uint16Array(indices);
         break;
     }
+    GL.finish(); // slow fix to deferred buffer-and-draw render pipeline
     GL.bufferSubData(GL.ELEMENT_ARRAY_BUFFER, 0, vertex_indices);
 
     GL.drawElements(mode, count, type, 0);
@@ -585,5 +586,7 @@ function GL_get_context(ML_interface, canvas_name) {
     glColor4f(1.0, 1.0, 1.0, 1.0);
     glPointSize(1.0);
 
+    glFlush();
+    glFinish();
     return (GL);
 }
