@@ -52,7 +52,7 @@ function main_GL() {
     var milliseconds_per_frame = 1000 / frames_per_second;
     var fill_test = (false ? fill_raster : fill_vector);
 
-    if (GL_initialize(document, "GL_canvas") === null) {
+    if (GL_get_context(document, "GL_canvas") === null) {
         alert("Failed to initialize WebGL.");
     }
 
