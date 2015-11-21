@@ -575,17 +575,37 @@ function GL_get_context(ML_interface, canvas_name) {
     GL_state.qx = 0; // color backup state hack
 
 /*
- * Finally, we need to emulate the initial GL state machine settings.
- *
- * For example, the default OpenGL color is white:  glColor4i(1, 1, 1, 1);
- * Another example:  Point sizes during GL_POINTS raster art, glPointSize(1);
+ * Finally, we need to emulate the initial GL ES 1.0 state machine settings.
  *
  * Because shader-based "modern" OpenGL needs to emulate these using GLSL and
  * uniform attributes, we need to initialize the uniforms in this wrapper.
  */
     glColor4f(1.0, 1.0, 1.0, 1.0);
     glPointSize(1.0);
+    glLineWidth(1.0);
 
+// A few more calls to force correct default state machine flags can't hurt.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ZERO);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DITHER);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    glDisable(GL_SAMPLE_COVERAGE);
+
+    glVertexPointer(4, GL_FLOAT, 0, 0);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glColorPointer(4, GL_FLOAT, 0, 0);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT + GL_DEPTH_BUFFER_BIT + GL_STENCIL_BUFFER_BIT);
     glFlush();
     glFinish();
     return (GL);
