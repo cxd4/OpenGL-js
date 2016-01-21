@@ -426,6 +426,7 @@ function GL_get_context(ML_interface, canvas_name) {
     canvas = ML_interface.getElementById(canvas_name);
 
     canvas_attributes = {
+        preserveDrawingBuffer: true, // needed to right-click, Save Image As...
         depth: true,
         alpha: true,
         antialias: true,
