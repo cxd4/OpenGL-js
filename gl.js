@@ -409,6 +409,7 @@ function glColorPointer(size, type, stride, pointer) {
 function GL_get_context(ML_interface, canvas_name) {
     "use strict";
     var canvas;
+    var canvas_attributes;
     var emulated_vertex_IBO;
 
  // Prevent re-assigning the context if it already was set with a valid context.
@@ -424,10 +425,16 @@ function GL_get_context(ML_interface, canvas_name) {
  */
     canvas = ML_interface.getElementById(canvas_name);
 
+    canvas_attributes = {
+        depth: true,
+        alpha: true,
+        antialias: true,
+        premultipliedAlpha: true
+    };
     try {
-        GL = canvas.getContext("webgl");
+        GL = canvas.getContext("webgl", canvas_attributes);
         if (!GL) {
-            GL = canvas.getContext("experimental-webgl");
+            GL = canvas.getContext("experimental-webgl", canvas_attributes);
          // alert("Warning:  Experimental WebGL implementation.");
         }
     } catch (error) {
