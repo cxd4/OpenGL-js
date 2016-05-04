@@ -11,92 +11,91 @@ var GL_state = {};
  * the OpenGL ES 1.1 specifications and the online OpenGL specifications.
  * Derived by setting GL_$name = WebGLContext.$name in the debugger.
  */
-var
-    GL_FALSE = false, // C macro is 0, but strict JS equality needs false.
-    GL_TRUE = true, // C macro is 1, but strict JS equality needs true.
+var GL_FALSE = false; // C macro is 0, but strict JS equality needs false.
+var GL_TRUE = true; // C macro is 1, but strict JS equality needs true.
     // Example:  (glIsEnabled(GL_BLEND) == 1) passes, but (... === 1) fails.
 
  // glGetError(void)
-    GL_NO_ERROR = 0,
-    GL_INVALID_ENUM = 0x0500,
-    GL_INVALID_VALUE = 0x0501,
-    GL_INVALID_OPERATION = 0x0502,
- // GL_STACK_OVERFLOW = 0x0503, // WebGL.STACK_OVERFLOW is undefined.
- // GL_STACK_UNDERFLOW = 0x0504, // WebGL.STACK_UNDERFLOW is undefined.
-    GL_OUT_OF_MEMORY = 0x0505,
-    GL_INVALID_FRAMEBUFFER_OPERATION = 0x0506, // not universal
-    GL_CONTEXT_LOST = undefined, // not universal
+var GL_NO_ERROR = 0;
+var GL_INVALID_ENUM = 0x0500;
+var GL_INVALID_VALUE = 0x0501;
+var GL_INVALID_OPERATION = 0x0502;
+ // GL_STACK_OVERFLOW = 0x0503; // WebGL.STACK_OVERFLOW is undefined.
+ // GL_STACK_UNDERFLOW = 0x0504; // WebGL.STACK_UNDERFLOW is undefined.
+var GL_OUT_OF_MEMORY = 0x0505;
+var GL_INVALID_FRAMEBUFFER_OPERATION = 0x0506; // not universal
+var GL_CONTEXT_LOST = undefined; // not universal
 
  // glReadPixels()
-    GL_ALPHA = 0x1906,
-    GL_RGB = 0x1907,
-    GL_RGBA = 0x1908,
+var GL_ALPHA = 0x1906;
+var GL_RGB = 0x1907;
+var GL_RGBA = 0x1908;
 
-    GL_BYTE = 0x1400,
-    GL_UNSIGNED_BYTE = 0x1401,
-    GL_SHORT = 0x1402,
-    GL_UNSIGNED_SHORT = 0x1403,
-    GL_FLOAT = 0x1406,
-    GL_UNSIGNED_SHORT_5_6_5 = 33635,
-    GL_UNSIGNED_SHORT_4_4_4_4 = 32819,
-    GL_UNSIGNED_SHORT_5_5_5_1 = 32820,
+var GL_BYTE = 0x1400;
+var GL_UNSIGNED_BYTE = 0x1401;
+var GL_SHORT = 0x1402;
+var GL_UNSIGNED_SHORT = 0x1403;
+var GL_FLOAT = 0x1406;
+var GL_UNSIGNED_SHORT_5_6_5 = 33635;
+var GL_UNSIGNED_SHORT_4_4_4_4 = 32819;
+var GL_UNSIGNED_SHORT_5_5_5_1 = 32820;
 
  // rendering primitives
-    GL_POINTS = 0,
-    GL_LINES = 1,
-    GL_LINE_LOOP = 2,
-    GL_LINE_STRIP = 3,
-    GL_TRIANGLES = 4,
-    GL_TRIANGLE_STRIP = 5,
-    GL_TRIANGLE_FAN = 6,
+var GL_POINTS = 0;
+var GL_LINES = 1;
+var GL_LINE_LOOP = 2;
+var GL_LINE_STRIP = 3;
+var GL_TRIANGLES = 4;
+var GL_TRIANGLE_STRIP = 5;
+var GL_TRIANGLE_FAN = 6;
 
  // client-side vertex array states (emulated--unavailable in WebGL)
-    GL_VERTEX_ARRAY = 0x8074, // emulated
-    GL_NORMAL_ARRAY = 0x8075,
-    GL_COLOR_ARRAY = 0x8076, // emulated
-    GL_TEXTURE_COORD_ARRAY = 0x8078,
+var GL_VERTEX_ARRAY = 0x8074; // emulated
+var GL_NORMAL_ARRAY = 0x8075;
+var GL_COLOR_ARRAY = 0x8076; // emulated
+var GL_TEXTURE_COORD_ARRAY = 0x8078;
 
  // glIsEnabled(), glEnable() and glDisable()
-    GL_CULL_FACE = 2884,
-    GL_BLEND = 3042,
-    GL_DITHER = 3024,
-    GL_STENCIL_TEST = 2960,
-    GL_DEPTH_TEST = 2929,
-    GL_SCISSOR_TEST = 3089,
-    GL_POLYGON_OFFSET_FILL = 0x8037,
-    GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E,
-    GL_SAMPLE_COVERAGE = 0x80A0,
+var GL_CULL_FACE = 2884;
+var GL_BLEND = 3042;
+var GL_DITHER = 3024;
+var GL_STENCIL_TEST = 2960;
+var GL_DEPTH_TEST = 2929;
+var GL_SCISSOR_TEST = 3089;
+var GL_POLYGON_OFFSET_FILL = 0x8037;
+var GL_SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
+var GL_SAMPLE_COVERAGE = 0x80A0;
 
  // glBlendFunc()
-    GL_ZERO = 0,
-    GL_ONE = 1,
-    GL_SRC_COLOR = 0x0300,
-    GL_ONE_MINUS_SRC_COLOR = 0x0301,
-    GL_SRC_ALPHA = 0x0302,
-    GL_ONE_MINUS_SRC_ALPHA = 0x0303,
-    GL_DST_ALPHA = 0x0304,
-    GL_ONE_MINUS_DST_ALPHA = 0x0305,
+var GL_ZERO = 0;
+var GL_ONE = 1;
+var GL_SRC_COLOR = 0x0300;
+var GL_ONE_MINUS_SRC_COLOR = 0x0301;
+var GL_SRC_ALPHA = 0x0302;
+var GL_ONE_MINUS_SRC_ALPHA = 0x0303;
+var GL_DST_ALPHA = 0x0304;
+var GL_ONE_MINUS_DST_ALPHA = 0x0305;
 
  // glFrontFace()
-    GL_CW = 0x0900,
-    GL_CCW = 0x0901,
+var GL_CW = 0x0900;
+var GL_CCW = 0x0901;
 
  // glCullFace()
-    GL_FRONT = 0x404,
-    GL_BACK = 0x405,
-    GL_FRONT_AND_BACK = 0x408,
+var GL_FRONT = 0x404;
+var GL_BACK = 0x405;
+var GL_FRONT_AND_BACK = 0x408;
 
  // glGetString(GLenum) -- return values
-    GL_VENDOR = 0x1F00,
-    GL_RENDERER = 0x1F01,
-    GL_VERSION = 0x1F02,
-    GL_EXTENSIONS = 0x1F03,
+var GL_VENDOR = 0x1F00;
+var GL_RENDERER = 0x1F01;
+var GL_VERSION = 0x1F02;
+var GL_EXTENSIONS = 0x1F03;
 
  // glClear(GLbitfield) -- bit masks
-    GL_DEPTH_BUFFER_BIT = 0x00000100,
- // GL_ACCUM_BUFFER_BIT = 0x00000200, // WebGL.ACCUM_BUFFER_BIT is undefined.
-    GL_STENCIL_BUFFER_BIT = 0x00000400,
-    GL_COLOR_BUFFER_BIT = 0x00004000;
+var GL_DEPTH_BUFFER_BIT = 0x00000100;
+ // GL_ACCUM_BUFFER_BIT = 0x00000200; // WebGL.ACCUM_BUFFER_BIT is undefined.
+var GL_STENCIL_BUFFER_BIT = 0x00000400;
+var GL_COLOR_BUFFER_BIT = 0x00004000;
 
 function glDrawArrays(mode, first, count) {
     "use strict";
@@ -515,8 +514,13 @@ function GL_get_context(ML_interface, canvas_name) {
     GL_state.programs[1] = [];
     GL_state.programs[2] = [];
 
-    var temp_vertex_shader, temp_fragment_shader;
-    var p, q, i = 0;
+    var temp_vertex_shader;
+    var temp_fragment_shader;
+
+    var p;
+    var q;
+    var i = 0;
+
     while (i < 3 * 3) {
         q = i % 3;
         p = (i - q) / 3;
