@@ -78,7 +78,7 @@ var fragment_shader, fragment_GLSL =
     "void main(void) {\n" +
     "    gl_FragColor = static_color;\n" +
     "}\n";
-var shader_program, vertex_attribute_ID, vertex_buffer_object;
+var shader_program, vertex_buffer_object;
 
 function init() {
     glScissor(0, 0, 64, 64);
@@ -102,17 +102,19 @@ function init() {
     GL.useProgram(shader_program);
 
     static_color_ID = GL.getUniformLocation(shader_program, "static_color");
-    vertex_attribute_ID = GL.getAttribLocation(shader_program, "position");
-    GL.enableVertexAttribArray(vertex_attribute_ID);
+    GL.bindAttribLocation(shader_program, 0, "position");
+    GL.enableVertexAttribArray(0);
 
     vertex_buffer_object = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer_object);
 
-    GL.bufferData(GL.ARRAY_BUFFER, 4 * 4 * 4, GL.STATIC_DRAW);
-    GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(screen));
-    GL.vertexAttribPointer(
-        vertex_attribute_ID, coordinates_per_vertex, GL_FLOAT, GL_FALSE, 0, 0
+    GL.bufferData(
+        GL.ARRAY_BUFFER,
+        4 * 4 * coordinates_per_vertex,
+        GL.STATIC_DRAW
     );
+    GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(screen));
+    GL.vertexAttribPointer(0, coordinates_per_vertex, GL_FLOAT, GL_FALSE, 0, 0);
 }
 </script>
 </head>
