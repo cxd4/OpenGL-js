@@ -62,12 +62,6 @@ function main_GL() {
 }
 
 var inverse_radius = 1.0;
-var screen = [
-    -1, -1, 0, inverse_radius, // lower-left
-    +1, -1, 0, inverse_radius, // lower-right
-    -1, +1, 0, inverse_radius, // upper-left
-    +1, +1, 0, inverse_radius, // upper-right
-];
 var vertex_shader, vertex_GLSL =
     "attribute vec" + coordinates_per_vertex + " position;\n" +
     "void main(void) {\n" +
@@ -105,15 +99,15 @@ function init() {
     GL.bindAttribLocation(shader_program, 0, "position");
     GL.enableVertexAttribArray(0);
 
+    var screen = [
+        -1, -1, 0, inverse_radius, // lower-left
+        +1, -1, 0, inverse_radius, // lower-right
+        -1, +1, 0, inverse_radius, // upper-left
+        +1, +1, 0, inverse_radius // upper-right
+    ];
     vertex_buffer_object = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer_object);
-
-    GL.bufferData(
-        GL.ARRAY_BUFFER,
-        4 * 4 * coordinates_per_vertex,
-        GL.STATIC_DRAW
-    );
-    GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(screen));
+    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(screen), GL.STATIC_DRAW);
     GL.vertexAttribPointer(0, coordinates_per_vertex, GL_FLOAT, GL_FALSE, 0, 0);
 }
 </script>
