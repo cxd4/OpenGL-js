@@ -43,7 +43,7 @@ function fill_vector() {
     GL.uniform4fv(static_color_ID, color_vector);
  // GL.uniform4f(ID, r, g, b, a); 1.2% faster on Direct3D 9 ANGLE (IE 11) ??
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
+    GL.drawArrays(GL_TRIANGLE_STRIP, 0, 3 + 1);
     return;
 }
 
@@ -108,7 +108,8 @@ function init() {
     vertex_buffer_object = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, vertex_buffer_object);
 
-    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(screen), GL.STATIC_DRAW);
+    GL.bufferData(GL.ARRAY_BUFFER, 4 * 4 * 4, GL.STATIC_DRAW);
+    GL.bufferSubData(GL.ARRAY_BUFFER, 0, new Float32Array(screen));
     GL.vertexAttribPointer(
         vertex_attribute_ID, coordinates_per_vertex, GL_FLOAT, GL_FALSE, 0, 0
     );
