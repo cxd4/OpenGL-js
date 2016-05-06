@@ -9,4 +9,6 @@ body {
 canvas {
     border          :  0px solid #400080;
     background-color:  transparent;
+    display         :  block;
+    margin          :  auto;
 }
