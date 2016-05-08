@@ -48,15 +48,21 @@ function fill_vector() {
 }
 
 function main_GL() {
-    var frames_per_second = 60;
-    var milliseconds_per_frame = 1000 / frames_per_second;
-    var fill_test = (false ? fill_raster : fill_vector);
-
+    "use strict";
     if (GL_get_context(document, "GL_canvas") === null) {
         alert("Failed to initialize WebGL.");
     }
 
     init();
+    set_test(false);
+    return;
+}
+function set_test(use_GLSL) {
+    "use strict";
+    var frames_per_second = 60;
+    var milliseconds_per_frame = 1000 / frames_per_second;
+    var fill_test = (use_GLSL ? fill_vector : fill_raster);
+
     setInterval(fill_test, milliseconds_per_frame);
     return;
 }
@@ -115,6 +121,12 @@ function init() {
 
 <body onload="main_GL()">
 <p><a href="gl.html">Click here for the spinning triangle color array test.</a></p>
+
+<p>
+<input type="checkbox" onclick="set_test(this.checked)">
+Render with GLSL instead of clearing frames to color floods.
+</p>
+
 <canvas id="GL_canvas" width="1024" height="1024">
 Your browser doesn't appear to support the <code>&lt;CANVAS&gt;</code> element.
 </canvas>
