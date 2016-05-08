@@ -12,3 +12,12 @@ canvas {
     display         :  block;
     margin          :  auto;
 }
+
+a:link {
+    color           :  #00FF00;
+    background-color:  #000000;
+}
+a:visited {
+    color           :  #008000;
+    background-color:  #000000;
+}
