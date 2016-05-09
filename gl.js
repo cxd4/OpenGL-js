@@ -451,120 +451,120 @@ function GL_get_context(ML_interface, canvas_name) {
     var GLSL_scripts = [
         [ // 4-dimensional positions with constant color
             "attribute highp vec4 pos;\n" + point_size +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos);\n" + PointSize +
-            "}\n",
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos);\n" + PointSize +
+                    "}\n",
 
             "uniform lowp vec4 const_color;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = const_color;\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = const_color;\n" +
+                    "}\n"
         ],
         [ // 4-dimensional positions with 4-channel color
             "attribute highp vec4 pos;\n" + point_size +
-            "varying lowp vec4 outc;\n" +
-            "attribute lowp vec4 col;\n" +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos);\n" + PointSize +
-            "    outc = col;\n" +
-            "}\n",
+                    "varying lowp vec4 outc;\n" +
+                    "attribute lowp vec4 col;\n" +
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos);\n" + PointSize +
+                    "    outc = col;\n" +
+                    "}\n",
 
             "varying lowp vec4 outc;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = outc;\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = outc;\n" +
+                    "}\n"
         ],
         [ // 4-dimensional positions with 3-channel color
             "attribute highp vec4 pos;\n" + point_size +
-            "varying lowp vec3 outc;\n" +
-            "attribute lowp vec3 col;\n" +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos);\n" + PointSize +
-            "    outc = col;\n" +
-            "}\n",
+                    "varying lowp vec3 outc;\n" +
+                    "attribute lowp vec3 col;\n" +
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos);\n" + PointSize +
+                    "    outc = col;\n" +
+                    "}\n",
 
             "varying lowp vec3 outc;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = vec4(outc, 1.0);\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = vec4(outc, 1.0);\n" +
+                    "}\n"
         ],
         [ // 3-dimensional positions with constant color
             "attribute highp vec3 pos;\n" + point_size +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos, 1.0);\n" + PointSize +
-            "}\n",
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos, 1.0);\n" + PointSize +
+                    "}\n",
 
             "uniform lowp vec4 const_color;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = const_color;\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = const_color;\n" +
+                    "}\n"
         ],
         [ // 3-dimensional positions with 4-channel color
             "attribute highp vec3 pos;\n" + point_size +
-            "varying lowp vec4 outc;\n" +
-            "attribute lowp vec4 col;\n" +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos, 1.0);\n" + PointSize +
-            "    outc = col;\n" +
-            "}\n",
+                    "varying lowp vec4 outc;\n" +
+                    "attribute lowp vec4 col;\n" +
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos, 1.0);\n" + PointSize +
+                    "    outc = col;\n" +
+                    "}\n",
 
             "varying lowp vec4 outc;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = outc;\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = outc;\n" +
+                    "}\n"
         ],
         [ // 3-dimensional positions with 3-channel color
             "attribute highp vec3 pos;\n" + point_size +
-            "varying lowp vec3 outc;\n" +
-            "attribute lowp vec3 col;\n" +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos, 1.0);\n" + PointSize +
-            "    outc = col;\n" +
-            "}\n",
+                    "varying lowp vec3 outc;\n" +
+                    "attribute lowp vec3 col;\n" +
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos, 1.0);\n" + PointSize +
+                    "    outc = col;\n" +
+                    "}\n",
 
             "varying lowp vec3 outc;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = vec4(outc, 1.0);\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = vec4(outc, 1.0);\n" +
+                    "}\n"
         ],
         [ // 2-dimensional positions with constant color
             "attribute highp vec2 pos;\n" + point_size +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos, 0.0, 1.0);\n" + PointSize +
-            "}\n",
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos, 0.0, 1.0);\n" + PointSize +
+                    "}\n",
 
             "uniform lowp vec4 const_color;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = const_color;\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = const_color;\n" +
+                    "}\n"
         ],
         [ // 2-dimensional positions with 4-channel color
             "attribute highp vec2 pos;\n" + point_size +
-            "varying lowp vec4 outc;\n" +
-            "attribute lowp vec4 col;\n" +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos, 0.0, 1.0);\n" + PointSize +
-            "    outc = col;\n" +
-            "}\n",
+                    "varying lowp vec4 outc;\n" +
+                    "attribute lowp vec4 col;\n" +
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos, 0.0, 1.0);\n" + PointSize +
+                    "    outc = col;\n" +
+                    "}\n",
 
             "varying lowp vec4 outc;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = outc;\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = outc;\n" +
+                    "}\n"
         ],
         [ // 2-dimensional positions with 3-channel color
             "attribute highp vec2 pos;\n" + point_size +
-            "varying lowp vec3 outc;\n" +
-            "attribute lowp vec3 col;\n" +
-            "void main(void) {\n" +
-            "    gl_Position = vec4(pos, 0.0, 1.0);\n" + PointSize +
-            "    outc = col;\n" +
-            "}\n",
+                    "varying lowp vec3 outc;\n" +
+                    "attribute lowp vec3 col;\n" +
+                    "void main(void) {\n" +
+                    "    gl_Position = vec4(pos, 0.0, 1.0);\n" + PointSize +
+                    "    outc = col;\n" +
+                    "}\n",
 
             "varying lowp vec3 outc;\n" +
-            "void main(void) {\n" +
-            "    gl_FragColor = vec4(outc, 1.0);\n" +
-            "}\n"
+                    "void main(void) {\n" +
+                    "    gl_FragColor = vec4(outc, 1.0);\n" +
+                    "}\n"
         ]
     ];
     GL_state.programs = [];
