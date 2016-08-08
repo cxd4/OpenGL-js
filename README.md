@@ -35,8 +35,17 @@ There is no support for `glTexCoordPointer` (or any connected pixel upload opera
 
 The typical geometric transformation functions--`glRotate*`, `glScale*`, and `glTranslate*`--are also deprecated but not implemented in this wrapper due to the immense complication of reading back positional data written to 3-D space and then manipulating them.  It is expected instead that you should be familiar with vertex arrays in OpenGL and recycle the vertex coordinate arrays by manipulating them yourself with trigonometric functions from the standard library.  (For example, instead of `glRotate*`, compute the inverse sine and inverse cosine of the y and x coordinates, respectively, then accumulate an angular offset to said coordinates, then update the values in the client-side vertex array with the new sines and cosines.)
 
-### System Requirements
-The system requirements for writing and running OpenGL code on the web using this wrapper are the same exactly as those for the native WebGL API it wraps around.  OpenGL ES hardware should, in general, have way fewer expectations than desktop OpenGL hardware, but this is not so from the perspective of reality, in which deprecation has crept its way into the ranks of modern OpenGL standards, while making hardware requirements more complex.  Therefore, even though this API exposes mostly OpenGL ES 1.0 functions (plus some deprecated functions) for convenience, all of the underlying browser's OpenGL ES 2.0 hardware requirements for WebGL remain.
+### Minimum System Requirements
+
+* HTML4 web browser, with support for the `CANVAS` extension drafted in HTML5
+* JavaScript client-side scripting enabled, with at least partial ECMAScript 6 support
+* recent video card which has not been [blacklisted as unsupported](https://www.khronos.org/webgl/wiki/BlacklistsAndWhitelists)
+
+The first two requirements are known to be met for WebGL under the following browsers:
+
+* Microsoft Edge (**not** Internet Explorer, due to unimplemented ES6 support)
+* **newer** Chromium-based release versions (including Iron and Google Chrome)
+* mostly all web browsers from under the Mozilla family (including SeaMonkey and FireFox)
 
 ### Coding Examples
 
