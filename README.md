@@ -44,8 +44,8 @@ The typical geometric transformation functions--`glRotate*`, `glScale*`, and `gl
 The first two requirements are known to be met for WebGL under the following browsers:
 
 * Microsoft Edge (**not** Internet Explorer, due to unimplemented ES6 support)
-* **newer** Chromium-based release versions (including Iron and Google Chrome)
-* mostly all web browsers from under the Mozilla family (including SeaMonkey and FireFox)
+* **newer** Chromium-based release versions (including Iron and Google Chrome 42+)
+* most web browsers from under the Mozilla family (including SeaMonkey and FireFox 35+)
 
 ### Coding Examples
 
