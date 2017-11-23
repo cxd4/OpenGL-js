@@ -1,9 +1,3 @@
-/*jslint es6:  true*/
-/*
- * WebGL specifications require ES6 support anyway, so why not employ it?
- * Hopefully, when ES6 becomes a mature standard, this bit can be removed.
- */
-
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
 
