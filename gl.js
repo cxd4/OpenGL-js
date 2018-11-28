@@ -1,4 +1,19 @@
-// @license magnet:?xt=urn:btih:90dc5c0be029de84e523b9b3922520e79e0e6f08&dn=cc0.txt CC0-1.0
+/*
+ * @licstart
+ *
+ * OpenGL JS:  C-style OpenGL (ES) wrapper defined using JavaScript WebGL.
+ * Written in 2015 by rjs.
+ *
+ * To the extent possible under law, the author(s) have dedicated all
+ * copyright and related and neighboring rights to this software to the public
+ * domain worldwide.  This software is distributed without any warranty.
+ *
+ * You should have received a copy of the CC0 Public Domain Dedication along
+ * with this software.
+ * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ *
+ * $licend
+ */
 
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
@@ -698,5 +713,3 @@ void main(void) {
     glFinish();
     return (GL);
 }
-
-// @license-end
