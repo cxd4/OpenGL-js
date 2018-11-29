@@ -20,6 +20,7 @@
   @licend  The above is the entire license notice
   for the JavaScript code in this page.
 */
+
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
 
