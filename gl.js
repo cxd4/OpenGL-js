@@ -451,20 +451,20 @@ function GL_get_context(ML_interface, canvas_name) {
     GL_CONTEXT_LOST = GL.CONTEXT_LOST_WEBGL;
 
     var GLSL_scripts = [
-        [`
+        [`#line 1
 attribute highp vec4 pos;
 uniform float point_size;
 void main(void) {
 	gl_Position = vec4(pos);
 	gl_PointSize = point_size;
 }
-`, `
+`, `#line 1
 uniform lowp vec4 const_color;
 void main(void) {
 	gl_FragColor = const_color;
 }
 `], // 4-dimensional positions with constant color
-        [`
+        [`#line 1
 attribute highp vec4 pos;
 uniform float point_size;
 varying lowp vec4 outc;
@@ -474,13 +474,13 @@ void main(void) {
 	gl_PointSize = point_size;
 	outc = col;
 }
-`, `
+`, `#line 1
 varying lowp vec4 outc;
 void main(void) {
 	gl_FragColor = outc;
 }
 `], // 4-dimensional positions with 4-channel color
-        [`
+        [`#line 1
 attribute highp vec4 pos;
 uniform float point_size;
 varying lowp vec3 outc;
@@ -490,26 +490,26 @@ void main(void) {
 	gl_PointSize = point_size;
 	outc = col;
 }
-`, `
+`, `#line 1
 varying lowp vec3 outc;
 void main(void) {
 	gl_FragColor = vec4(outc, 1.0);
 }
 `], // 4-dimensional positions with 3-channel color
-        [`
+        [`#line 1
 attribute highp vec3 pos;
 uniform float point_size;
 void main(void) {
 	gl_Position = vec4(pos, 1.0);
 	gl_PointSize = point_size;
 }
-`, `
+`, `#line 1
 uniform lowp vec4 const_color;
 void main(void) {
 	gl_FragColor = const_color;
 }
 `], // 3-dimensional positions with constant color
-        [`
+        [`#line 1
 attribute highp vec3 pos;
 uniform float point_size;
 varying lowp vec4 outc;
@@ -519,13 +519,13 @@ void main(void) {
 	gl_PointSize = point_size;
 	outc = col;
 }
-`, `
+`, `#line 1
 varying lowp vec4 outc;
 void main(void) {
 	gl_FragColor = outc;
 }
 `], // 3-dimensional positions with 4-channel color
-        [`
+        [`#line 1
 attribute highp vec3 pos;
 uniform float point_size;
 varying lowp vec3 outc;
@@ -535,26 +535,26 @@ void main(void) {
 	gl_PointSize = point_size;
 	outc = col;
 }
-`, `
+`, `#line 1
 varying lowp vec3 outc;
 void main(void) {
 	gl_FragColor = vec4(outc, 1.0);
 }
 `], // 3-dimensional positions with 3-channel color
-        [`
+        [`#line 1
 attribute highp vec2 pos;
 uniform float point_size;
 void main(void) {
 	gl_Position = vec4(pos, 0.0, 1.0);
 	gl_PointSize = point_size;
 }
-`, `
+`, `#line 1
 uniform lowp vec4 const_color;
 void main(void) {
 	gl_FragColor = const_color;
 }
 `], // 2-dimensional positions with constant color
-        [`
+        [`#line 1
 attribute highp vec2 pos;
 uniform float point_size;
 varying lowp vec4 outc;
@@ -564,13 +564,13 @@ void main(void) {
 	gl_PointSize = point_size;
 	outc = col;
 }
-`, `
+`, `#line 1
 varying lowp vec4 outc;
 void main(void) {
 	gl_FragColor = outc;
 }
 `], // 2-dimensional positions with 4-channel color
-        [`
+        [`#line 1
 attribute highp vec2 pos;
 uniform float point_size;
 varying lowp vec3 outc;
@@ -580,7 +580,7 @@ void main(void) {
 	gl_PointSize = point_size;
 	outc = col;
 }
-`, `
+`, `#line 1
 varying lowp vec3 outc;
 void main(void) {
 	gl_FragColor = vec4(outc, 1.0);
