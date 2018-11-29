@@ -1,4 +1,4 @@
-// @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt Expat (MIT License)
+// @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt Expat
 
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
