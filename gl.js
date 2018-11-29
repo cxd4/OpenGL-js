@@ -1,5 +1,5 @@
 /*
- * @licstart
+ * @licstart  The following is the entire license notice for the JavaScript code in this page.
  *
  * OpenGL JS:  C-style OpenGL (ES) wrapper defined using JavaScript WebGL.
  * Written in 2015 by rjs.
@@ -12,7 +12,7 @@
  * with this software.
  * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  *
- * $licend
+ * $licend  The above is the entire license notice for the JavaScript code in this page.
  */
 
 var GL; /* global context name for setting up C emulation in JavaScript */
