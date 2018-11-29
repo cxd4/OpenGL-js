@@ -1,4 +1,3 @@
-// @source: https://cxd4.github.io/OpenGL-js/
 /* @licstart  The following is the entire license notice for the 
   JavaScript code in this page.
 
