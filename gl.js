@@ -6,7 +6,7 @@ The following is the entire license notice for the JavaScript code in this file.
  * OpenGL JS:  C-style OpenGL (ES) wrapper defined using JavaScript WebGL.
  * Copyright (C) 2015  rjs
  *
- * This program is free software: you can redistribute it and/or modify
+ * This program is free software:  You can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
