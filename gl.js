@@ -1,5 +1,6 @@
 /*
  * @licstart
+ * The following is the entire license notice for the JavaScript code.
  *
  * Copyright (C) 2015 me
  *
@@ -19,6 +20,7 @@
  * through which recipients can access the Corresponding Source.
  *
  * @licend
+ * The following is the entire license notice for the JavaScript code.
  */
 
 
