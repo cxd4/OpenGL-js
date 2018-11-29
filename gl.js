@@ -1,6 +1,6 @@
 /*
-@licstart
-The following is the entire license notice for the JavaScript code in this page.
+ * @licstart
+ * The following is the entire license notice for the JavaScript code in this page.
 
   Copyright (C) 2015 me
 
@@ -18,9 +18,9 @@ The following is the entire license notice for the JavaScript code in this page.
   section 4, provided you include this license notice and a URL
   through which recipients can access the Corresponding Source.
 
-@licend
-The above is the entire license notice for the JavaScript code in this page.
-*/
+ * @licend
+ * The above is the entire license notice for the JavaScript code in this page.
+ */
 
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
