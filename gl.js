@@ -1,8 +1,9 @@
-/**
- * @licstart  The following is the entire license notice for the 
- *  JavaScript code in this page.
+/*
+ * @licstart
+ * The following is the entire license notice for the JavaScript code in this
+ * page.
  *
- * Copyright (C) 2015  me
+ * Copyright (C) 2015 me
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -19,8 +20,9 @@
  * section 4, provided you include this license notice and a URL
  * through which recipients can access the Corresponding Source.
  *
- * @licend  The above is the entire license notice
- * for the JavaScript code in this page.
+ * @licend
+ * The above is the entire license notice for the JavaScript code in this
+ * page.
  */
 
 
