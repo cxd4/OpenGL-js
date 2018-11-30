@@ -23,6 +23,11 @@
 <link rel="stylesheet" href="gl.css" type="text/css">
 <script type="text/javascript" src="gl.js"></script>
 <script type="text/javascript">
+/*
+@license magnet:?xt=urn:btih:90dc5c0be029de84e523b9b3922520e79e0e6f08&dn=cc0.txt
+CC0-1.0
+*/
+
 var coordinates_per_vertex = 4;
 
 var static_color_ID;
@@ -116,6 +121,7 @@ function init() {
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(screen), GL.STATIC_DRAW);
     GL.vertexAttribPointer(0, coordinates_per_vertex, GL_FLOAT, GL_FALSE, 0, 0);
 }
+/* @license-end */
 </script>
 </head>
 
