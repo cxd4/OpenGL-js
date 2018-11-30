@@ -3,6 +3,10 @@ Experimental interface for C-style OpenGL functions for faster cross-testing in 
 
 It's a lazy name for a wrapper interface that exposes most of the fundamentally important C functions any OpenGL programmer should expect.  The wrapper functions--as with the native API being emulated--still have to be coded through JavaScript, as there is no other way to establish an interface for OpenGL programming inside the web browser.
 
+`gl.js` is the source code, and `gl.min.js` is the compiled JavaScript script. They are both interchangeable; it doesn't matter which one you reference in your pages for your OpenGL code as far as functionality goes.  The major difference is file size and readability of the code, so the compressed and harder-to-read `gl.min.js` may load or even perform slightly faster on other computers or Internet connections.
+
+Thanks to the [Babel](https://babeljs.io/) JavaScript compiler for doing such a great job at compressing my `gl.js` programming into such a compact `gl.min.js`--the latter of which during the compression was processed in such a way that the multi-line GLSL shader scripts were translated into traditional, pre-ES6 multi-line strings which should work better with older browsers (like Internet Explorer 11 instead of Microsoft Edge) that still support WebGL canvases.  Other than this, there should be no compatibility difference between `gl.js` and `gl-min.js`, so use whichever you think is more appropriate for your project.
+
 ### Exposed GL Commands
 The exposed API resembles a minimalist subset of OpenGL ES 1.0--the very first version of OpenGL by Khronos (for embedded systems)--which predates the official decision to deprecate most of the functions important to computer-aided design and fundamental outside of the game design industry.
 
@@ -38,12 +42,12 @@ The typical geometric transformation functions--`glRotate*`, `glScale*`, and `gl
 ### Minimum System Requirements
 
 * HTML4 web browser, with support for the `CANVAS` extension drafted in HTML5
-* JavaScript client-side scripting enabled, with at least partial ECMAScript 6 support
+* JavaScript client-side scripting enabled, with at least partial ECMAScript 6 support (ES2015)
 * recent video card which has not been [blacklisted as unsupported](https://www.khronos.org/webgl/wiki/BlacklistsAndWhitelists)
 
 The first two requirements are known to be met for WebGL under the following browsers:
 
-* Microsoft Edge (**not** Internet Explorer, due to unimplemented ES6 support)
+* Microsoft Edge (**not** Internet Explorer 11, unless using `gl.min.js` instead of `gl.js`)
 * **newer** Chromium-based release versions (including Iron and Google Chrome 42+)
 * most web browsers from under the Mozilla family (including SeaMonkey and FireFox 35+)
 
