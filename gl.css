@@ -4,7 +4,7 @@ body {
     background-image:  url("checkerboard.gif");
 }
 
-p {
+p, th, td {
     background-color:  #000000;
     color           :  #FFFF00;
 }
