@@ -1,8 +1,23 @@
 /*
-@license
-magnet:?xt=urn:btih:90dc5c0be029de84e523b9b3922520e79e0e6f08&dn=cc0.txt
-CC0-1.0
-*/
+ * @licstart	The following is the entire license notice for the
+ * JavaScript code in this file.
+ *
+ * OpenGL JS:  C-style OpenGL (ES) wrapper defined using JavaScript WebGL.
+ * Copyright (C) 2015-2018 rjs
+ *
+ * This program is free software:  you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * @licend	The above is the entire license notice for the JavaScript
+ * code in this file.
+ */
 
 var GL; /* global context name for setting up C emulation in JavaScript */
 var GL_state = {};
